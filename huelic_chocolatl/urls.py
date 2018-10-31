@@ -23,8 +23,9 @@ from huelic_chocolatl import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('home/', views.home, name="home"),
     path('prueba/', views.prueba_logout, name="prueba"),
-    path('', login, {'template_name':'login/login.html'}, name='login'),
+    path('accounts/login/', login, {'template_name':'login/login2.html'}, name='login'),
     path('logout/', logout_then_login, name='logout'),
 ]
 
