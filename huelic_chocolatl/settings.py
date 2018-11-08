@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'apps.periodo',
     'apps.contabilidad_general',
     'apps.contabilidad_costos',
+    'apps.transaccion',
 ]
 
 MIDDLEWARE = [
