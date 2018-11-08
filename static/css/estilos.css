@@ -1,3 +1,22 @@
 #log3{
 	display: none;
 }
+.prueba{
+	margin-top: 5.2%;
+	background: yellow;
+	height: 50%;
+	width: 100%;
+	padding-top: 3%;
+	padding-right: 5%;
+	padding-left: 5%;
+	padding-bottom: 5%;
+}
+
+#footer {
+   position:fixed;
+   left:0px;
+   bottom:0px;
+   height:80px;
+   width:100%;
+   background:#999;
+}
