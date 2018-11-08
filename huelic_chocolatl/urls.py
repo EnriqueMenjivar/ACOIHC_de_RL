@@ -20,6 +20,7 @@ from django.conf.urls.static import static
 from django.contrib.auth.views import login, logout_then_login
 from django.http import HttpResponse
 from huelic_chocolatl import views
+#from apps.contabilidad_general import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,6 +31,7 @@ urlpatterns = [
 
     #url transaccion
     path('transaccion/',include(('apps.transaccion.urls','transaccion'),namespace='transaccion_url')),
+    #path('prueba/', views.prueba, name='prueba'),
 ]
 
 

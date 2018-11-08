@@ -29,6 +29,8 @@
   <link href="../../static/plantilla/lib/venobox/venobox.css" rel="stylesheet">
   <link href="../../static/plantilla/css/estilos.css" rel="stylesheet">
   <link href="../../static/css/estilos.css" rel="stylesheet">
+  <link href="../../static/css/bootstrap.css" rel="stylesheet">
+  <link href="../../static/css/bootstrap.min.css" rel="stylesheet">
 {% block extracss %}
 {% endblock %}
   <!-- Nivo Slider Theme -->
@@ -117,101 +119,15 @@
     {% endblock %}
   </header>
   <!-- header end -->
-
-  <!-- Start Bottom Header -->
-  {% block portada %}
-  <div class="header-bg page-area">
-    <div class="home-overly"></div>
-    <div class="container">
-      <div class="row">
-        <div class="col-md-12 col-sm-12 col-xs-12">
-          <div class="slider-content text-center">
-            <div class="header-bottom">
-              <div class="layer2 wow zoomIn" data-wow-duration="1s" data-wow-delay=".4s">
-                <h1 class="title2">Sistema contable</h1>
-              </div>
-              <div class="layer3 wow zoomInUp" data-wow-duration="2s" data-wow-delay="1s">
-                <h2 class="title3">"Un emprendedor ve <b>oportunidades</b> donde otros solo ven problemas"</h2>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div class="row">
+  <div class="prueba">
+    {% block content %}
+    {% endblock %}
   </div>
-  {% endblock %}
-  <!-- END Header -->
-  {% block content %}
-  {% endblock %}
-  <!-- End Blog Area -->
-
-  <div class="clearfix"></div>
-
+</div>
   <!-- Start Footer bottom Area -->
-  <footer>
+  <footer id="footer">
     {% block footer %}    
-    <div class="footer-area">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-4 col-sm-4 col-xs-12">
-            <div class="footer-content">
-              <div class="footer-head">
-                <div class="footer-logo">
-                  <h2><span>Huelic</span>Chocolatl</h2>
-                </div>
-
-                <p></p>
-                <div class="footer-icons">
-                  <ul>
-                    <li>
-                      <a href="#"><i class="fab fa-facebook-square"></i></a>
-                    </li>
-                    <li>
-                      <a href="#"><i class="fab fa-twitter"></i></a>
-                    </li>
-                    <li>
-                      <a href="#"><i class="fab fa-google"></i></a>
-                    </li>
-                    <li>
-                      <a href="#"><i class="fab fa-pinterest"></i></a>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- end single footer -->
-          <div class="col-md-4 col-sm-4 col-xs-12">
-            <div class="footer-content">
-              <div class="footer-head">
-                <h4>informacion</h4>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.
-                </p>
-                <div class="footer-contacts">
-                  <p><span>Tel:</span> 2237 2121</p>
-                  <p><span>Email:</span> huelic_chocolatl@gmail.com</p>
-                  <p><span>Horas de atencion:</span> 9am-5pm</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- end single footer -->
-          <div class="col-md-4 col-sm-4 col-xs-12">
-            <div class="footer-content">
-              <div class="footer-head">
-                <h4>Instagram</h4>
-                <div class="flicker-img">
-                  <a href="#"><img src="../../static/plantilla/img/portfolio/1.jpg" alt=""></a>
-                  <a href="#"><img src="../../static/plantilla/img/portfolio/2.jpg" alt=""></a>
-                  <a href="#"><img src="../../static/plantilla/img/portfolio/3.jpg" alt=""></a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
     <div class="footer-area-bottom">
       <div class="container">
         <div class="row">

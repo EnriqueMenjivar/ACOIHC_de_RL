@@ -8,6 +8,6 @@ def prueba_logout(request):
     return HttpResponse(html)
 
 def home(request):
-	return render(request, 'base/base.html')
+	return render(request, 'index.html')
 
 	
