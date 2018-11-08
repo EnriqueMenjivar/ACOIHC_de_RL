@@ -27,6 +27,9 @@ urlpatterns = [
     path('prueba/', views.prueba_logout, name="prueba"),
     path('accounts/login/', login, {'template_name':'login/login2.html'}, name='login'),
     path('logout/', logout_then_login, name='logout'),
+
+    #url transaccion
+    path('transaccion/',include(('apps.transaccion.urls','transaccion'),namespace='transaccion_url')),
 ]
 
 
