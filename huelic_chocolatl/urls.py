@@ -29,6 +29,9 @@ urlpatterns = [
     path('accounts/login/', login, {'template_name':'login/login2.html'}, name='login'),
     path('logout/', logout_then_login, name='logout'),
     #path('prueba/', views.prueba, name='prueba'),
+
+    #url contabilidad_costos
+    path('contabilidad_costos/',include(('apps.contabilidad_costos.urls'))),
 ]
 
 

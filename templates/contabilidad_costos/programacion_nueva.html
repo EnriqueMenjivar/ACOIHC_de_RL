@@ -1,0 +1,41 @@
+{% extends 'base/base.html'%}
+{% block title %} Programacion nueva {% endblock %}
+{% block extracss %}
+
+{% endblock %}
+{% block portada %}<br><br><br>{% endblock %}
+{% block content %}
+	<form id="fmProgramacionNueva" name="programacion_nueva" method="POST">
+		<div class="form-group">
+			<label>Periodo contable</label>
+			<select class="form-control">
+			  <option>--Seleccione--</i></option>
+			  <option>periodo1</option>
+			  <option>periodo2</option>
+			</select>
+			<small class="form-text text-muted">Seleccione el periodo al cual pertenecera la programacion.</small>
+		</div>
+		<div class="form-group">
+			<label>Fecha de programacion</label>
+			<input type="date" class="form-control" name="">
+		</div>
+		<div class="form-group">
+			<label>Producto a realizar</label>
+			<select class="form-control">
+			  <option>--Seleccione--</i></option>
+			  <option>Producto 1</option>
+			  <option>Producto 2</option>
+			</select>
+			<small class="form-text text-muted">Seleccione el producto a producir.</small>
+		</div>
+
+		<div class="form-group">
+			<label>Cantidad a realizar</label>
+			<input type="text" class="form-control" name="" placeholder="Ingrese la cantidad de producto" min="1">
+		</div>
+		<input type="submit" class="btn btn-primary" name="" value="Guardar">
+		<input type="button" class="btn btn-secondary" name="" value="Cancelar">
+	</form>
+
+	
+{% endblock %}

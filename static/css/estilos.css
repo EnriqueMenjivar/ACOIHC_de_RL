@@ -3,7 +3,7 @@
 }
 .prueba{
 	margin-top: 5.2%;
-	background: yellow;
+	background: #eaeded;
 	height: 50%;
 	width: 100%;
 	padding-top: 3%;
@@ -19,4 +19,25 @@
    height:80px;
    width:100%;
    background:#999;
+}
+
+#tbProgramaciones{
+	height: auto;
+}
+
+#thead-dark{
+	background-color: black;
+	color: #fff;
+}
+
+#tbProgramaciones{
+	margin: 8px;
+	align-content: center;
+}
+
+#fmProgramacionNueva{
+	align-items: center;
+	margin: 50px;
+	margin-right: 200px;
+	margin-left: 200px;
 }
