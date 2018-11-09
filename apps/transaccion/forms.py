@@ -2,7 +2,7 @@ from django import forms
 from apps.contabilidad_general import models
 
 
-class Transaccion(forms.ModelForm):
+class TransaccionForm(forms.ModelForm):
     class Meta:
         model = models.Transaccion
 
@@ -19,9 +19,9 @@ class Transaccion(forms.ModelForm):
         }
 
         widgets = {
-            'periodo_transaccion':forms.TextInput,
-            'fecha_transaccion': forms.DateInput(),
-            'descripcion_transaccion':forms.TextInput(),
+            'periodo_transaccion':forms.TextInput(attrs={'class':'form-control'}),
+            'fecha_transaccion': forms.DateInput(format='%d/%m/%Y',attrs={'class':'form-control','type':'date', 'id':'2'}),
+            'descripcion_transaccion':forms.TextInput(attrs={'class':'form-control','id':'3'}),
         }
 
 
@@ -45,7 +45,7 @@ class Transaccion_CuentaForm(forms.ModelForm):
 
         widgets = {
             'transaccion_tc':forms.TextInput(),
-            'cuenta_tc':forms.CheckboxInput(),
+            'cuenta_tc':forms.TextInput(),
             'debe_tc':forms.NumberInput(),
             'haber_tc':forms.NumberInput(),
         }

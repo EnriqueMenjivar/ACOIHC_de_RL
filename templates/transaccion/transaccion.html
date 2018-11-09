@@ -5,63 +5,113 @@
 
 {% endblock %}
 {%block portada%}
+
 {%endblock%}
-
-
 {%block content%}
 
-<div class="mt-5 bg-ligth">
+<div>
+    <!--Validacion partida doble-->
+    <div class="alert alert-danger alert-dismissible show text-center" role="alert">
+        <strong>Advertencia!</strong> No se cumple partida doble. Revisar datos de transaccion.
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
     <div class="row">
         <div class="col-lg-4">
-            <h2 class="h1">ALV</h2>
+
         </div>
         <div class="col-lg-8">
 
-            <div class="row jumbotron">
-                <!-- Boton modal Haber -->
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#haber" name="obtener">
-                    Haber
-                </button>
+            <div class="row jumbotron container-fluid">
+                <form class="form-group" method="POST" action="" id="formulario">
+                    <div class="col-lg-8">
 
+                        {%csrf_token%}
+                        <div class="form-group row mr-2 ml-2">
+
+                            <div class="col-sm-10">
+                                <input type="text" name="periodo_transaccion" value="{{periodo.id}}" hidden>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Fecha transaccion:</label>
+                            <div class="col-sm-10">
+                                {{form.fecha_transaccion}}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label"> Descripcion:</label>
+
+                            <div class="col-sm-10">
+                                {{form.descripcion_transaccion}}
+                            </div>
+                            <!--<div class="col-sm-10">
+                                <input type="text" name="descripcion_transaccion">
+                            </div>-->
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 text-center">
+                        <br><br>
+                        <button type="submit" class="btn btn-primary" name="inicio_transaccion" id="1">
+                            Iniciar Transaccion
+                        </button>
+                </form>
+
+            </div>
+        </div>
+
+        <div class="row jumbotron">
+            <div class="col-lg-6">
                 <!-- Boton modal Debe -->
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#debe">
+                <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#debe" name="obtener_debe">
                     Debe
                 </button>
             </div>
 
-            <div class="row jumbotron">
-                <table class="table">
-                    <h3>Sumatoria de Cuentas</h3>
-                    <thead class="thead-dark">
-                        <tr>
-
-                            <th scope="col">Saldo Debe</th>
-                            <th scope="col">Saldo Haber</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-
-                            <td>Valores</td>
-                            <td>Valores</td>
-
-                        </tr>
-
-                    </tbody>
-                </table>
-
-
-
+            <div class="col-lg-6">
+                <!-- Boton modal Haber -->
+                <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#haber" name="obtener_haber">
+                    Haber
+                </button>
             </div>
 
+            <br>
+            <br>
+            <table class="table">
+                <h3>Sumatoria de Cuentas</h3>
+                <thead class="thead-dark">
+                    <tr>
+
+                        <th scope="col">Saldo Debe</th>
+                        <th scope="col">Saldo Haber</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+
+                        <td>Valores</td>
+                        <td>Valores</td>
+
+                    </tr>
+
+                </tbody>
+            </table>
+
+
+
         </div>
+
     </div>
+</div>
 </div>
 
 
 
 <!-- Modal Debe-->
-<div class="modal fade" id="debe" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+<div class="modal" id="debe" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -71,12 +121,49 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="row">
-                    <div class="col">
+                <div class="row container-fluid">
+
+                    <div class="col-lg-4">
                         <h3>Activos</h3>
+                        {%for c in cuentas%}
+                        {%ifequal c.codigo_padre "1"%}
+                        <div class="row">
+                            <label><input type="checkbox" aria-label="Checkbox for following text input" value="seleccionado">{{c.nombre_cuenta}}
+                            </label>
+                        </div>
+                        {%endifequal%}
+
+                        {% empty %}
+                        <h2 align="center" class="mb-4">No hay Cuentas</h2>
+                        {%endfor%}
                     </div>
-                    <div class="col">
+                    <div class="col-lg-4">
                         <h3>Pasivo</h3>
+                        {%for c in cuentas%}
+                        {%ifequal c.codigo_padre "2"%}
+                        <div class="row">
+                            <label><input type="checkbox" aria-label="Checkbox for following text input">{{c.nombre_cuenta}}
+                            </label>
+                        </div>
+                        {%endifequal%}
+
+                        {% empty %}
+                        <h2 align="center" class="mb-4">No hay Cuentas</h2>
+                        {%endfor%}
+                    </div>
+                    <div class="col-lg-4">
+                        <h3>Patrimonio</h3>
+                        {%for c in cuentas%}
+                        {%ifequal c.codigo_padre "3"%}
+                        <div class="row">
+                            <label><input type="checkbox" aria-label="Checkbox for following text input">{{c.nombre_cuenta}}
+                            </label>
+                        </div>
+                        {%endifequal%}
+
+                        {% empty %}
+                        <h2 align="center" class="mb-4">No hay Cuentas</h2>
+                        {%endfor%}
                     </div>
                 </div>
             </div>
@@ -89,7 +176,7 @@
 </div>
 
 <!-- Modal Haber-->
-<div class="modal fade" id="haber" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+<div class="modal" id="haber" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -99,18 +186,55 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="row">
-                    <div class="col">
+                <div class="row container-fluid">
+
+                    <div class="col-lg-4">
                         <h3>Activos</h3>
+                        {%for c in cuentas%}
+                        {%ifequal c.codigo_padre "1"%}
+                        <div class="row">
+                            <label><input type="checkbox" aria-label="Checkbox for following text input">{{c.nombre_cuenta}}
+                            </label>
+                        </div>
+                        {%endifequal%}
+
+                        {% empty %}
+                        <h2 align="center" class="mb-4">No hay Cuentas</h2>
+                        {%endfor%}
                     </div>
-                    <div class="col">
+                    <div class="col-lg-4">
                         <h3>Pasivo</h3>
+                        {%for c in cuentas%}
+                        {%ifequal c.codigo_padre "2"%}
+                        <div class="row">
+                            <label><input type="checkbox" aria-label="Checkbox for following text input">{{c.nombre_cuenta}}
+                            </label>
+                        </div>
+                        {%endifequal%}
+
+                        {% empty %}
+                        <h2 align="center" class="mb-4">No hay Cuentas</h2>
+                        {%endfor%}
+                    </div>
+                    <div class="col-lg-4 ">
+                        <h3>Patrimonio</h3>
+                        {%for c in cuentas%}
+                        {%ifequal c.codigo_padre "3"%}
+                        <div class="row">
+                            <label><input type="checkbox" aria-label="Checkbox for following text input">{{c.nombre_cuenta}}
+                            </label>
+                        </div>
+                        {%endifequal%}
+
+                        {% empty %}
+                        <h2 align="center" class="mb-4">No hay Cuentas</h2>
+                        {%endfor%}
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Regresar</button>
-                <button type="button" class="btn btn-primary">Agregar</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" >Regresar</button>
+                <button type="button" class="btn btn-primary" onclick="prueba()">Agregar</button>
             </div>
         </div>
     </div>
@@ -119,3 +243,26 @@
 {%endblock%}
 {%block footer%}
 {%endblock%}
+{% block extrajs %}
+<script type="text/javascript">
+    function prueba(){
+        i=0;
+        {%for c in cuentas%}
+        var vector[i]={{c.nombre_cuenta}};
+        i=i+1;
+        {%endfor%}
+        alert(vector);
+    }
+    
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("formulario").submit(function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: $(this).attr('action'),
+            })
+        })
+    })
+</script>
+{% endblock %}
