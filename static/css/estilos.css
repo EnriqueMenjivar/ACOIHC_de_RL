@@ -23,21 +23,40 @@
 
 #tbProgramaciones{
 	height: auto;
+	margin: 8px;
+	align-content: center;
 }
+#tbDiv{
+	margin: auto;
+	width: 700px;
+}
+ #tbMP1{
+ 	margin: auto;
+ }
 
 #thead-dark{
 	background-color: black;
 	color: #fff;
 }
 
-#tbProgramaciones{
-	margin: 8px;
-	align-content: center;
-}
 
-#fmProgramacionNueva{
+
+#fmProgramacionNueva, #fmProceso1{
 	align-items: center;
 	margin: 50px;
 	margin-right: 200px;
 	margin-left: 200px;
+
+}
+
+.divBorder{
+	margin-left: 100px;
+	margin-right: 100px; 
+	margin-bottom: 50px;
+	border-style: solid;
+	border-color: #54acac;
+}
+
+h4{
+	text-align: center;
 }

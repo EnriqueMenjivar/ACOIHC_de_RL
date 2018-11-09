@@ -5,37 +5,113 @@
 {% endblock %}
 {% block portada %}<br><br><br>{% endblock %}
 {% block content %}
+<div class="divBorder">
+	<br>
+	<h4>Datos de la Programacion</h4>
 	<form id="fmProgramacionNueva" name="programacion_nueva" method="POST">
+		{% csrf_token %}
 		<div class="form-group">
 			<label>Periodo contable</label>
-			<select class="form-control">
+			<select id="periodo" name="perido" class="form-control">
 			  <option>--Seleccione--</i></option>
-			  <option>periodo1</option>
-			  <option>periodo2</option>
+			  {% if periodos %}
+			  	{% for periodo in periodos %}
+			  		<option value="{{ periodo.id }}">{{ periodo.id }}, del {{ periodo.inicio_periodo }} al {{ periodo.final_periodo }} </option>
+			  	{% endfor %}
+			  {% else %}
+			  	<option>No hay periodos</option>
+			  {% endif %}
+			  
 			</select>
 			<small class="form-text text-muted">Seleccione el periodo al cual pertenecera la programacion.</small>
 		</div>
 		<div class="form-group">
 			<label>Fecha de programacion</label>
-			<input type="date" class="form-control" name="">
+			<input id="fecha" type="date" class="form-control" name="fecha">
 		</div>
 		<div class="form-group">
 			<label>Producto a realizar</label>
-			<select class="form-control">
+			<select id="producto" class="form-control" name="producto">
 			  <option>--Seleccione--</i></option>
-			  <option>Producto 1</option>
-			  <option>Producto 2</option>
+			  {% if productos %}
+			  	{% for producto in productos %}
+			  		<option value="{{ producto.codigo_cuenta }}">{{ producto.codigo_cuenta }} {{ producto.nombre_cuenta }}</option>
+			  	{% endfor %}
+			  {% else %}
+			  	<option>No hay productos</option>
+			  {% endif %}
+			 
 			</select>
 			<small class="form-text text-muted">Seleccione el producto a producir.</small>
 		</div>
 
 		<div class="form-group">
 			<label>Cantidad a realizar</label>
-			<input type="text" class="form-control" name="" placeholder="Ingrese la cantidad de producto" min="1">
+			<input id="cantidad" type="text" class="form-control" name="cantidad" placeholder="Ingrese la cantidad de producto" min="1">
 		</div>
-		<input type="submit" class="btn btn-primary" name="" value="Guardar">
+		<input id="btnGuardar" type="button" class="btn btn-primary" name="" value="Guardar">
 		<input type="button" class="btn btn-secondary" name="" value="Cancelar">
 	</form>
+</div>
 
+<div class="divBorder">
+	<br>
+	<h4>Proceso 1</h4>
+	<form id="fmProceso1" name="fmProceso1" method="POST">
+		<div class="form_group">
+			<label>Materia prima</label>
+			<select id="materiaPrima" class="form-control">
+				<option>--Seleccione--</option>
+				{% if materiales %}
+					{% for materia in materiales %}
+						<option value="{{ materia.codigo_cuenta }}">{{ materia.nombre_cuenta }}</option>
+					{% endfor %}
+				{% else %}
+				{% endif %}
+			</select>
+		</div>
+		<div class="form_group">
+			<label>Cantidad</label>
+			<input class="form-control" type="text" name="cantMP1">
+		</div>
+		<br>
+		<input type="button" class="btn btn-info" name="btnCargar" value="Cargar">
+	</form>
+	<div id="tbDiv">
+		<table class="table" id="tbMP1">
+			<thead id="thead-dark" class="thead-dark">
+				<tr>
+					<th scope="col">Materia prima</th>
+					<th scope="col">Cantidad</th>
+					<th scope="col">Precio unitario</th>
+					<th scope="col">Monto</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+	<br>
+</div>	
 	
+{% endblock %}
+
+{% block extrajs %}
+	<script>
+		$("#btnGuardar").click(function(){
+			
+			var periodo = $("#periodo").val();
+			var fecha = $("#fecha").val();
+			var producto = $("#producto").val();
+			var cantidad = $("#cantidad").val();
+			$.ajax({
+
+				method : 'GET',
+				url : '/contabilidad_costos/programaciones_ajax/',
+				data : {'periodo': periodo,'fecha': fecha,'producto': producto,'cantidad': cantidad},
+				success : function(data){
+					alert(data[0].pk);
+				}
+			});
+				
+		});
+	</script>
 {% endblock %}
