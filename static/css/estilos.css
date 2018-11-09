@@ -26,9 +26,9 @@
 	margin: 8px;
 	align-content: center;
 }
-#tbDiv{
+#tbDiv,#tbDiv2{
 	margin: auto;
-	width: 700px;
+	width: 800px;
 }
  #tbMP1{
  	margin: auto;
@@ -39,9 +39,12 @@
 	color: #fff;
 }
 
+.contador{
+	margin-left: 120px; 
+}
 
 
-#fmProgramacionNueva, #fmProceso1{
+#fmProgramacionNueva, #fmProceso1,#fmProceso1MO{
 	align-items: center;
 	margin: 50px;
 	margin-right: 200px;

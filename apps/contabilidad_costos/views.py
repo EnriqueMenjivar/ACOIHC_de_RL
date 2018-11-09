@@ -14,7 +14,8 @@ def programacion_nueva(request):
 	periodos = Periodo.objects.all()
 	productos = Cuenta.objects.filter(codigo_padre='1141')
 	materiales = Cuenta.objects.filter(codigo_padre='1143')
-	contexto = {'periodos':periodos, 'productos':productos, 'materiales':materiales}
+	cargos = Cargo.objects.all()
+	contexto = {'periodos':periodos, 'productos':productos, 'materiales':materiales, 'cargos':cargos}
 	return render(request, 'contabilidad_costos/programacion_nueva.html', contexto)
 
 class ProgramacionesAjaxView(TemplateView):
