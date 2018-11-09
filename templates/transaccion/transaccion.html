@@ -20,12 +20,11 @@
 
     <div class="row">
         <div class="col-lg-4">
-
         </div>
         <div class="col-lg-8">
 
             <div class="row jumbotron container-fluid">
-                <form class="form-group" method="POST" action="" id="formulario">
+                <form class="form-group" method="POST" action="" class="my-ajax-form" data-url="/transaccion/">
                     <div class="col-lg-8">
 
                         {%csrf_token%}
@@ -47,15 +46,12 @@
                             <div class="col-sm-10">
                                 {{form.descripcion_transaccion}}
                             </div>
-                            <!--<div class="col-sm-10">
-                                <input type="text" name="descripcion_transaccion">
-                            </div>-->
                         </div>
                     </div>
 
                     <div class="col-lg-4 text-center">
                         <br><br>
-                        <button type="submit" class="btn btn-primary" name="inicio_transaccion" id="1">
+                        <button type="submit" class="btn btn-success" name="inicio_transaccion" id="1">
                             Iniciar Transaccion
                         </button>
                 </form>
@@ -63,25 +59,45 @@
             </div>
         </div>
 
-        <div class="row jumbotron">
-            <div class="col-lg-6">
-                <!-- Boton modal Debe -->
-                <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#debe" name="obtener_debe">
-                    Debe
+        <div class="row jumbotron container-fluid text-center">
+            <div class="row">
+                <form action="POST">
+                    <div class="col-lg-6">
+                        <!-- Boton modal Debe -->
+                        <h3>Debe</h3>
+                        <button type="button" class="btn btn-primary" id="btndebe">
+                            Agregar Cuentas
+                        </button>
+                        <br><br>
+                        <div id="debe"></div>
+                    </div>
+                    <button hidden type="submit" id="btn1"></button>
+                </form>
+
+                <form action="POST">
+                    <div class="col-lg-6">
+                        <!-- Boton modal Haber -->
+                        <h3>Haber</h3>
+                        <button type="button" class="btn btn-primary" id="btnhaber">
+                            Agregar Cuentas
+                        </button>
+                        <br><br>
+                        <div id="haber"></div>
+                        <button hidden type="submit" id="btn2"></button>
+                    </div>
+                </form>
+            </div>
+            <div class="row">
+                <button type="button" class="btn btn-success" onclick="guardar()">
+                    Registrar Transaccion
                 </button>
             </div>
 
-            <div class="col-lg-6">
-                <!-- Boton modal Haber -->
-                <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#haber" name="obtener_haber">
-                    Haber
-                </button>
-            </div>
+        </div>
+        <div class="row jumbotron container-fluid text-center">
 
-            <br>
-            <br>
             <table class="table">
-                <h3>Sumatoria de Cuentas</h3>
+                <h3>Total de la Transaccion</h3>
                 <thead class="thead-dark">
                     <tr>
 
@@ -100,169 +116,89 @@
                 </tbody>
             </table>
 
-
-
-        </div>
-
-    </div>
-</div>
-</div>
-
-
-
-<!-- Modal Debe-->
-<div class="modal" id="debe" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Seleccione cuentas para Debe</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row container-fluid">
-
-                    <div class="col-lg-4">
-                        <h3>Activos</h3>
-                        {%for c in cuentas%}
-                        {%ifequal c.codigo_padre "1"%}
-                        <div class="row">
-                            <label><input type="checkbox" aria-label="Checkbox for following text input" value="seleccionado">{{c.nombre_cuenta}}
-                            </label>
-                        </div>
-                        {%endifequal%}
-
-                        {% empty %}
-                        <h2 align="center" class="mb-4">No hay Cuentas</h2>
-                        {%endfor%}
-                    </div>
-                    <div class="col-lg-4">
-                        <h3>Pasivo</h3>
-                        {%for c in cuentas%}
-                        {%ifequal c.codigo_padre "2"%}
-                        <div class="row">
-                            <label><input type="checkbox" aria-label="Checkbox for following text input">{{c.nombre_cuenta}}
-                            </label>
-                        </div>
-                        {%endifequal%}
-
-                        {% empty %}
-                        <h2 align="center" class="mb-4">No hay Cuentas</h2>
-                        {%endfor%}
-                    </div>
-                    <div class="col-lg-4">
-                        <h3>Patrimonio</h3>
-                        {%for c in cuentas%}
-                        {%ifequal c.codigo_padre "3"%}
-                        <div class="row">
-                            <label><input type="checkbox" aria-label="Checkbox for following text input">{{c.nombre_cuenta}}
-                            </label>
-                        </div>
-                        {%endifequal%}
-
-                        {% empty %}
-                        <h2 align="center" class="mb-4">No hay Cuentas</h2>
-                        {%endfor%}
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Regresar</button>
-                <button type="button" class="btn btn-primary">Agregar</button>
-            </div>
         </div>
     </div>
 </div>
-
-<!-- Modal Haber-->
-<div class="modal" id="haber" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Seleccione cuentas para Haber</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row container-fluid">
-
-                    <div class="col-lg-4">
-                        <h3>Activos</h3>
-                        {%for c in cuentas%}
-                        {%ifequal c.codigo_padre "1"%}
-                        <div class="row">
-                            <label><input type="checkbox" aria-label="Checkbox for following text input">{{c.nombre_cuenta}}
-                            </label>
-                        </div>
-                        {%endifequal%}
-
-                        {% empty %}
-                        <h2 align="center" class="mb-4">No hay Cuentas</h2>
-                        {%endfor%}
-                    </div>
-                    <div class="col-lg-4">
-                        <h3>Pasivo</h3>
-                        {%for c in cuentas%}
-                        {%ifequal c.codigo_padre "2"%}
-                        <div class="row">
-                            <label><input type="checkbox" aria-label="Checkbox for following text input">{{c.nombre_cuenta}}
-                            </label>
-                        </div>
-                        {%endifequal%}
-
-                        {% empty %}
-                        <h2 align="center" class="mb-4">No hay Cuentas</h2>
-                        {%endfor%}
-                    </div>
-                    <div class="col-lg-4 ">
-                        <h3>Patrimonio</h3>
-                        {%for c in cuentas%}
-                        {%ifequal c.codigo_padre "3"%}
-                        <div class="row">
-                            <label><input type="checkbox" aria-label="Checkbox for following text input">{{c.nombre_cuenta}}
-                            </label>
-                        </div>
-                        {%endifequal%}
-
-                        {% empty %}
-                        <h2 align="center" class="mb-4">No hay Cuentas</h2>
-                        {%endfor%}
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal" >Regresar</button>
-                <button type="button" class="btn btn-primary" onclick="prueba()">Agregar</button>
-            </div>
-        </div>
-    </div>
 </div>
+
+
 
 {%endblock%}
 {%block footer%}
 {%endblock%}
 {% block extrajs %}
+
 <script type="text/javascript">
-    function prueba(){
-        i=0;
-        {%for c in cuentas%}
-        var vector[i]={{c.nombre_cuenta}};
-        i=i+1;
-        {%endfor%}
-        alert(vector);
+    $("#btndebe").addEventListener("click", function () {
+        var ndiv1, ndiv2, ndiv3;
+        ndiv1 = document.createElement("div");
+        ndiv2 = document.createElement("div");
+        ndiv3 = document.createElement("div");
+
+        ndiv1.setAttribute("class", "form-group row");
+        ndiv2.setAttribute("class", "col-lg-7");
+        ndiv3.setAttribute("class", "col-lg-5");
+
+        $("#debe").appendChild(ndiv1);
+        ndiv1.appendChild(ndiv2);
+        ndiv1.appendChild(ndiv3);
+
+        var nin1, nin2;
+        nin1 = document.createElement("select");
+        nin2 = document.createElement("input");
+
+        nin1.setAttribute("class", "form-control");
+        nin2.setAttribute("class", "form-control");
+        nin1.innerHTML = "{%for c in cuentas%} <option>{{c.nombre_cuenta}}</option> {%endfor%}";
+
+        ndiv2.appendChild(nin1);
+        ndiv3.appendChild(nin2);
+
+    })
+    $("#btnhaber").addEventListener("click", function () {
+        var ndiv1, ndiv2, ndiv3;
+        ndiv1 = document.createElement("div");
+        ndiv2 = document.createElement("div");
+        ndiv3 = document.createElement("div");
+
+        ndiv1.setAttribute("class", "form-group row");
+        ndiv2.setAttribute("class", "col-lg-7");
+        ndiv3.setAttribute("class", "col-lg-5");
+
+        $("#haber").appendChild(ndiv1);
+        ndiv1.appendChild(ndiv2);
+        ndiv1.appendChild(ndiv3);
+
+        var nin1, nin2;
+        nin1 = document.createElement("select");
+        nin2 = document.createElement("input");
+
+        nin1.setAttribute("class", "form-control");
+        nin2.setAttribute("class", "form-control");
+        nin1.innerHTML = "{%for c in cuentas%} <option>{{c.nombre_cuenta}}</option> {%endfor%}";
+
+        ndiv2.appendChild(nin1);
+        ndiv3.appendChild(nin2);
+
+    })
+    function $(selector) {
+        return document.querySelector(selector);
     }
-    
 </script>
 <script type="text/javascript">
-    $(document).ready(function () {
-        $("formulario").submit(function (e) {
-            e.preventDefault();
-            $.ajax({
-                url: $(this).attr('action'),
-            })
+    function guardar() {
+
+    }
+</script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        var $myForm = $('.my-ajax-form')
+        $myForm.submit(function(event){
+            event.preventDefault();
+            var $formData=$myForm.serialize();
+
         })
     })
 </script>
+
 {% endblock %}

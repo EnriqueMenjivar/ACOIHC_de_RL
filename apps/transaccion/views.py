@@ -10,14 +10,16 @@ def transaccion(request):
     cuentas = Cuenta.objects.all()
     periodo = Periodo.objects.get(estado_periodo=False)
 
-    if request.method == 'POST':
-        form = TransaccionForm(request.POST)
+    form1 = TransaccionForm()
+    form2=Transaccion_CuentaForm()
 
-        if form.is_valid():
-            form.save()
+    if request.method == 'POST':
+        form2=Transaccion_CuentaForm(request.POST)
+        if form1.is_valid():
+            form1.save()
     else:
-        form = TransaccionForm()
+        form1 = TransaccionForm()
 
     # Contexto
-    contexto = {'cuentas': cuentas, 'form': form,'periodo': periodo,}
+    contexto = {'cuentas': cuentas, 'form': form1,'periodo': periodo,}
     return render(request, 'transaccion/transaccion.html', contexto)
