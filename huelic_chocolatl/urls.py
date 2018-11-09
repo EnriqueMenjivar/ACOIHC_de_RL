@@ -32,6 +32,7 @@ urlpatterns = [
 
     #url contabilidad_costos
     path('contabilidad_costos/',include(('apps.contabilidad_costos.urls'))),
+    path('periodo_contable/',include('apps.periodo.urls')),
 ]
 
 
