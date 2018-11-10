@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from apps.catalogo.forms import CuentaForm, AgrupacionForm
-from apps.catalogo.models import Grupo, Agrupacion, Cuenta
+from apps.catalogo.models import Grupo, Agrupacion, Cuenta, CuentaHija
 from django.views.generic import ListView, CreateView, UpdateView
 # Create your views here.
 
@@ -15,9 +15,10 @@ class CuentaCreateView(CreateView):
 def cuenta_create(request):
 	form = CuentaForm()
 	grupos = Grupo.objects.all()
-	cod_cuenta=Cuenta.objects.latest('id').codigo_cuenta
+	cod_cuenta=str(Cuenta.objects.latest('id').codigo_cuenta)
 	cod_cuenta=cod_cuenta[2:len(cod_cuenta)]
 	cod_correlativo = str(int(cod_cuenta)+1)
+	#cod_correlativo = str(cod_cuenta+1)
 
 	if request.method=='POST':
 		form = CuentaForm(request.POST)
@@ -28,7 +29,7 @@ def cuenta_create(request):
 
 			cuenta = Cuenta.objects.latest('id')
 			cod_cuenta =cuenta.agrupacion.codigo_agrupacion
-			cuenta.codigo_cuenta = cod_cuenta+cod_correlativo
+			cuenta.codigo_cuenta = int(cod_cuenta+cod_correlativo)
 			cuenta.save()
 
 			return redirect('home')
@@ -41,12 +42,17 @@ def load_agrupaciones(request):
 
 def cuenta_hija_create(request, cuenta_id):
 	cuenta_p = Cuenta.objects.get(id=cuenta_id)
-	cod_cuenta_h = cuenta_p.codigo_cuenta+str(1)
+	cuenta_h = CuentaHija.objects.latest('id')
+	#if cuenta_h:
+	cod_cuenta_h = cuenta_p.codigo_cuenta+1
+	#cod_cuenta_h = cuenta_p.codigo_cuenta+str(int(cod_cuenta_h[3:len(cod_cuenta_h)])+1)
+	#else:
+		#cod_cuenta_h = cuenta_p.codigo_cuenta+str(1)
 	cuentaid=cuenta_id
 
 	if request.method=='POST':
-		Cuenta.objects.create(
-			agrupacion=cuenta_p.agrupacion,
+		CuentaHija.objects.create(
+			padre=cuenta_id,
 			codigo_padre=cuenta_p.codigo_cuenta,
 			nombre_cuenta=request.POST['nombre_cuenta'],
 			codigo_cuenta=cod_cuenta_h,
@@ -54,9 +60,17 @@ def cuenta_hija_create(request, cuenta_id):
 			saldo_deudor_cuenta=0.0,
 			saldo_acreedor_cuenta=0.0
 			)
-		return redirect('home')
+
+		return redirect('contabilidad_general:mostrar-cuentas')
 	return render(request, 'contabilidad_general/cuenta_hija_create.html', {'cuenta_p':cuenta_p, 'cuenta_id': cuentaid,})
 
+def catalogo_show(request):
+	cuentas = Cuenta.objects.all()
+	return render(request, 'contabilidad_general/catalogo_show.html', {'cuentas':cuentas})
+
+def hijas_show(request, cuenta_id):
+	hijas = CuentaHija.objects.filter(padre=cuenta_id)
+	return render(request, 'contabilidad_general/hijas_show.html', {'hijas':hijas,})
 			
 '''#Consulta de prueba
 	cuenta = Cuenta.objects.latest('id')
