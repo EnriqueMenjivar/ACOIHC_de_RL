@@ -6,6 +6,7 @@ class Periodo(models.Model):
 	inicio_periodo = models.DateField()
 	final_periodo = models.DateField()
 	estado_periodo = models.BooleanField(default=False)
+	periodo_ajuste = models.BooleanField(default=False)
 		
 class BalancePeriodo(models.Model):
 	periodo_balance = models.ForeignKey(Periodo, null=True, on_delete=models.CASCADE)

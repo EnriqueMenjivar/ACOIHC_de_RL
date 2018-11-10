@@ -24,13 +24,13 @@
       	>
             <div class="row">
               <div class="col-md-4">
-                  <a href="{% url 'contabilidad_general:mostrar-hijas' cuenta.id %}" class="btn btn-block btn-primary font-weight-bold">Cuentas hija</a>
+                  <a href="{% url 'contabilidad_general:mostrar-hijas' cuenta.id %}" class="btn btn-block btn-info font-weight-bold">Cuentas hija</a>
               </div>  
               <div class="col-md-3">
-                  <a href="" class="btn btn-block btn-success font-weight-bold">Editar</a>
+                  <a href="{% url 'contabilidad_general:cuenta-editar' cuenta.id %}" class="btn btn-block btn-success font-weight-bold">Editar</a>
               </div>
               <div class="col-md-5">
-                  <a href="{% url 'contabilidad_general:crear-hija' cuenta.id %}" class="btn btn-block btn-success font-weight-bold">Agregar cuenta hija</a>
+                  <a href="{% url 'contabilidad_general:crear-hija' cuenta.id %}" class="btn btn-block btn-primary font-weight-bold">Agregar cuenta hija</a>
               </div>
             </div>
         </div>

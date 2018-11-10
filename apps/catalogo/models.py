@@ -15,6 +15,7 @@ class Agrupacion(models.Model):
 	codigo_agrupacion = models.CharField(max_length=3)
 	def __str__(self):
 		return self.nombre_agrupacion
+	
 
 class Cuenta(models.Model):
 	agrupacion = models.ForeignKey(Agrupacion, null=True, on_delete=models.CASCADE)
@@ -38,5 +39,4 @@ class CuentaHija(models.Model):
 
 	def __str__(self):
 		return self.nombre_cuenta
-
 

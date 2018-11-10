@@ -9,6 +9,8 @@ urlpatterns = [
 	path('crear-hija/<cuenta_id>/', views.cuenta_hija_create, name="crear-hija"),
 	path('mostrar-cuentas/', views.catalogo_show, name="mostrar-cuentas"),
 	path('mostrar-hijas/<cuenta_id>/', views.hijas_show, name="mostrar-hijas"),
+	path('cuenta-editar/<cuenta_id>/', views.cuenta_update, name="cuenta-editar"),
+	path('hija-editar/<hija_id>/', views.hija_update, name="hija-editar"),
 	path('ajax/load-agrupaciones/', views.load_agrupaciones, name="ajax"),
 	
 ]

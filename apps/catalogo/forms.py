@@ -1,5 +1,5 @@
 from django import forms
-from apps.catalogo.models import Grupo, Agrupacion, Cuenta
+from apps.catalogo.models import Grupo, Agrupacion, Cuenta, CuentaHija
 
 class CuentaForm(forms.ModelForm):
 
@@ -19,16 +19,12 @@ class CuentaForm(forms.ModelForm):
 			'agrupacion':'Agrupacion',
 			'nombre_cuenta':'Nombre de la cuenta',
 			'descripcion_cuenta':'Descripción de la cuenta',
-			'saldo_deudor_cuenta':'Saldo deudor',
-			'saldo_acreedor_cuenta':'Saldo acreedor',
 		}
 
 		widgets = {
 			'agrupacion': forms.Select(attrs={'class':'form-control'}),
 			'nombre_cuenta': forms.TextInput(),
 			'descripcion_cuenta': forms.TextInput(),
-			'saldo_deudor_cuenta': forms.TextInput(),
-			'saldo_acreedor_cuenta': forms.TextInput(),
 		}
 
 		
@@ -54,3 +50,13 @@ class AgrupacionForm(forms.ModelForm):
 			'nombre_agrupacion': forms.TextInput(),
 			'codigo_agrupacion': forms.TextInput(),
 		}
+
+class HijaForm(forms.ModelForm):
+
+	class Meta:
+		model = CuentaHija
+		fields = [
+			'codigo_cuenta',
+			'nombre_cuenta',
+			'descripcion_cuenta',
+		]

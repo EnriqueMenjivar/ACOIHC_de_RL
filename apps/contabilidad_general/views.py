@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from apps.catalogo.forms import CuentaForm, AgrupacionForm
+from apps.catalogo.forms import CuentaForm, AgrupacionForm, HijaForm
 from apps.catalogo.models import Grupo, Agrupacion, Cuenta, CuentaHija
 from django.views.generic import ListView, CreateView, UpdateView
 # Create your views here.
@@ -42,12 +42,7 @@ def load_agrupaciones(request):
 
 def cuenta_hija_create(request, cuenta_id):
 	cuenta_p = Cuenta.objects.get(id=cuenta_id)
-	cuenta_h = CuentaHija.objects.latest('id')
-	#if cuenta_h:
-	cod_cuenta_h = cuenta_p.codigo_cuenta+1
-	#cod_cuenta_h = cuenta_p.codigo_cuenta+str(int(cod_cuenta_h[3:len(cod_cuenta_h)])+1)
-	#else:
-		#cod_cuenta_h = cuenta_p.codigo_cuenta+str(1)
+	cod_cuenta_h = str(cuenta_p.codigo_cuenta)+str(1)
 	cuentaid=cuenta_id
 
 	if request.method=='POST':
@@ -71,7 +66,38 @@ def catalogo_show(request):
 def hijas_show(request, cuenta_id):
 	hijas = CuentaHija.objects.filter(padre=cuenta_id)
 	return render(request, 'contabilidad_general/hijas_show.html', {'hijas':hijas,})
-			
+
+def cuenta_update(request, cuenta_id):
+	grupos = Grupo.objects.all()
+	cuenta = Cuenta.objects.get(id=cuenta_id)
+	if request.method == 'GET':
+		form = CuentaForm(instance=cuenta)
+	else:
+		form = CuentaForm(request.POST, instance=cuenta)
+		if form.is_valid():
+			form.save()
+		return redirect('contabilidad_general:mostrar-cuentas')
+	contexto = {
+		'form':form,
+		'cuenta':cuenta,
+		'grupos':grupos,
+	}
+	return render(request, 'contabilidad_general/cuenta_update.html', contexto)
+
+def hija_update(request, hija_id):
+	hija = CuentaHija.objects.get(id=hija_id)
+	if request.method == 'GET':
+		form = HijaForm(instance=hija)
+	else:
+		form = HijaForm(request.POST, instance=hija)
+		if form.is_valid():
+			form.save()
+		return redirect('contabilidad_general:mostrar-cuentas')
+	contexto = {
+		'form':form,
+		'hija':hija,
+	}
+	return render(request, 'contabilidad_general/hija_update.html', contexto)
 '''#Consulta de prueba
 	cuenta = Cuenta.objects.latest('id')
 	cod_agrupacion = cuenta.agrupacion.codigo_agrupacion
