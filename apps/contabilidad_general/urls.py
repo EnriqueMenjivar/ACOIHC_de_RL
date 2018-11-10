@@ -12,5 +12,6 @@ urlpatterns = [
 	path('cuenta-editar/<cuenta_id>/', views.cuenta_update, name="cuenta-editar"),
 	path('hija-editar/<hija_id>/', views.hija_update, name="hija-editar"),
 	path('ajax/load-agrupaciones/', views.load_agrupaciones, name="ajax"),
+	path('prueba/<periodo_id>', views.cerrar_periodo, name="prueba"),
 	
 ]

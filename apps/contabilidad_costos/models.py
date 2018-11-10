@@ -14,6 +14,10 @@ class Entrada_Salida(models.Model):
 	kardex = models.ForeignKey(Kardex, null=True, on_delete=models.CASCADE)
 	cantidad_unidades = models.IntegerField()
 	precio_unitario = models.FloatField()
+	tipo_movimiento = models.BooleanField(default=False)
+	cabeza_kardex = models.BooleanField(default=False)
+	cola_kardex = models.BooleanField(default=False)
+	siguiente_kardex = models.CharField(max_length=5, blank=True, null=True)
 
 class Cargo(models.Model):
 	nombre_cargo = models.CharField(max_length=100)

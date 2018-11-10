@@ -22,6 +22,8 @@ class Cuenta(models.Model):
 	nombre_cuenta = models.CharField(max_length=100)
 	codigo_cuenta = models.IntegerField(blank=True, null=True)
 	descripcion_cuenta = models.CharField(max_length=100)
+	debe = models.FloatField(default=0.0)
+	haber = models.FloatField(default=0.0)
 	saldo_deudor_cuenta = models.FloatField(default=0.0)
 	saldo_acreedor_cuenta = models.FloatField(default=0.0)
 
@@ -29,11 +31,13 @@ class Cuenta(models.Model):
 		return self.nombre_cuenta
 
 class CuentaHija(models.Model):
-	padre = models.IntegerField()
+	padre = models.ForeignKey(Cuenta, null=True, on_delete=models.CASCADE)
 	codigo_padre = models.CharField(max_length=5, blank = True, null= True)
 	nombre_cuenta = models.CharField(max_length=100)
 	codigo_cuenta = models.IntegerField(blank=True)
 	descripcion_cuenta = models.CharField(max_length=100)
+	debe = models.FloatField(default=0.0)
+	haber = models.FloatField(default=0.0)
 	saldo_deudor_cuenta = models.FloatField(default=0.0)
 	saldo_acreedor_cuenta = models.FloatField(default=0.0)
 

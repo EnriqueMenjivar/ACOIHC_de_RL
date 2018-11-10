@@ -2,7 +2,9 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from apps.catalogo.forms import CuentaForm, AgrupacionForm, HijaForm
 from apps.catalogo.models import Grupo, Agrupacion, Cuenta, CuentaHija
+from apps.periodo.models import BalancePeriodo, Periodo
 from django.views.generic import ListView, CreateView, UpdateView
+
 # Create your views here.
 
 class CuentaCreateView(CreateView):
@@ -98,6 +100,23 @@ def hija_update(request, hija_id):
 		'hija':hija,
 	}
 	return render(request, 'contabilidad_general/hija_update.html', contexto)
+
+def cerrar_periodo(request, periodo_id):
+	if 'btnCerrarPeriodo' in request.POST:
+		cuenta = Cuenta.objects.all()
+		periodo = Periodo.objects.get(id=periodo_id)
+		
+		i=0
+		while i<len(cuenta):
+			bp=BalancePeriodo()
+			bp.periodo_balance=periodo
+			bp.cuenta_balance=cuenta[i]
+			bp.saldo_deudor=cuenta[i].saldo_deudor_cuenta
+			bp.saldo_acreedor=cuenta[i].saldo_acreedor_cuenta
+			bp.save()
+			i+=1
+	return render(request, 'contabilidad_general/prueba.html', {'periodo_id':periodo_id})
+
 '''#Consulta de prueba
 	cuenta = Cuenta.objects.latest('id')
 	cod_agrupacion = cuenta.agrupacion.codigo_agrupacion
