@@ -1,0 +1,37 @@
+{% extends 'base/base.html'%}
+{% block title %} Programaciones {% endblock %}
+{% block portada %}<br><br><br>{% endblock %}
+{% block content %}
+<br>
+&nbsp;&nbsp;<a href="{% url 'programaciones_nueva' %}"><i class="fas fa-plus-square fa-2x"></i></a>
+{% if programaciones %}	
+	<table id="tbProgramaciones" class="table">
+		<thead id="thead-dark" class="thead-dark">
+			<tr>
+				<th scope="col">Periodo</th>
+				<th scope="col">Fecha</th>
+				<th scope="col">Producto</th>
+				<th scope="col">Cantidad</th>
+				<th scope="col">Finalizado</th>
+				<th scope="col">Acciones</th>
+			</tr>
+		</thead>
+		<tbody>
+		{% for programacion in programaciones %}	
+			<tr id="{{programacion.id}}">
+				<td><b>{{programacion.periodo_programacion.id}}</b></td>
+				<td>{{programacion.fecha_programacion}}</td>
+				<td>{{programacion.producto_programacion}}</td>
+				<td>{{programacion.cantidad_programacion}}</td>
+				<td>{{programacion.estado_programacion}}</td>
+				<td><input class="btn btn-info" type="submit" name="btnEditar" value="Editar"><input class="btn btn-danger" type="submit" name="btnEliminar" value="Eliminar"></td>
+			</tr>
+		{% endfor %}
+		</tbody>
+	</table>
+{% else %}
+	<b>No hay ninguna programacion</b>
+{% endif %}
+
+
+{% endblock %}

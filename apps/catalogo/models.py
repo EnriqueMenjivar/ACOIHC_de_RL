@@ -18,13 +18,13 @@ class Agrupacion(models.Model):
 	
 
 class Cuenta(models.Model):
-	codigo_agrup = models.ForeignKey(Agrupacion, null=True, on_delete=models.CASCADE)
-	codigo_padre = models.CharField(max_length=4)
+	agrupacion = models.ForeignKey(Agrupacion, null=True, on_delete=models.CASCADE)
+	codigo_padre = models.CharField(max_length=4, blank = True, null= True)
 	nombre_cuenta = models.CharField(max_length=100)
-	codigo_cuenta = models.CharField(max_length=5)
+	codigo_cuenta = models.CharField(max_length=5, blank=True)
 	descripcion_cuenta = models.CharField(max_length=100)
-	saldo_deudor_cuenta = models.FloatField()
-	saldo_acreedor_cuenta = models.FloatField()
+	saldo_deudor_cuenta = models.FloatField(default=0.0)
+	saldo_acreedor_cuenta = models.FloatField(default=0.0)
 
 	def __str__(self):
 		return self.nombre_cuenta

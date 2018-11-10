@@ -1,0 +1,146 @@
+{% extends 'base/base.html'%}
+{% block title %} Periodos Contables{% endblock %}
+{% block extracss %}
+	<link href="../../static/css/sb-admin-2.css" rel="stylesheet">
+	<link href="../../static/css/sb-admin-2.min.css" rel="stylesheet">
+{% endblock %}
+{% block portada %}<br><br><br>{% endblock %}
+{% block content %}
+
+<!-- Tabla de periodos -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="row">
+                            <div class="col-lg-10">
+                            <p>Periodos Contables </p>
+                            </div>
+                            <div class="col-lg-2">
+                            {% if cant == 0 %}
+                                <a class="btn btn-success" data-toggle = "modal" href="#crear" >Nuevo Periodo</a>
+                            {% else %}
+                                <a class="btn btn-default" data-toggle = "modal" href="#crearNo" >Nuevo Periodo</a>
+                            {%endif%}
+                            </div>
+                            </div>
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                            	{%if periodos %}
+                                <table class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Fecha Inicio</th>
+                                            <th>Fecha de Finalizacion</th>
+                                            <th>Estado</th>
+                                            <th>Accion</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    	{% for p in periodos%}
+                                        <tr>
+                                            <td>{{p.inicio_periodo}}</td>
+                                             {%if p.estado_periodo == False%}
+                                            <td>En proceso</td>
+                  							<td>Activo</td>
+                  							{% endif %}
+                  							{%if p.estado_periodo == True%}
+                                            <td>{{p.final_periodo}}</td>
+                  							<td>Cerrado</td>
+                  							{% endif %}
+                                            <td>
+                                                <a href="{% url 'periodo_menu_vista' p.id %}">Ver</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                {%if p.estado_periodo == False%}
+                                                <a href="#{{p.id}}"  data-toggle = "modal">Cerrar Periodo</a>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        <!-- Ventana modal para cerrar periodo--> 
+                                                    <div class="modal fade" id="{{p.id}}">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <!-- Header de ventana-->
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title">Cierre de Periodo</h5>
+                                                                    <button tyle="button" class="close" data-dismiss="modal" aria-hidden = "true">&times;</button>
+                                                                </div>
+                                                                <!-- Contenido de la ventana -->
+                                                                <div class="modal-body">
+                                                                        <p class="text-align">Confirmar si desea cerrar periodo.</p> 
+                                                                </div>
+                                                                <!--Footer-->
+                                                                <div class="modal-footer">
+                                                                    <form method="POST">
+                                                                        {% csrf_token %}
+                                                                            <input type="hidden" name="idPeriodo" value= "{{p.id}}">
+                                                                            <button type="submit" class="btn btn-primary " name="btnCierre">Aceptar</button>
+                                                                            <button type="button" class="btn btn-default" data-dismiss= "modal" name="btnCerrar">Cancelar</button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                        {%endfor%}
+                                    </tbody>
+                                </table>
+                                {%else%}
+                                <h5>No existen periodos registrados. Por favor iniciar periodo.</h5>
+                                {%endif %}
+                            </div>
+                            <!-- /.table-responsive -->
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                </div>
+	<!-- Fin de Tabla de periodos -->
+
+
+<!-- Ventana modal Para crear nuevo periodo--> 
+            <div class="modal fade" id="crear">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <!-- Header de ventana-->
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Nuevo Periodo</h5>
+                                    <button tyle="button" class="close" data-dismiss="modal" aria-hidden = "true">&times;</button>
+                                </div>
+                                <!-- Contenido de la ventana -->
+                                <div class="modal-body">
+                                        <p class="text-align">¿Desea iniciar un periodo contable?</p> 
+                                </div>
+                                <!--Footer-->
+                                <div class="modal-footer">
+                                   <form method="POST">
+                                        {% csrf_token %}
+                                            <button type="submit" class="btn btn-primary " name="btnNuevo">Nuevo Periodo</button>
+                                            <button type="button" class="btn btn-default" data-dismiss= "modal" name="btnC">Cancelar</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+<!-- Ventana modal --> 
+            <div class="modal fade" id="crearNo">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <!-- Header de ventana-->
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Nuevo Periodo</h5>
+                                    <button tyle="button" class="close" data-dismiss="modal" aria-hidden = "true">&times;</button>
+                                </div>
+                                <!-- Contenido de la ventana -->
+                                <div class="modal-body">
+                                        <p class="text-align">No puede abrir un nuevo periodo dado que existe un periodo actual vigente.</p> 
+                                </div>
+                                <!--Footer-->
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" data-dismiss= "modal" name="btnModal">Aceptar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+{% endblock %}

@@ -2,7 +2,15 @@
 	display: none;
 }
 .prueba{
+<<<<<<< HEAD
 	margin-top: 5.2%;	
+=======
+	margin-top: 5.2%;
+<<<<<<< HEAD
+=======
+	background: #eaeded;
+>>>>>>> 99c0cba3fbb082faf914a0a423a954e8ae809204
+>>>>>>> 11af461aacc9d23fb534e0841052bb332979ff34
 	height: 50%;
 	width: 100%;
 	padding-top: 3%;
@@ -18,4 +26,47 @@
    height:80px;
    width:100%;
    background:#999;
+}
+
+#tbProgramaciones{
+	height: auto;
+	margin: 8px;
+	align-content: center;
+}
+#tbDiv,#tbDiv2{
+	margin: auto;
+	width: 800px;
+}
+ #tbMP1{
+ 	margin: auto;
+ }
+
+#thead-dark{
+	background-color: black;
+	color: #fff;
+}
+
+.contador{
+	margin-left: 120px; 
+}
+
+
+#fmProgramacionNueva, #fmProceso1,#fmProceso1MO{
+	align-items: center;
+	margin: 50px;
+	margin-right: 200px;
+	margin-left: 200px;
+
+}
+
+.divBorder{
+	margin-left: 100px;
+	margin-right: 100px; 
+	margin-bottom: 50px;
+	border-style: solid;
+	border-color: #54acac;
+}
+
+h4{
+	text-align: center;
 }
