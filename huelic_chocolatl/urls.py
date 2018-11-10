@@ -20,15 +20,14 @@ from django.conf.urls.static import static
 from django.contrib.auth.views import login, logout_then_login
 from django.http import HttpResponse
 from huelic_chocolatl import views
-#from apps.contabilidad_general import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('home/', views.home, name="home"),
+    path('contabilidad_general/', include(('apps.contabilidad_general.urls', 'contabilidad_general'), namespace='contabilidad_general')),
     path('prueba/', views.prueba_logout, name="prueba"),
     path('accounts/login/', login, {'template_name':'login/login2.html'}, name='login'),
     path('logout/', logout_then_login, name='logout'),
-    #path('prueba/', views.prueba, name='prueba'),
 ]
 
 

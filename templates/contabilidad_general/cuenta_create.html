@@ -1,0 +1,86 @@
+{% extends 'base/base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+	<form method="post" id="cuentaForm" data-agrupacion-url="{% url 'contabilidad_general:ajax' %}" novalidate>
+		{% csrf_token %}
+		<div class="row">
+  			<div class="col-md-10">
+    			<div class="row">
+      				<div class="col-md-6">
+        				<label >Grupo</label>
+						<select class="form-control" name="grupo" id="id_grupo" required>
+							<option class="form-control" selected>-------------</option>
+							{% for grupo in grupos %}
+							<option class="form-control" value="{{grupo.id}}">{{grupo.nombre_grupo}}</option>
+							{% endfor %}
+						</select>
+      				</div>
+    			</div>
+  			</div>
+		</div>
+		<br>
+		<div class="row">
+  			<div class="col-md-10">
+    			<div class="row">
+      				<div class="col-md-6">
+        				<label >Agrupacion</label>
+						<select class="form-control" id="id_agrupacion" name="agrupacion" required>
+							<option class="form-control" selected>-------------</option>
+						</select>
+      				</div>
+
+    			</div>
+  			</div>
+		</div>
+		<br>
+		<div class="row">
+  			<div class="col-md-10">
+    			<div class="row">
+      				<div class="col-md-6">
+        				<label >Nombre</label>
+				<input class="form-control" type="text" name="nombre_cuenta" required>
+      				</div>
+
+    			</div>
+  			</div>
+		</div>
+		<br>
+		<div class="row">
+  			<div class="col-md-10">
+    			<div class="row">
+      				<div class="col-md-6">
+        				<label >Descripción</label>
+        				<textarea class="form-control" type="text" name="descripcion_cuenta" required></textarea>
+      				</div>
+    			</div>
+  			</div>
+		</div>
+		<br>
+		<div class="row">
+  			<div class="col-md-10">
+        		<input class="btn btn-primary btn-lg" type="submit" name="btnGuardar" value="Guardar">
+  			</div>
+		</div>
+		
+	</form>
+
+<!--<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>-->
+<script type="text/javascript" src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+<script type="text/javascript">
+	$("#id_grupo").change(function(){
+		var url = $("#cuentaForm").attr("data-agrupacion-url");
+		var grupoId = $(this).val();
+
+		$.ajax({
+			url: url,
+			data: {
+				'grupo': grupoId
+			},
+			success: function(data){
+				$("#id_agrupacion").html(data);
+			}
+		});
+	});
+</script>
+{% endblock %}
