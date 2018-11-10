@@ -1,0 +1,42 @@
+{% extends 'base/base.html' %}
+
+
+{% block content %}
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Codigo de la cuenta</th>
+      <th scope="col">Nombre de la cuenta</th>
+      <th scope="col">Saldo deudor</th>
+      <th scope="col">Saldo acreedor</th>
+      <th scope="col">Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+  	{% for cuenta in cuentas %}
+    <tr class="table-dark">
+      <th scope="row">{{cuenta.codigo_cuenta}}</th>
+      <td>{{cuenta.nombre_cuenta}}</td>
+      <td>{{cuenta.saldo_deudor}}</td>
+      <td>{{cuenta.saldo_acreedor}}</td>
+      <td>
+      	<div class="col-md-11"
+      	>
+            <div class="row">
+              <div class="col-md-4">
+                  <a href="{% url 'contabilidad_general:mostrar-hijas' cuenta.id %}" class="btn btn-block btn-info font-weight-bold">Cuentas hija</a>
+              </div>  
+              <div class="col-md-3">
+                  <a href="{% url 'contabilidad_general:cuenta-editar' cuenta.id %}" class="btn btn-block btn-success font-weight-bold">Editar</a>
+              </div>
+              <div class="col-md-5">
+                  <a href="{% url 'contabilidad_general:crear-hija' cuenta.id %}" class="btn btn-block btn-primary font-weight-bold">Agregar cuenta hija</a>
+              </div>
+            </div>
+        </div>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table> 
+{% endblock %}

@@ -1,3 +1,4 @@
+$(document).ready(function(){
 var $myForm = $('.formulario');
 $myForm.submit(function (event) {
     event.preventDefault();
@@ -24,5 +25,7 @@ $myForm.submit(function (event) {
     function handleError(data) {
         console.log(data);
     }
+
+});
 
 });

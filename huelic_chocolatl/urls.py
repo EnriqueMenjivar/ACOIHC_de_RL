@@ -25,12 +25,11 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('home/', views.home, name="home"),
     path('contabilidad_general/', include(('apps.contabilidad_general.urls', 'contabilidad_general'), namespace='contabilidad_general')),
+    path('transaccion/', include(('apps.transaccion.urls', 'transaccion'), namespace='transaccion')),
     path('prueba/', views.prueba_logout, name="prueba"),
     path('accounts/login/', login, {'template_name':'login/login2.html'}, name='login'),
     path('logout/', logout_then_login, name='logout'),
 
-    #url transaccion
-    path('transaccion/',include(('apps.transaccion.urls','transaccion'),namespace='transaccion_url')),
     #path('prueba/', views.prueba, name='prueba'),
 
     #url contabilidad_costos
