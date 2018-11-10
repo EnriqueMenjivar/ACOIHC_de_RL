@@ -12,7 +12,7 @@ $myForm.submit(function (event) {
         error: handleError,
     });
     function handleSuccess(data){
-        console.log(data.message);
+        alert("todo vergon");
     }
     function handleError(data){
         console.log(data.message);
