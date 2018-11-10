@@ -1,0 +1,122 @@
+{% extends 'base/base.html'%}
+{% load static %}
+{% block title %} Estados Financieros{% endblock %}
+{% block extracss %}
+    <link rel="stylesheet" href="{% static 'css/sb-admin-2.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sb-admin-2.min.css' %}">
+{% endblock %}
+{% block portada %}<br><br><br>{% endblock %}
+{% block content %}
+<h4 class="text-center">Periodo Contable.</h4>
+<p class="text-center">Inicio de periodo: {{periodoActual.inicio_periodo}}</p>
+
+ <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Estados Financieros
+                        </div>
+                        <!-- .panel-heading -->
+                        <div class="panel-body">
+                            <div class="panel-group" id="accordion">
+                                            <div class="row">
+                                                <div class="col-lg-3 col-md-6">
+                                                    <div class="panel panel-primary">
+                                                        <div class="panel-heading">
+                                                            <div class="row">
+                                                                <div class="col-xs-3">
+                                                                    <i class="fa fa-columns fa-5x"></i>
+                                                                </div>
+                                                                <div class="col-xs-9 text-right">
+                                                                    <div class="huge"></div>
+                                                                    <div>Balance de Comprobacion</div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <a href="#">
+                                                            <div class="panel-footer">
+                                                                <span class="pull-left">Generar</span>
+                                                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                                                <div class="clearfix"></div>
+                                                            </div>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-6">
+                                                    <div class="panel panel-green">
+                                                        <div class="panel-heading">
+                                                            <div class="row">
+                                                                <div class="col-xs-3">
+                                                                    <i class="fa fa-dollar fa-5x"></i>
+                                                                </div>
+                                                                <div class="col-xs-9 text-right">
+                                                                    <div class="huge"></div>
+                                                                    <div>Estado de Resultado</div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <a href="#">
+                                                            <div class="panel-footer">
+                                                                <span class="pull-left">Generar</span>
+                                                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                                                <div class="clearfix"></div>
+                                                            </div>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-6">
+                                                    <div class="panel panel-yellow">
+                                                        <div class="panel-heading">
+                                                            <div class="row">
+                                                                <div class="col-xs-3">
+                                                                    <i class="fa fa-bank fa-5x"></i>
+                                                                </div>
+                                                                <div class="col-xs-9 text-right">
+                                                                    <div class="huge"></div>
+                                                                    <div>Estado de Capital</div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <a href="#">
+                                                            <div class="panel-footer">
+                                                                <span class="pull-left">Generar</span>
+                                                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                                                <div class="clearfix"></div>
+                                                            </div>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-6">
+                                                    <div class="panel panel-red">
+                                                        <div class="panel-heading">
+                                                            <div class="row">
+                                                                <div class="col-xs-3">
+                                                                    <i class="fa fa-building fa-5x"></i>
+                                                                </div>
+                                                                <div class="col-xs-9 text-right">
+                                                                    <div class="huge"></div>
+                                                                    <div>Balance General</div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <a href="#">
+                                                            <div class="panel-footer">
+                                                                <span class="pull-left">Generar</span>
+                                                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                                                <div class="clearfix"></div>
+                                                            </div>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br><br> 
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    
+       
+{% endblock %}

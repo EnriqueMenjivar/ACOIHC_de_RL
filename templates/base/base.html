@@ -1,4 +1,4 @@
-{% load staticfiles %}
+{% load static %}
 <!doctype html>
 <html lang="en">
 
@@ -82,27 +82,15 @@
                 {% block nav %}
                 <ul class="nav navbar-nav navbar-right nav">
                   <li class="active">
-                    <a class="page-scroll" href="#"><i class="fas fa-home"></i>Home</a>
+                    <a class="page-scroll" href="{% url 'home'%}"><i class="fas fa-home"></i>Home</a>
                   </li>
                   <li>
-                    <a class="page-scroll" href="#a"><i class="fas fa-info"></i>About</a>
+                    <a class="page-scroll" href="{% url 'periodo_contable'%}"><i class="fas fa-info"></i>Periodos Contables</a>
                   </li>
                   <li>
-                    <a class="page-scroll" href="#"><i class="fas fa-chart-line"></i>Contabilidad general</a>
-                    <ul>
-                    	<li><a class="page-scroll" href="">Balance General</a></li>
-                    	<li><a class="page-scroll" href="">Estado de Resultado</a></li>
-                    	<li><a class="page-scroll" href="">Estado de Capital</a></li>
-                    </ul>
+                    <a class="page-scroll" href="#"><i class="fas fa-info"></i>Catalogo de Cuentas</a>
                   </li>
-                  <li>
-                    <a class="page-scroll" href="#team"><i class="fas fa-hand-holding-usd"></i></i>Contabilidad de costos</a>
-                    <ul>
-                    	<li><a class="page-scroll" href="#">Kardex</a></li>
-                    	<li><a class="page-scroll" href="#">Planillas de sueldos</a></li>
-                    	<li><a class="page-scroll" href="#">Otros</a></li>
-                    </ul>
-                  </li>
+                  
                   <li>
                     <a class="page-scroll" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i>Salir</a>
                   </li>
