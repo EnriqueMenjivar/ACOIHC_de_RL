@@ -9,8 +9,16 @@ def  periodo_contable ( request ):
 	}
 	return render (request, 'periodos/admin_periodos.html' , contexto)
 
-def  periodo_menu_vista ( request):
+def  periodo_menu_vista (request):
+	periodoActual = Periodo.objects.get(id = 5)
 	contexto = {
-	'cont' : 'hola',
+	'periodoActual' : periodoActual,
 	}
 	return render (request, 'periodos/periodo_menu.html' , contexto)
+
+def  periodo_menu_estados( request):
+	periodoActual = Periodo.objects.get(id = 3)
+	contexto = {
+	'periodoActual' : periodoActual,
+	}
+	return render (request, 'periodos/periodo_estados.html' , contexto)

@@ -38,7 +38,12 @@
                   							{%if p.estado_periodo == True%}
                   							<td>Cerrado</td>
                   							{% endif %}
-                                            <td><a href="{% url 'periodo_menu_vista'%}">Ver</a></td>
+                                            <td>
+                                                <a href="{% url 'periodo_menu_vista' %}">Ver</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                {%if p.estado_periodo == False%}
+                                                <a href="{% url 'periodo_menu_vista' %}">Cerrar Periodo</a>
+                                                {% endif %}
+                                            </td>
                                         </tr>
                                         {%endfor%}
                                     </tbody>
@@ -55,4 +60,7 @@
                 </div>
                 </div>
 	<!-- Fin de Tabla de periodos -->
+
+
+    
 {% endblock %}
