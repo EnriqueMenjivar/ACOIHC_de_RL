@@ -8,14 +8,21 @@ $myForm.submit(function (event) {
         type: "POST",
         url: $thisURL,
         data: $formData,
-        success:handleSuccess,
+        success: handleSuccess,
         error: handleError,
     });
-    function handleSuccess(data){
-        alert("todo vergon");
+    function handleSuccess(data) {
+        alert("Transaccion iniciada con exito. Agregue Cuentas a la transaccion");
+        $("#2").attr("readonly", true);
+        $("#3").attr("readonly", true);
+        $("#1").attr("disabled", true);
+        $("#recibedeb").attr("value", data.message);
+        $("#recibehab").attr("value", data.message);
+
+
     }
-    function handleError(data){
-        console.log(data.message);
+    function handleError(data) {
+        console.log(data);
     }
 
 });

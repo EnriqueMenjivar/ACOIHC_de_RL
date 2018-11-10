@@ -17,7 +17,7 @@
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    
+
 
     <div class="row">
         <div class="col-lg-3 btn-group-vertical text-center">
@@ -69,17 +69,19 @@
 
         <div class="row jumbotron container-fluid text-center">
             <div class="row">
-                <form action="POST">
+                <form action="" method="POST">
+                    {%csrf_token%}
                     <div class="col-lg-6">
                         <!-- Boton modal Debe -->
                         <h3>Debe</h3>
+                        <input name="transaccion_tc" type="text" id="recibedeb" hidden>
                         <button type="button" class="btn btn-primary" id="btndebe">
                             Agregar Cuentas
                         </button>
                         <br><br>
                         <div id="debe"></div>
                     </div>
-                    <button hidden type="submit" id="btn1"></button>
+                    <button type="submit" id="btn1">Prueba</button>
                 </form>
 
                 <form action="POST">
@@ -90,8 +92,9 @@
                             Agregar Cuentas
                         </button>
                         <br><br>
+                        <input name="transaccion_tc" type="text" id="recibehab" hidden>
                         <div id="haber"></div>
-                        <button hidden type="submit" id="btn2"></button>
+                        <button hidden type="submit" id="btn2">Prueba</button>
                     </div>
                 </form>
             </div>
@@ -116,7 +119,7 @@
                 <tbody>
                     <tr>
 
-                        <td>Valores</td>
+                        <td id="resultado">Valores</td>
                         <td>Valores</td>
 
                     </tr>
@@ -136,69 +139,80 @@
 {% block extrajs %}
 
 
+
+
+<script type="text/javascript">
+
+    document.getElementById("btndebe").addEventListener("click", function () {
+        var ndiv1, ndiv2, ndiv3;
+        ndiv1 = document.createElement("div");
+        ndiv2 = document.createElement("div");
+        ndiv3 = document.createElement("div");
+
+        ndiv1.setAttribute("class", "form-group row");
+        ndiv2.setAttribute("class", "col-lg-7");
+        ndiv3.setAttribute("class", "col-lg-5");
+
+        document.getElementById("debe").appendChild(ndiv1);
+        ndiv1.appendChild(ndiv2);
+        ndiv1.appendChild(ndiv3);
+
+        var nin1, nin2;
+        nin1 = document.createElement("select");
+        nin2 = document.createElement("input");
+        nin3 = document.createElement("input");
+
+        nin1.setAttribute("class", "form-control");
+        nin2.setAttribute("class", "form-control");
+        nin1.setAttribute("name", "cuenta_tc");
+        nin2.setAttribute("name", "debe_tc");
+        nin2.setAttribute("type", "number");
+
+        nin3.setAttribute("name", "haber_tc");
+        nin3.setAttribute("value", 0);
+        nin3.setAttribute("hidden", "hidden");
+
+        nin1.innerHTML = "{%for c in cuentas%} {%ifnotequal c.codigo_padre '12'%}<option>{{c.id}}</option> {%endifnotequal%} {%endfor%}";
+
+        ndiv2.appendChild(nin1);
+        ndiv3.appendChild(nin2);
+        ndiv3.appendChild(nin3);
+
+
+    })
+    document.getElementById("btnhaber").addEventListener("click", function () {
+        var ndiv1, ndiv2, ndiv3;
+        ndiv1 = document.createElement("div");
+        ndiv2 = document.createElement("div");
+        ndiv3 = document.createElement("div");
+
+        ndiv1.setAttribute("class", "form-group row");
+        ndiv2.setAttribute("class", "col-lg-7");
+        ndiv3.setAttribute("class", "col-lg-5");
+
+        document.getElementById("haber").appendChild(ndiv1);
+        ndiv1.appendChild(ndiv2);
+        ndiv1.appendChild(ndiv3);
+
+        var nin1, nin2;
+        nin1 = document.createElement("select");
+        nin2 = document.createElement("input");
+
+
+        nin1.setAttribute("class", "form-control");
+        nin2.setAttribute("class", "form-control");
+        nin1.setAttribute("name", "cuenta_tc");
+        nin2.setAttribute("name", "haber_tc");
+        nin2.setAttribute("type", "number");
+
+        nin1.innerHTML = "{%for c in cuentas%} {%ifnotequal c.codigo_padre '12'%}<option>{{c.nombre_cuenta}}</option> {%endifnotequal%} {%endfor%}";
+        ndiv2.appendChild(nin1);
+        ndiv3.appendChild(nin2);
+
+    })
+
+</script>
 <script type="text/javascript" src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+
 <script src="{% static 'js/prueba.js'%}"></script>|
-
-<script type="text/javascript">
-    $("#btndebe").addEventListener("click", function () {
-        var ndiv1, ndiv2, ndiv3;
-        ndiv1 = document.createElement("div");
-        ndiv2 = document.createElement("div");
-        ndiv3 = document.createElement("div");
-
-        ndiv1.setAttribute("class", "form-group row");
-        ndiv2.setAttribute("class", "col-lg-7");
-        ndiv3.setAttribute("class", "col-lg-5");
-
-        $("#debe").appendChild(ndiv1);
-        ndiv1.appendChild(ndiv2);
-        ndiv1.appendChild(ndiv3);
-
-        var nin1, nin2;
-        nin1 = document.createElement("select");
-        nin2 = document.createElement("input");
-
-        nin1.setAttribute("class", "form-control");
-        nin2.setAttribute("class", "form-control");
-        nin1.innerHTML = "{%for c in cuentas%} <option>{{c.nombre_cuenta}}</option> {%endfor%}";
-
-        ndiv2.appendChild(nin1);
-        ndiv3.appendChild(nin2);
-
-    })
-    $("#btnhaber").addEventListener("click", function () {
-        var ndiv1, ndiv2, ndiv3;
-        ndiv1 = document.createElement("div");
-        ndiv2 = document.createElement("div");
-        ndiv3 = document.createElement("div");
-
-        ndiv1.setAttribute("class", "form-group row");
-        ndiv2.setAttribute("class", "col-lg-7");
-        ndiv3.setAttribute("class", "col-lg-5");
-
-        $("#haber").appendChild(ndiv1);
-        ndiv1.appendChild(ndiv2);
-        ndiv1.appendChild(ndiv3);
-
-        var nin1, nin2;
-        nin1 = document.createElement("select");
-        nin2 = document.createElement("input");
-
-        nin1.setAttribute("class", "form-control");
-        nin2.setAttribute("class", "form-control");
-        nin1.innerHTML = "{%for c in cuentas%} <option>{{c.nombre_cuenta}}</option> {%endfor%}";
-
-        ndiv2.appendChild(nin1);
-        ndiv3.appendChild(nin2);
-
-    })
-    function $(selector) {
-        return document.querySelector(selector);
-    }
-</script>
-<script type="text/javascript">
-    function guardar() {
-
-    }
-</script>
 {% endblock %}
