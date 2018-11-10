@@ -3,11 +3,13 @@
 {% block extracss %}
 <link href="{%static '/plantilla/lib/bootstrap/css/bootstrap.css' %}" rel="stylesheet">
 
+
 {% endblock %}
 {%block portada%}
 
 {%endblock%}
 {%block content%}
+
 
 <div>
     <!--Validacion partida doble-->
@@ -17,14 +19,22 @@
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
+    
 
     <div class="row">
-        <div class="col-lg-4">
+        <div class="col-lg-3 btn-group-vertical text-center">
+            <h3 class="h4">Transacciones Especiales</h3>
+            <div class="btn-group-vertical">
+                <button type="button" class="btn btn-primary">Compra de Inventario</button>
+                <button type="button" class="btn btn-info">Venta de Inventario</button>
+                <button type="button" class="btn btn-primary">Devoluciones de Inventario</button>
+            </div>
+
         </div>
-        <div class="col-lg-8">
+        <div class="col-lg-9">
 
             <div class="row jumbotron container-fluid">
-                <form class="form-group" method="POST" action="" class="my-ajax-form" data-url="/transaccion/">
+                <form method="POST" class="formulario" data-url="/transaccion/" action="">
                     <div class="col-lg-8">
 
                         {%csrf_token%}
@@ -128,6 +138,10 @@
 {%endblock%}
 {% block extrajs %}
 
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="{% static 'js/prueba.js'%}"></script>|
+
 <script type="text/javascript">
     $("#btndebe").addEventListener("click", function () {
         var ndiv1, ndiv2, ndiv3;
@@ -190,15 +204,4 @@
 
     }
 </script>
-<script type="text/javascript">
-    $(document).ready(function(){
-        var $myForm = $('.my-ajax-form')
-        $myForm.submit(function(event){
-            event.preventDefault();
-            var $formData=$myForm.serialize();
-
-        })
-    })
-</script>
-
 {% endblock %}
