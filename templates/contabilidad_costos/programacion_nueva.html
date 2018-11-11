@@ -8,7 +8,8 @@
 <div class="divBorder">
 	<br>
 	<h4>Datos de la Programacion</h4>
-	<form id="fmProgramacionNueva" name="programacion_nueva" method="POST">
+	
+	<form action="/" id="fmProgramacionNueva" name="programacion_nueva" method="POST">
 		{% csrf_token %}
 		<div class="form-group">
 			<label>Periodo contable</label>
@@ -49,8 +50,11 @@
 			<label>Cantidad a realizar</label>
 			<input id="cantidad" type="text" class="form-control" name="cantidad" placeholder="Ingrese la cantidad de producto" min="1">
 		</div>
+
 		<input id="btnGuardar" type="button" class="btn btn-primary" name="" value="Guardar">
+		<button type="submit" class="btn btn-primary" align="center" />Guardar</button>
 		<input type="button" class="btn btn-secondary" name="" value="Cancelar">
+
 	</form>
 </div>
 
