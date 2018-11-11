@@ -24,15 +24,16 @@ from huelic_chocolatl import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('home/', views.home, name="home"),
+    path('casa/', views.home, name="casa"),
     path('prueba/', views.prueba_logout, name="prueba"),
     path('accounts/login/', login, {'template_name':'login/login2.html'}, name='login'),
     path('logout/', logout_then_login, name='logout'),
     #path('prueba/', views.prueba, name='prueba'),
 
     #url contabilidad_costos
-    path('contabilidad_costos/',include(('apps.contabilidad_costos.urls'))),
+    path('contabilidad_costos/',include('apps.contabilidad_costos.urls')),
     path('periodo_contable/',include('apps.periodo.urls')),
+
 ]
 
 

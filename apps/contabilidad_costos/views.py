@@ -2,7 +2,9 @@ from django.shortcuts import render, HttpResponse
 from apps.contabilidad_costos.models import *
 from apps.periodo.models import Periodo
 from apps.catalogo.models import Cuenta
-from django.views.generic import TemplateView
+from apps.contabilidad_costos.forms import EmpleadoForms
+from django.views.generic import TemplateView, ListView, CreateView
+from django.urls import reverse_lazy
 from datetime import datetime
 from django.core import serializers
 
@@ -35,6 +37,17 @@ class ProgramacionesAjaxView(TemplateView):
 		data = serializers.serialize('json',programacion_list,fields = ('id'))
 		return HttpResponse(data, content_type = 'application/json')
 		
-	
+
+class Lista_Empleados(ListView):
+	model = Empleado
+	template_name = 'contabilidad_costos/empleado_list'
+
+class Registra_Empleado(CreateView):
+	model = Empleado
+	template_name = 'contabilidad_costos/empleado_registrar.html'
+	form_class = EmpleadoForms
+	success_url = reverse_lazy('empleado_lista')
 
 
+def planilla_general(request):
+	return render(request,'contabilidad_costos/planillaGeneral.html')
