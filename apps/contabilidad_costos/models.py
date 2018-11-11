@@ -10,7 +10,8 @@ class Kardex(models.Model):
 	precio_unitario_peps = models.FloatField()
 
 class Entrada_Salida(models.Model):
-	transaccion = models.ForeignKey(Transaccion_Cuenta, null=True, on_delete=models.CASCADE)
+	periodo_es = models.ForeignKey(Periodo, null=True, on_delete=models.CASCADE)
+	fecha_es = models.DateField()
 	kardex = models.ForeignKey(Kardex, null=True, on_delete=models.CASCADE)
 	cantidad_unidades = models.IntegerField()
 	precio_unitario = models.FloatField()
@@ -18,6 +19,15 @@ class Entrada_Salida(models.Model):
 	cabeza_kardex = models.BooleanField(default=False)
 	cola_kardex = models.BooleanField(default=False)
 	siguiente_kardex = models.CharField(max_length=5, blank=True, null=True)
+
+class Entrada_Salida_Respaldo(models.Model):
+	periodo_esr = models.ForeignKey(Periodo, null=True, on_delete=models.CASCADE)
+	fecha_esr = models.DateField()
+	kardexr = models.ForeignKey(Kardex, null=True, on_delete=models.CASCADE)
+	cantidad_unidadesr = models.IntegerField()
+	precio_unitarior = models.FloatField()
+	tipo_movimientor = models.BooleanField(default=False)
+
 
 class Cargo(models.Model):
 	nombre_cargo = models.CharField(max_length=100)
