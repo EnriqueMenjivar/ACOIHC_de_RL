@@ -15,18 +15,32 @@ class Agrupacion(models.Model):
 	codigo_agrupacion = models.CharField(max_length=3)
 	def __str__(self):
 		return self.nombre_agrupacion
+	
 
 class Cuenta(models.Model):
-	codigo_agrup = models.ForeignKey(Agrupacion, null=True, on_delete=models.CASCADE)
-	codigo_padre = models.CharField(max_length=4)
+	agrupacion = models.ForeignKey(Agrupacion, null=True, on_delete=models.CASCADE)
 	nombre_cuenta = models.CharField(max_length=100)
-	codigo_cuenta = models.CharField(max_length=5)
+	codigo_cuenta = models.IntegerField(blank=True, null=True)
 	descripcion_cuenta = models.CharField(max_length=100)
-	saldo_deudor_cuenta = models.FloatField()
-	saldo_acreedor_cuenta = models.FloatField()
+	debe = models.FloatField(default=0.0)
+	haber = models.FloatField(default=0.0)
+	saldo_deudor_cuenta = models.FloatField(default=0.0)
+	saldo_acreedor_cuenta = models.FloatField(default=0.0)
 
 	def __str__(self):
 		return self.nombre_cuenta
 
+class CuentaHija(models.Model):
+	padre = models.ForeignKey(Cuenta, null=True, on_delete=models.CASCADE)
+	codigo_padre = models.CharField(max_length=5, blank = True, null= True)
+	nombre_cuenta = models.CharField(max_length=100)
+	codigo_cuenta = models.IntegerField(blank=True)
+	descripcion_cuenta = models.CharField(max_length=100)
+	debe = models.FloatField(default=0.0)
+	haber = models.FloatField(default=0.0)
+	saldo_deudor_cuenta = models.FloatField(default=0.0)
+	saldo_acreedor_cuenta = models.FloatField(default=0.0)
 
+	def __str__(self):
+		return self.nombre_cuenta
 
