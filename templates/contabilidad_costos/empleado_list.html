@@ -1,0 +1,33 @@
+{% extends 'base/base.html'%}
+{% block title %} Empleados {% endblock %}
+{% block portada %}<br><br><br>{% endblock %}
+{% block content %}
+<br>
+<a href="{% url 'empleado_general' %}" >PLANILLA GENERAL</a><br><br><br><br>
+{% if object_list %}	
+	<table id="tbEmpleados" class="table">
+		<thead id="thead-dark" class="thead-dark">
+			<tr>
+				<th scope="col">DUI</th>
+				<th scope="col">NOMBRES</th>
+				<th scope="col">APELLIDOS</th>
+				<th scope="col">PLANILLA</th>
+			</tr>
+		</thead>
+		<tbody>
+		{% for empleado in object_list %}	
+			<tr id="{{empleado.id}}">
+				<td><b>{{empleado.dui_empleado}}</b></td>
+				<td>{{empleado.nombre_empleado}}</td>
+				<td>{{empleado.apellido_empleado}}</td>
+				<td><input class="btn btn-info" type="submit" name="btnPlanilla" value=" Ver Planilla"></td>
+			</tr>
+		{% endfor %}
+		</tbody>
+	</table>
+{% else %}
+	<b>No hay ninguna Empledo</b>
+{% endif %}
+
+
+{% endblock %}

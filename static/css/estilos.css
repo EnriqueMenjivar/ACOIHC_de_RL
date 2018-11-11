@@ -63,3 +63,15 @@
 h4{
 	text-align: center;
 }
+
+#b_comprobacion{
+  width: 70%;
+  overflow: auto;
+  margin: auto;
+}
+
+.btnNueva{
+	margin-left: 85%;
+	margin-top: 1%;
+}
+
