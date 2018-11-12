@@ -42,7 +42,7 @@ def peps(idPeriodo, fecha,id_cuenta,cant,precio_u,tipo):
 						tipo_movimientor= tipo
 						)
 					nuevaColar.save()
-				else: # si no existe una entrada en ese kardex
+				else: # si no existe una entrada en ese kardex creamos la primera
 					nuevaCola = Entrada_Salida(
 						periodo_es= periodo,
 						fecha_es=fecha,
@@ -64,7 +64,7 @@ def peps(idPeriodo, fecha,id_cuenta,cant,precio_u,tipo):
 						tipo_movimientor= tipo
 						)
 					nuevaColar.save()
-			if tipo == True:
+			if tipo == True: #si es salida del kardex
 				if cant != 0 and cant <= kardex_afectado.cantidad_existencia:
 					existe_cabeza = Entrada_Salida.objects.filter(cabeza_kardex = True).exists() 
 					if existe_cabeza: # si existe una entrada en ese kardex
