@@ -1,13 +1,14 @@
 {% extends 'base/base.html'%}
-{% block title %} Empleados {% endblock %}
+{% block title %} Administrar Planilla {% endblock %}
 {% block portada %}<br><br><br>{% endblock %}
 {% block content %}
 <br>
-<a href="{% url 'empleado_general' %}" >PLANILLA GENERAL</a><br><br><br><br>
+<a href="{% url 'empleado_general' %}" ><b>PLANILLA GENERAL</b></a><br><br><br><br>
 {% if object_list %}	
 	<table id="tbEmpleados" class="table">
 		<thead id="thead-dark" class="thead-dark">
 			<tr>
+				<th scope="col">ID</th>
 				<th scope="col">DUI</th>
 				<th scope="col">NOMBRES</th>
 				<th scope="col">APELLIDOS</th>
@@ -17,10 +18,11 @@
 		<tbody>
 		{% for empleado in object_list %}	
 			<tr id="{{empleado.id}}">
+				<td>{{empleado.id}}</td>
 				<td><b>{{empleado.dui_empleado}}</b></td>
 				<td>{{empleado.nombre_empleado}}</td>
 				<td>{{empleado.apellido_empleado}}</td>
-				<td><input class="btn btn-info" type="submit" name="btnPlanilla" value=" Ver Planilla"></td>
+				<td><a class= "btn btn-primary" href="{% url 'empleado_planilla' empleado.id %}"> Ver Planilla</a></td>
 			</tr>
 		{% endfor %}
 		</tbody>

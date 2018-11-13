@@ -43,6 +43,7 @@ class Empleado(models.Model):
 	dui_empleado = models.CharField(max_length=100)
 	Nisss_empleado = models.CharField(max_length=100)
 	Nafp_empleado = models.CharField(max_length=100)
+	años_empleado = models.FloatField()
 
 	def __str__(self):
 		return self.nombre_empleado
@@ -55,6 +56,7 @@ class Planilla(models.Model):
 	vacacion_planilla = models.FloatField()
 	aguinaldo_planilla = models.FloatField()
 	insaforp = models.FloatField()
+	salario_total = models.FloatField()
 
 class Programacion(models.Model):
 	periodo_programacion = models.ForeignKey(Periodo, null=True, on_delete=models.CASCADE)
