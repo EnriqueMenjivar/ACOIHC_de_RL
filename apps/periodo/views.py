@@ -3,6 +3,7 @@ from apps.periodo.models import *
 from django.shortcuts import redirect
 import datetime, time 
 from apps.contabilidad_costos.peps import * 
+from apps.contabilidad_general.models import * 
 
 # Create your views here.
 def  periodo_contable ( request ):
@@ -45,35 +46,47 @@ def  periodo_menu_vista (request,id):
 	}
 	return render (request, 'periodos/periodo_menu.html' , contexto)
 
-def  periodo_menu_estados( request):
-	periodoActual = Periodo.objects.get(id = 3)
+def  periodo_menu_estados( request,id):
+	periodoActual = Periodo.objects.get(id = id)
 	contexto = {
 	'periodoActual' : periodoActual,
 	}
 	return render (request, 'periodos/periodo_estados.html' , contexto)
 
 
-
-
-
-def  listar_transacciones( request):
+def  listar_transacciones( request,id):
+	listTransaccion = list() # creamos la lista que enviaremos al contexto
+	list_interna = list() # me permitira guardar en la primera posicion la transaccion, y en la segunda posicion una lista de transaccion_cuenta
 	
-	if request.method == 'POST':
+	periodo_existe = Periodo.objects.filter(id = id).exists()
+	if periodo_existe:
+		periodo = Periodo.objects.get(id=id)
+		transaccion_existe = Transaccion.objects.filter(periodo_transaccion = periodo).exists()
+		if transaccion_existe:
+			transacciones = Transaccion.objects.filter(periodo_transaccion = periodo) #traemos las transacciones del periodo en cuestion
+			for transaccion in transacciones:
+				list_interna.append(transaccion)
+				detalle_existe = Transaccion_Cuenta.objects.filter(transaccion_tc= transaccion).exists()
+				if detalle_existe:
+					detalle_transacciones = Transaccion_Cuenta.objects.filter(transaccion_tc= transaccion)
+					list_interna.append(detalle_transacciones)
+				listTransaccion.append(list_interna)
+				list_interna = []
+
+	if request.method == 'POST': #Prueba para el metodo pesp
 		if 'btnPeps' in request.POST:
 			idPeriodo = 1
 			fecha = time.strftime("%Y-%m-%d")
 			id_cuenta = 1
 			cant = 80
 			precio_u = 48.00
-			tipo = True
-
-			
+			tipo = False
 			peps(idPeriodo, fecha,id_cuenta,cant,precio_u,tipo)
 			ajuste_peps()
 			return redirect('listar_transacciones')
 
 	contexto = {
-	'' : '',
+	'listTransaccion' : listTransaccion,
 	}
 	return render (request, 'transaccion/listar_transacciones.html' , contexto)
 
