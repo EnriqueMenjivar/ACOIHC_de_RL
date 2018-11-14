@@ -19,8 +19,8 @@ $myForm.submit(function (event) {
         $("#1").attr("disabled", true);
         $("#recibedeb").attr("value", data.message);
         $("#recibehab").attr("value", data.message);
-        $("#ad").removeAttr('disabled');
-        $("#ah").removeAttr('disabled');
+        /*$("#ad").seteAttribute('disabled',false);
+        $("#ah").removeAttribute('disabled',false);*/
 
 
     }
