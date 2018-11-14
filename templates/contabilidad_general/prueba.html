@@ -1,0 +1,12 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<form method="post">
+	{% csrf_token %}
+	<div class="row">
+		<div class="col-md-10">
+			<input class="btn btn-primary btn-lg" type="submit" name="btnCerrarPeriodo" value="Guardar">
+		</div>
+	</div>
+</form>
+{% endblock%}

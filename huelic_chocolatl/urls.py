@@ -23,6 +23,7 @@ from huelic_chocolatl import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('casa/', views.home, name="casa"),
     path('home/', views.home, name="home"),
     path('contabilidad_general/', include(('apps.contabilidad_general.urls', 'contabilidad_general'), namespace='contabilidad_general')),
     path('transaccion/', include(('apps.transaccion.urls', 'transaccion'), namespace='transaccion')),
@@ -33,8 +34,9 @@ urlpatterns = [
     #path('prueba/', views.prueba, name='prueba'),
 
     #url contabilidad_costos
-    path('contabilidad_costos/',include(('apps.contabilidad_costos.urls'))),
+    path('contabilidad_costos/',include('apps.contabilidad_costos.urls')),
     path('periodo_contable/',include('apps.periodo.urls')),
+
 ]
 
 

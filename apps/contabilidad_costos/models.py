@@ -10,10 +10,24 @@ class Kardex(models.Model):
 	precio_unitario_peps = models.FloatField()
 
 class Entrada_Salida(models.Model):
-	transaccion = models.ForeignKey(Transaccion_Cuenta, null=True, on_delete=models.CASCADE)
+	periodo_es = models.ForeignKey(Periodo, null=True, on_delete=models.CASCADE)
+	fecha_es = models.DateField()
 	kardex = models.ForeignKey(Kardex, null=True, on_delete=models.CASCADE)
 	cantidad_unidades = models.IntegerField()
 	precio_unitario = models.FloatField()
+	tipo_movimiento = models.BooleanField(default=False)
+	cabeza_kardex = models.BooleanField(default=False)
+	cola_kardex = models.BooleanField(default=False)
+	siguiente_kardex = models.CharField(max_length=5, blank=True, null=True)
+
+class Entrada_Salida_Respaldo(models.Model):
+	periodo_esr = models.ForeignKey(Periodo, null=True, on_delete=models.CASCADE)
+	fecha_esr = models.DateField()
+	kardexr = models.ForeignKey(Kardex, null=True, on_delete=models.CASCADE)
+	cantidad_unidadesr = models.IntegerField()
+	precio_unitarior = models.FloatField()
+	tipo_movimientor = models.BooleanField(default=False)
+
 
 class Cargo(models.Model):
 	nombre_cargo = models.CharField(max_length=100)
@@ -29,6 +43,7 @@ class Empleado(models.Model):
 	dui_empleado = models.CharField(max_length=100)
 	Nisss_empleado = models.CharField(max_length=100)
 	Nafp_empleado = models.CharField(max_length=100)
+	años_empleado = models.FloatField()
 
 	def __str__(self):
 		return self.nombre_empleado
@@ -41,6 +56,7 @@ class Planilla(models.Model):
 	vacacion_planilla = models.FloatField()
 	aguinaldo_planilla = models.FloatField()
 	insaforp = models.FloatField()
+	salario_total = models.FloatField()
 
 class Programacion(models.Model):
 	periodo_programacion = models.ForeignKey(Periodo, null=True, on_delete=models.CASCADE)

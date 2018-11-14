@@ -2,6 +2,10 @@
 
 
 {% block content %}
+{% if cuentas %}
+<div class="col-md-3 btnNueva">
+  <a href="{% url 'contabilidad_general:crear' %}" class="btn btn-secondary">+ Nueva</a>
+</div>
 <table class="table table-hover">
   <thead>
     <tr>
@@ -17,8 +21,8 @@
     <tr class="table-dark">
       <th scope="row">{{cuenta.codigo_cuenta}}</th>
       <td>{{cuenta.nombre_cuenta}}</td>
-      <td>{{cuenta.saldo_deudor}}</td>
-      <td>{{cuenta.saldo_acreedor}}</td>
+      <td>{{cuenta.saldo_deudor_cuenta}}</td>
+      <td>{{cuenta.saldo_acreedor_cuenta}}</td>
       <td>
       	<div class="col-md-11"
       	>
@@ -38,5 +42,8 @@
     </tr>
     {% endfor %}
   </tbody>
+  {% else %}
+  <h2 class="text-center">No hay cuentas por mostrar</h2>
+  {% endif %}
 </table> 
 {% endblock %}
