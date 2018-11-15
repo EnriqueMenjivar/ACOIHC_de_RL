@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 from apps.transaccion.forms import TransaccionForm, Transaccion_CuentaForm
 from apps.periodo.models import Periodo
-from apps.catalogo.models import Cuenta
+from apps.catalogo.models import CuentaHija
 from apps.contabilidad_general.models import Transaccion, Transaccion_Cuenta
 from django.http import JsonResponse
 from decimal import Decimal
@@ -10,7 +10,7 @@ from decimal import Decimal
 
 
 def transaccion(request):
-    cuentas = Cuenta.objects.all()
+    cuentas = CuentaHija.objects.all()
     periodo = Periodo.objects.get(estado_periodo=False)
     cuentasDebe=[]
     cuentasHaber=[]

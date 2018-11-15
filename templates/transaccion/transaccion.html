@@ -24,7 +24,7 @@
                         <div class="col-lg-4">
                             <h3>Activos</h3>
                             {%for c in cuentas%}
-                            {%ifequal c.codigo_cuenta 1%}
+                            {%ifequal c.padre_id 1 %}
                             <div class="row">
                                 <label><input type="checkbox" aria-label="Checkbox for following text input" name="{{c.id}}debe">{{c.nombre_cuenta}}
                                 </label>
@@ -268,9 +268,7 @@
                 </form>
             </div><br><br><br>
             <div class="row">
-                <button type="button" class="btn btn-success" name="guardar" onclick="">
-                    Registrar Transaccion
-                </button>
+                <button type="button"  class="btn btn-success" onclick="partidaDoble()">Registrar Transaccion</button>
             </div>
         </div>
         <div class="row jumbotron container-fluid text-center">
@@ -298,7 +296,6 @@
         </div>
     </div>
 </div>
-<button type="button" onclick="partidaDoble()">prueba</button>
 </div>
 
 
