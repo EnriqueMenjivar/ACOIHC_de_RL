@@ -1,5 +1,5 @@
 from django.db import models
-from apps.catalogo.models import Cuenta
+from apps.catalogo.models import Cuenta, CuentaHija
 from apps.periodo.models import Periodo
 
 # Create your models here.
@@ -13,7 +13,7 @@ class Transaccion(models.Model):
 
 class Transaccion_Cuenta(models.Model):
 	transaccion_tc = models.ForeignKey(Transaccion, null=True, on_delete=models.CASCADE)
-	cuenta_tc = models.ForeignKey(Cuenta, null=True, on_delete=models.CASCADE)
+	cuenta_tc = models.ForeignKey(CuentaHija, null=True, on_delete=models.CASCADE)
 	debe_tc = models.FloatField()
 	haber_tc = models.FloatField()
 
