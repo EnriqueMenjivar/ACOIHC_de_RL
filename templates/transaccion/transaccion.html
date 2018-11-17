@@ -38,7 +38,7 @@
                         <div class="col-lg-4">
                             <h3>Pasivo</h3>
                             {%for c in cuentas%}
-                            {%ifequal c.codigo_cuenta 2%}
+                            {%ifequal c.padre_id 2%}
                             <div class="row">
                                 <label><input type="checkbox" aria-label="Checkbox for following text input" name="{{c.id}}debe">{{c.nombre_cuenta}}
                                 </label>
@@ -52,7 +52,7 @@
                         <div class="col-lg-4">
                             <h3>Patrimonio</h3>
                             {%for c in cuentas%}
-                            {%ifequal c.codigo_cuenta 3%}
+                            {%ifequal c.padre_id 3%}
                             <div class="row">
                                 <label><input type="checkbox" aria-label="Checkbox for following text input" name="{{c.id}}debe">{{c.nombre_cuenta}}
                                 </label>
@@ -93,7 +93,7 @@
                         <div class="col-lg-4">
                             <h3>Activos</h3>
                             {%for c in cuentas%}
-                            {%ifequal c.codigo_cuenta 1%}
+                            {%ifequal c.padre_id 1%}
                             <div class="row">
                                 <label><input type="checkbox" aria-label="Checkbox for following text input" name="{{c.id}}haber">{{c.nombre_cuenta}}
                                 </label>
@@ -107,7 +107,7 @@
                         <div class="col-lg-4">
                             <h3>Pasivo</h3>
                             {%for c in cuentas%}
-                            {%ifequal c.codigo_cuenta 2%}
+                            {%ifequal c.padre_id 2%}
                             <div class="row">
                                 <label><input type="checkbox" aria-label="Checkbox for following text input" name="{{c.id}}haber">{{c.nombre_cuenta}}
                                 </label>
@@ -121,7 +121,7 @@
                         <div class="col-lg-4">
                             <h3>Patrimonio</h3>
                             {%for c in cuentas%}
-                            {%ifequal c.codigo_cuenta 3%}
+                            {%ifequal c.padre_id 3%}
                             <div class="row">
                                 <label><input type="checkbox" aria-label="Checkbox for following text input" name="{{c.id}}haber">{{c.nombre_cuenta}}
                                 </label>
@@ -164,8 +164,10 @@
             <h3 class="h4">Transacciones Especiales</h3>
             <div class="btn-group-vertical">
                 <button type="button" class="btn btn-primary">Compra de Inventario</button>
-                <button type="button" class="btn btn-info">Venta de Inventario</button>
-                <button type="button" class="btn btn-primary">Devoluciones de Inventario</button>
+                <button type="button" class="btn btn-info">Venta de Productos Terminados</button>
+                <button type="button" class="btn btn-primary">Devolucion S/Compra de Inventario</button>
+                <button type="button" class="btn btn-info">Devolucion S/Venta de Inventario</button>
+                <button type="button" class="btn btn-primary">Compra de Maquinaria y Equipo</button>
             </div>
 
         </div>
@@ -410,5 +412,5 @@
 </script>
 <script type="text/javascript" src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
 
-<script src="{% static 'js/prueba.js'%}"></script>|
+<script src="{% static 'js/prueba.js'%}"></script>
 {% endblock %}
