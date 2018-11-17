@@ -1,4 +1,4 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, HttpResponse, redirect
 from apps.contabilidad_costos.models import *
 from apps.periodo.models import Periodo
 from apps.catalogo.models import Cuenta
@@ -42,12 +42,43 @@ class Lista_Empleados(ListView):
 	model = Empleado
 	template_name = 'contabilidad_costos/empleado_list'
 
-class Registra_Empleado(CreateView):
-	model = Empleado
-	template_name = 'contabilidad_costos/empleado_registrar.html'
-	form_class = EmpleadoForms
-	success_url = reverse_lazy('empleado_lista')
-
 
 def planilla_general(request):
 	return render(request,'contabilidad_costos/planillaGeneral.html')
+
+
+def planilla_empleado(request, id_empleado):
+	empleado = Empleado.objects.get(id = id_empleado)
+	planilla = Planilla.objects.get(id = id_empleado)
+
+	return render(request, 'contabilidad_costos/planillaEmpleado.html', {'empleado':empleado, 'planilla':planilla} )
+
+
+
+def registra_Empleado(request):
+	if request.method == 'POST':
+		form1 = EmpleadoForms(request.POST)
+		if form1.is_valid():
+
+			form1.save()
+			
+			periodo = Periodo.objects.get(id=1)
+			empleado = Empleado.objects.last()
+			salario_Mensual = empleado.cargo_empleado.sueldo_base
+			iss = salario_Mensual*0.075;
+			afp = salario_Mensual*0.065;
+			insaforp = salario_Mensual*0.01;
+			vacaciones = 0;
+			aguinaldo = 0;
+			salario_total = salario_Mensual + iss + afp + insaforp ;
+	
+
+			
+			planilla = Planilla(periodo_planilla= periodo, empleado_planilla= empleado, isss_planilla=iss, afp_planilla= afp, vacacion_planilla=vacaciones, aguinaldo_planilla=aguinaldo, insaforp=insaforp, salario_total=salario_total)
+			planilla.save()
+
+		return redirect('empleado_lista')
+	else:
+		form1 = EmpleadoForms()
+
+	return render(request, 'contabilidad_costos/empleado_registrar.html',{'form1': form1 })

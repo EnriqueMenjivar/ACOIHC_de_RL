@@ -1,0 +1,114 @@
+{% extends 'base/base.html'%}
+{% block title %} Empleados {% endblock %}
+{% block portada %}<br><br><br>{% endblock %}
+{% block content %}
+ 
+<h1>Planilla De Empleado {{empleado.id}} </h1>
+
+<div class="divBorder">
+	<h5 style="color:red;text-align:center;"> Datos Empleado</h5>
+	<br>
+	<form action="/" id="fmEmpleado" name="datosEmpleado" method="POST">
+		{% csrf_token %}
+
+		<div class="form-group">
+			<label>Nombres :</label>
+			<input id="nombres" type="text" style="width:700px;height:40px" class="form-control" name="nombres" min="1" readonly="readonly" value = "{{empleado.nombre_empleado}}">
+		</div>
+
+		<div class="form-group">
+			<label>Apellidos :</label>
+			<input id="apellidos" type="text" style="width:700px;height:40px" class="form-control" name="apellidos" min="1" readonly="readonly" value = "{{empleado.apellido_empleado}}">
+		</div>
+
+		<div class="form-group">
+			<label>DUI :</label>
+			<input id="dui" type="text" align="center" style="width:700px;height:40px" class="form-control" name="dui" min="1" readonly="readonly" value = "{{empleado.dui_empleado}}">
+		</div>
+
+		<div class="form-group">
+			<label>N° ISSS :</label>
+			<input id="isss" type="text" style="width:700px;height:40px" class="form-control" name="isss" min="1" readonly="readonly" value = "{{empleado.Nisss_empleado}}">
+		</div>
+
+		<div class="form-group">
+			<label>N° AFP :</label>
+			<input id="afp" type="text" style="width:700px;height:40px" class="form-control" name="afp" min="1" readonly="readonly" value = "{{empleado.Nafp_empleado}}">
+		</div>
+
+		
+		<div class="form-group">
+			<label>CARGO :</label>
+			<input id="cargo" type="text" style="width:700px;height:40px" class="form-control" name="cargo" min="1" readonly="readonly" value = "{{empleado.cargo_empleado}}">
+		</div>
+
+		<div class="form-group">
+			<label> SALARIO BASE :</label>
+			<input id="salrio" type="text" style="width:700px;height:40px" class="form-control" name="salario" min="1" readonly="readonly" value = "{{empleado.cargo_empleado.sueldo_base}}">
+		</div>
+
+	</form>
+</div>
+
+<br><br>
+
+
+<div class="divBorder" >
+	<div style="float:left;" >
+		<input type="checkbox" id="cbox1" value="check1"> <label for="cbox1" style="font-size:22px">Vacaciones</label>
+	</div>
+
+	<div>
+		<input type="checkbox" id="cbox2" value="check2"> <label for="cbox2" style="font-size:22px">Aguinaldo</label>
+	</div>
+
+	<div>
+		<button type="submit" class="btn btn-primary" align="center"/>AGREGAR</button>
+	</div>
+</div>
+
+
+<div class="divBorder">
+	<h5 style="color:red;text-align:center;"> Cotizaciones </h5>
+	<br>
+	<form action="/" id="fmEmpleado" name="datosEmpleado" method="POST">
+		{% csrf_token %}
+	<div style="float:left;">
+			<div class="form-group">
+				<label> ISSS :</label>
+				<input id="nombres" type="text" style="width:500px;height:40px" class="form-control" name="nombres" min="1" readonly="readonly" value = "{{planilla.isss_planilla}}">
+			</div>
+
+			<div class="form-group">
+				<label> AFP :</label>
+				<input id="apellidos" type="text" style="width:500px;height:40px" class="form-control" name="apellidos" min="1" readonly="readonly" value = "{{planilla.afp_planilla}}">
+			</div>
+
+			<div class="form-group">
+				<label> AGUINALDO :</label>
+				<input id="dui" type="text" align="center" style="width:500px;height:40px" class="form-control" name="dui" min="1" readonly="readonly" value = "{{planilla.aguinaldo_planilla}}">
+			</div>
+
+	</div>
+
+
+			<div class="form-group">
+				<label> VACACIONES :</label>
+				<input id="isss" type="text" style="width:500px;height:40px" class="form-control" name="isss" min="1" readonly="readonly" value = "{{planilla.vacacion_planilla}}">
+			</div>
+
+			<div class="form-group">
+				<label> INSAFORP :</label>
+				<input id="afp" type="text" style="width:500px;height:40px" class="form-control" name="afp" min="1" readonly="readonly" value = "{{planilla.insaforp}}">
+			</div>
+
+			
+			<div class="form-group">
+				<label> SUELDO LIQUIDO :</label>
+				<input id="cargo" type="text" style="width:500px;height:40px" class="form-control" name="cargo" min="1" readonly="readonly" value = "{{planilla.salario_total}}">
+			</div>
+		
+	</form>
+</div>
+
+{% endblock %}

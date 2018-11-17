@@ -1,16 +1,17 @@
 from django.db import models
-from apps.catalogo.models import Cuenta
+from apps.catalogo.models import Cuenta, CuentaHija
 from apps.contabilidad_general.models import Transaccion_Cuenta
 from apps.periodo.models import Periodo
 # Create your models here.
 
 class Kardex(models.Model):
-	cuenta_kardex = models.ForeignKey(Cuenta, null=True, on_delete=models.CASCADE)
+	cuenta_kardex = models.ForeignKey(CuentaHija, null=True, on_delete=models.CASCADE)
 	cantidad_existencia = models.IntegerField()
 	precio_unitario_peps = models.FloatField()
 
 class Entrada_Salida(models.Model):
-	transaccion = models.ForeignKey(Transaccion_Cuenta, null=True, on_delete=models.CASCADE)
+	periodo_es = models.ForeignKey(Periodo, null=True, on_delete=models.CASCADE)
+	fecha_es = models.DateField()
 	kardex = models.ForeignKey(Kardex, null=True, on_delete=models.CASCADE)
 	cantidad_unidades = models.IntegerField()
 	precio_unitario = models.FloatField()
@@ -18,6 +19,15 @@ class Entrada_Salida(models.Model):
 	cabeza_kardex = models.BooleanField(default=False)
 	cola_kardex = models.BooleanField(default=False)
 	siguiente_kardex = models.CharField(max_length=5, blank=True, null=True)
+
+class Entrada_Salida_Respaldo(models.Model):
+	periodo_esr = models.ForeignKey(Periodo, null=True, on_delete=models.CASCADE)
+	fecha_esr = models.DateField()
+	kardexr = models.ForeignKey(Kardex, null=True, on_delete=models.CASCADE)
+	cantidad_unidadesr = models.IntegerField()
+	precio_unitarior = models.FloatField()
+	tipo_movimientor = models.BooleanField(default=False)
+
 
 class Cargo(models.Model):
 	nombre_cargo = models.CharField(max_length=100)
@@ -33,6 +43,7 @@ class Empleado(models.Model):
 	dui_empleado = models.CharField(max_length=100)
 	Nisss_empleado = models.CharField(max_length=100)
 	Nafp_empleado = models.CharField(max_length=100)
+	años_empleado = models.FloatField()
 
 	def __str__(self):
 		return self.nombre_empleado
@@ -45,6 +56,7 @@ class Planilla(models.Model):
 	vacacion_planilla = models.FloatField()
 	aguinaldo_planilla = models.FloatField()
 	insaforp = models.FloatField()
+	salario_total = models.FloatField()
 
 class Programacion(models.Model):
 	periodo_programacion = models.ForeignKey(Periodo, null=True, on_delete=models.CASCADE)
@@ -66,12 +78,11 @@ class Proceso(models.Model):
 
 class Asignar_Materia_Prima(models.Model):
 	proceso_mp = models.ForeignKey(Proceso, null=True, on_delete=models.CASCADE)
-	nombre_mp = models.CharField(max_length=100)
+	#nombre_mp = models.CharField(max_length=100)
+	nombre_mp = models.ForeignKey(CuentaHija, null=True, on_delete=models.CASCADE)
 	cantidad_mp = models.FloatField()
 	precio_unitario_mp = models.FloatField()
 
-	def __str__(self):
-		return self.nombre_mp
 
 class Asignar_Cif(models.Model):
 	proceso_cif = models.ForeignKey(Proceso, null=True, on_delete=models.CASCADE)

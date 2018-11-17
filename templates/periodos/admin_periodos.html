@@ -42,23 +42,55 @@
                                     	{% for p in periodos%}
                                         <tr>
                                             <td>{{p.inicio_periodo}}</td>
-                                             {%if p.estado_periodo == False%}
+                                             {%if p.estado_periodo == False and p.periodo_ajuste == False%}
                                             <td>En proceso</td>
                   							<td>Activo</td>
                   							{% endif %}
+                                            {%if p.estado_periodo == False and p.periodo_ajuste == True%}
+                                            <td>En proceso (Ajuste de cuentas)</td>
+                                            <td>Ajustes</td>
+                                            {% endif %}
                   							{%if p.estado_periodo == True%}
                                             <td>{{p.final_periodo}}</td>
                   							<td>Cerrado</td>
                   							{% endif %}
                                             <td>
                                                 <a href="{% url 'periodo_menu_vista' p.id %}">Ver</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                {%if p.estado_periodo == False%}
-                                                <a href="#{{p.id}}"  data-toggle = "modal">Cerrar Periodo</a>
+                                                {%if p.estado_periodo == False and p.periodo_ajuste == False%}
+                                                <a href="#f{{p.id}}"  data-toggle = "modal">Cerrar periodo</a>
+                                                {% endif %}
+                                                {%if p.estado_periodo == False and p.periodo_ajuste == True%}
+                                                <a href="#{{p.id}}"  data-toggle = "modal">Finalizar Ajustes</a>
                                                 {% endif %}
                                             </td>
                                         </tr>
-                                        <!-- Ventana modal para cerrar periodo--> 
+                                        <!-- Ventana modal para cerrar periodo definitivamente--> 
                                                     <div class="modal fade" id="{{p.id}}">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <!-- Header de ventana-->
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title">Finalizar Ajustes</h5>
+                                                                    <button tyle="button" class="close" data-dismiss="modal" aria-hidden = "true">&times;</button>
+                                                                </div>
+                                                                <!-- Contenido de la ventana -->
+                                                                <div class="modal-body">
+                                                                        <p class="text-align">Confirmar si desea finalizar ajustes para cerrar periodo definitivamente.</p> 
+                                                                </div>
+                                                                <!--Footer-->
+                                                                <div class="modal-footer">
+                                                                    <form method="POST">
+                                                                        {% csrf_token %}
+                                                                            <input type="hidden" name="idPeriodo" value= "{{p.id}}">
+                                                                            <button type="submit" class="btn btn-primary " name="btnCierre">Aceptar</button>
+                                                                            <button type="button" class="btn btn-default" data-dismiss= "modal" name="btnCerrar">Cancelar</button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Ventana modal para cerrar periodo e iniciar ajustes--> 
+                                                    <div class="modal fade" id="f{{p.id}}">
                                                         <div class="modal-dialog">
                                                             <div class="modal-content">
                                                                 <!-- Header de ventana-->
@@ -68,13 +100,13 @@
                                                                 </div>
                                                                 <!-- Contenido de la ventana -->
                                                                 <div class="modal-body">
-                                                                        <p class="text-align">Confirmar si desea cerrar periodo.</p> 
+                                                                        <p class="text-align">Confirmar si desea cerrar periodo. para realizar ajustes</p> 
                                                                 </div>
                                                                 <!--Footer-->
                                                                 <div class="modal-footer">
                                                                     <form method="POST">
                                                                         {% csrf_token %}
-                                                                            <input type="hidden" name="idPeriodo" value= "{{p.id}}">
+                                                                            <input type="hidden" name="idPe" value= "{{p.id}}">
                                                                             <button type="submit" class="btn btn-primary " name="btnCierre">Aceptar</button>
                                                                             <button type="button" class="btn btn-default" data-dismiss= "modal" name="btnCerrar">Cancelar</button>
                                                                     </form>
@@ -123,7 +155,7 @@
                             </div>
                         </div>
                     </div> 
-<!-- Ventana modal --> 
+<!-- Ventana modal de advertencia de no poder crear un nuevo periodo--> 
             <div class="modal fade" id="crearNo">
                         <div class="modal-dialog">
                             <div class="modal-content">
