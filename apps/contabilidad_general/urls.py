@@ -4,7 +4,6 @@ from apps.contabilidad_general import views
 app_name = "contabilidad_general"
 
 urlpatterns = [
-	#path('crear/', views.CuentaCreateView.as_view(), name="crear"),
 	path('crear/', views.cuenta_create, name="crear"),
 	path('crear-hija/<cuenta_id>/', views.cuenta_hija_create, name="crear-hija"),
 	path('mostrar-cuentas/', views.catalogo_show, name="mostrar-cuentas"),
@@ -18,5 +17,6 @@ urlpatterns = [
 	path('ajax/load-agrupaciones/', views.load_agrupaciones, name="ajax"),
 	path('prueba/<periodo_id>', views.cerrar_periodo, name="prueba"),
 	path('sumar/', views.sumar, name="sumar"),
+	#path('sumar1/', views.sumar1, name="sumar1"),
 	
 ]
