@@ -1,13 +1,13 @@
 from apps.contabilidad_general.models import Transaccion_Cuenta
 from apps.contabilidad_costos.models import Kardex, Entrada_Salida, Entrada_Salida_Respaldo
-from apps.catalogo.models import Cuenta
+from apps.catalogo.models import Cuenta,CuentaHija
 from apps.periodo.models import Periodo
 
 def peps(idPeriodo, fecha,id_cuenta,cant,precio_u,tipo):
 	periodo = Periodo.objects.get(id = idPeriodo)
-	existe_cuenta = Cuenta.objects.filter(id= id_cuenta).exists()
+	existe_cuenta = CuentaHija.objects.filter(id= id_cuenta).exists()
 	if existe_cuenta:
-		cuenta_afectada = Cuenta.objects.get(id= id_cuenta)
+		cuenta_afectada = CuentaHija.objects.get(id= id_cuenta)
 		existe_kardex = Kardex.objects.filter(cuenta_kardex = cuenta_afectada).exists()
 		if existe_kardex:
 			kardex_afectado = Kardex.objects.get(cuenta_kardex = cuenta_afectada)
