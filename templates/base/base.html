@@ -71,7 +71,7 @@
 										<span class="icon-bar"></span>
 									</button>
                 <!-- Brand -->
-                <a class="navbar-brand page-scroll sticky-logo" href="index.html">
+                <a class="navbar-brand page-scroll sticky-logo" href="{% url 'home' %}">
                   <h1><img src="{% static 'plantilla/img/logo.png' %}" width="70" height="70"><span>Huelic</span>Chocolatl</h1>
                   <!-- Uncomment below if you prefer to use an image logo -->
                   <!-- <img src="img/logo.png" alt="" title=""> -->
@@ -84,17 +84,23 @@
                   <li class="active">
                     <a class="page-scroll" href="{% url 'home'%}"><i class="fas fa-home"></i>Home</a>
                   </li>
+                  {% if request.user.is_authenticated %}
                   <li>
                     <a class="page-scroll" href="{% url 'periodo_contable'%}"><i class="fas fa-info"></i>Periodos Contables</a>
                   </li>
                   <li>
-                    <a class="page-scroll" href="#"><i class="fas fa-info"></i>Catalogo de Cuentas</a>
+                    <a class="page-scroll" href="{%url 'contabilidad_general:mostrar-cuentas'%}"><i class="fas fa-info"></i>Catalogo de Cuentas</a>
                   </li>
                   
                   <li>
                     <a class="page-scroll" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i>Salir</a>
                   </li>
                 </ul>
+                {%else%}
+                  <li>
+                    <a class="page-scroll" href="{% url 'login' %}"><i class="fas fa-sign-out-alt"></i>Iniciar Sesión</a>
+                  </li>
+                {%endif%}
                 {% endblock %}
               </div>
               <!-- navbar-collapse -->

@@ -82,3 +82,6 @@ def registra_Empleado(request):
 		form1 = EmpleadoForms()
 
 	return render(request, 'contabilidad_costos/empleado_registrar.html',{'form1': form1 })
+
+def lista_kardex(request):
+	return render(request,'contabilidad_costos/lista_kardex.html')

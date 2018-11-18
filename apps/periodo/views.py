@@ -90,3 +90,9 @@ def  listar_transacciones( request,id):
 	}
 	return render (request, 'transaccion/listar_transacciones.html' , contexto)
 
+def  libro_mayor( request,id):
+	periodoActual = Periodo.objects.get(id = id)
+	contexto = {
+	'periodoActual' : periodoActual,
+	}
+	return render (request, 'periodos/libro_mayor.html' , contexto)
