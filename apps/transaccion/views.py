@@ -21,7 +21,7 @@ def iniciar_transaccion(request, form1):
 
 
 def transaccion(request):
-    cuentas = CuentaHija.objects.all()
+    cuentas = CuentaHija.objects.select_related().all()
     periodo = Periodo.objects.get(estado_periodo=False)
     cuentasDebe = []
     cuentasHaber = []
@@ -57,6 +57,7 @@ def transaccion(request):
                     haber_tc=Decimal("0.0"),
                 )
                 tran.save()
+                aumentar_saldo(c.id, valor, True)
 
             if str(c.id)+"abon" in request.POST:
                 valor = request.POST[str(c.id)+"abon"]
@@ -67,6 +68,7 @@ def transaccion(request):
                     haber_tc=Decimal(valor),
                 )
                 tran.save()
+                aumentar_saldo(c.id, valor, False)
 
         return redirect('transaccion:transacciones')
 
@@ -81,8 +83,26 @@ def compra_inventario(request):
     form1 = TransaccionForm()
     if request.is_ajax():
         iniciar_transaccion(request, form1)
-    
-    contexto={
-        'form':form1,'periodo':periodo
+
+    contexto = {
+        'form': form1, 'periodo': periodo
     }
-    return render(request, 'transaccion/transaccion_especial.html',contexto)
+    return render(request, 'transaccion/transaccion_especial.html', contexto)
+
+
+def aumentar_saldo(id_cuenta, monto, opcion):
+    cuenta = CuentaHija.objects.get(id=id_cuenta)
+    if opcion:
+        cuenta.debe = cuenta.debe+float(monto)
+    else:
+        cuenta.haber=cuenta.haber+float(monto)
+    
+    if cuenta.debe==cuenta.haber:
+        cuenta.saldo_deudor_cuenta=0
+        cuenta.saldo_acreedor_cuenta=0
+    else:
+        if cuenta.debe>cuenta.haber:
+            cuenta.saldo_deudor_cuenta=cuenta.debe-cuenta.haber
+        else:
+            cuenta.saldo_acreedor_cuenta=cuenta.haber-cuenta.debe
+    cuenta.save()
