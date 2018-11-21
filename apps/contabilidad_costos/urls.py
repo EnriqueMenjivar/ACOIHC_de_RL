@@ -11,5 +11,6 @@ urlpatterns = [
     path('empleado_general/', planilla_general, name= 'empleado_general'),
     path('empleado_planilla/(¿P<id_empleado>\d+)/', planilla_empleado , name = 'empleado_planilla'),
     path('lista_kardex/', lista_kardex, name= 'lista_kardex'),
+    path('lista_kardex/kardex/<id>/', kardex, name= 'kardex'),
    
 ]

@@ -1,7 +1,7 @@
 from django.shortcuts import render, HttpResponse, redirect
 from apps.contabilidad_costos.models import *
-from apps.periodo.models import Periodo
-from apps.catalogo.models import Cuenta
+from apps.periodo.models import *
+from apps.catalogo.models import *
 from apps.contabilidad_costos.forms import EmpleadoForms
 from django.views.generic import TemplateView, ListView, CreateView
 from django.urls import reverse_lazy
@@ -84,4 +84,32 @@ def registra_Empleado(request):
 	return render(request, 'contabilidad_costos/empleado_registrar.html',{'form1': form1 })
 
 def lista_kardex(request):
-	return render(request,'contabilidad_costos/lista_kardex.html')
+	lista_kardex = list() # creamos la lista que enviaremos al contexto
+	list_interna = list() # me permitira guardar en la primera posicion el kardex, y en la segunda posicion una lista de precio_un y cant
+	kardexs = Kardex.objects.all() #traemos todos los kardex
+	for kardex in kardexs:
+		list_interna.append(kardex)
+		es_existe = Entrada_Salida.objects.filter(kardex= kardex).exists()
+		if es_existe:
+			es = Entrada_Salida.objects.filter(kardex=kardex, cantidad_unidades__gt = 0 )
+			list_interna.append(es)
+		lista_kardex.append(list_interna)
+		list_interna = []
+	contexto={
+	'lista_kardex':lista_kardex
+	}
+	return render(request,'contabilidad_costos/lista_kardex.html',contexto)
+
+def kardex(request,id):
+	kardex_existe = Kardex.objects.filter(id = id).exists #vemos si el kardex existe
+	if kardex_existe:
+		kardex = Kardex.objects.get(id = id)
+		periodo_actual = Periodo.objects.get(estado_periodo =False)
+		esr = Entrada_Salida_Respaldo.objects.filter(kardexr=kardex,periodo_esr=periodo_actual)
+		es = Entrada_Salida.objects.filter(kardex=kardex, cantidad_unidades__gt = 0 )
+	contexto={
+	'kardex':kardex,
+	'esr':esr,
+	'es':es
+	}
+	return render(request,'contabilidad_costos/kardex.html',contexto)

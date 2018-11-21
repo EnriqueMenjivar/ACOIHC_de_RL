@@ -3,7 +3,7 @@ from apps.contabilidad_costos.models import Kardex, Entrada_Salida, Entrada_Sali
 from apps.catalogo.models import Cuenta,CuentaHija
 from apps.periodo.models import Periodo
 
-def peps(idPeriodo, fecha,id_cuenta,cant,precio_u,tipo):
+def peps(idPeriodo, fecha,id_cuenta,cant,precio_u,tipo,costo_venta):
 	periodo = Periodo.objects.get(id = idPeriodo)
 	existe_cuenta = CuentaHija.objects.filter(id= id_cuenta).exists()
 	if existe_cuenta:
@@ -93,6 +93,7 @@ def peps(idPeriodo, fecha,id_cuenta,cant,precio_u,tipo):
 							nuevaColar.save()
 							kardex_afectado.cantidad_existencia -= cant
 							kardex_afectado.precio_unitario_peps -= (cant*cabeza.precio_unitario)
+							costo_venta += cant*cabeza.precio_unitario
 							kardex_afectado.save()
 							cabeza.cantidad_unidades -= cant
 							cabeza.save()
@@ -123,6 +124,7 @@ def peps(idPeriodo, fecha,id_cuenta,cant,precio_u,tipo):
 
 							kardex_afectado.cantidad_existencia -= cant
 							kardex_afectado.precio_unitario_peps -= (cant*cabeza.precio_unitario)
+							costo_venta += cant*cabeza.precio_unitario
 							kardex_afectado.save()
 							cabeza.cantidad_unidades -= cant
 							cabeza.cabeza_kardex = False
@@ -162,6 +164,7 @@ def peps(idPeriodo, fecha,id_cuenta,cant,precio_u,tipo):
 									nuevaColar.save()
 									kardex_afectado.cantidad_existencia -= cabeza.cantidad_unidades
 									kardex_afectado.precio_unitario_peps -= (cabeza.cantidad_unidades*cabeza.precio_unitario)
+									costo_venta += cabeza.cantidad_unidades*cabeza.precio_unitario
 									kardex_afectado.save()
 									cabeza_nueva = Entrada_Salida.objects.get(id= int(cabeza.siguiente_kardex))
 									cabeza_nueva.cabeza_kardex = True
@@ -171,9 +174,9 @@ def peps(idPeriodo, fecha,id_cuenta,cant,precio_u,tipo):
 									cabeza.cabeza_kardex = False
 									cabeza.save()
 									
-									peps(idPeriodo, fecha,id_cuenta,cant,precio_u,tipo)
+									peps(idPeriodo, fecha,id_cuenta,cant,precio_u,tipo,costo_venta)
 
-	return
+	return costo_venta
 
 def ajuste_peps():
 	existe_es = Entrada_Salida.objects.filter(siguiente_kardex="P").exists()
