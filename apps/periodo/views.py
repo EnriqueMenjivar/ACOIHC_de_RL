@@ -78,8 +78,8 @@ def  listar_transacciones( request,id):
 			idPeriodo = 3
 			fecha = time.strftime("%Y-%m-%d")
 			id_cuenta = 8
-			cant = 100
-			precio_u = 8.50
+			cant = 101
+			precio_u = 9.50
 			tipo = True
 			cv = list()
 			cv = peps(idPeriodo, fecha,id_cuenta,cant,precio_u,tipo,cv)
