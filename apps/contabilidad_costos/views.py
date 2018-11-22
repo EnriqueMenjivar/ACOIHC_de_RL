@@ -8,19 +8,52 @@ from django.urls import reverse_lazy
 from datetime import datetime
 from django.core import serializers
 
+
 def programacion_list(request):
 	lista_programacion = Programacion.objects.all()
 	return render(request,'contabilidad_costos/programacion_list.html', {'programaciones':lista_programacion})
 
 def programacion_nueva(request):
 	periodos = Periodo.objects.all()
-	productos = Cuenta.objects.filter(codigo_padre='1141')
-	materiales = Cuenta.objects.filter(codigo_padre='1143')
-	cargos = Cargo.objects.all()
-	contexto = {'periodos':periodos, 'productos':productos, 'materiales':materiales, 'cargos':cargos}
+	productos = CuentaHija.objects.filter(codigo_padre='1103')
+	contexto = {'periodos':periodos, 'productos':productos}
+
+	if 'btnGuardarProgra' in request.POST:
+		periodo = Periodo.objects.get(id = request.POST['periodoSeleccionado'])
+		fecha = request.POST['fecha']
+		producto = request.POST['producto']
+		cantidad = request.POST['cantidad']
+		programaciones = Programacion.objects.all().order_by('id')
+
+		if len(programaciones) == 0:
+			id_programacion = 1
+		else:	
+			id_programacion =programaciones[len(programaciones) - 1].id + 1
+
+		programacion_nueva = Programacion(id =id_programacion, fecha_programacion = fecha, producto_programacion = producto, cantidad_programacion = cantidad, estado_programacion = False, periodo_programacion = periodo)
+		programacion_nueva.save()
+
+		for x in [1,2,3,4,5,6,7]:
+			programaciones_procesos = Programacion_Proceso.objects.all().order_by('id')
+			if len(programaciones_procesos) == 0:
+				id_programacion_proceso = 1
+			else:
+				id_programacion_proceso = programaciones_procesos[len(programaciones_procesos) - 1].id + 1
+
+			programacion_proceso = Programacion_Proceso(id = id_programacion_proceso, programacion = programacion_nueva, proceso = Proceso.objects.get(id = x), terminado = False)
+			programacion_proceso.save()
+			pass
+		return redirect('/contabilidad_costos/programaciones_lista/')
+
 	return render(request, 'contabilidad_costos/programacion_nueva.html', contexto)
 
-class ProgramacionesAjaxView(TemplateView):
+
+def seguimiento(request, id_programacion):
+	procesos_pendientes = Programacion_Proceso.objects.filter(programacion__id = id_programacion, terminado = False)
+	materiales = CuentaHija.objects.filter(codigo_padre='1105') | CuentaHija.objects.filter(codigo_padre='1104')
+	cargos = Cargo.objects.all()
+	return render(request,'contabilidad_costos/seguimiento.html', {'procesos_pendientes':procesos_pendientes, 'materiales':materiales, 'cargos':cargos} )
+"""class ProgramacionesAjaxView(TemplateView):
 
 	def get(self, request, *args, **kwargs):
 		periodo = request.GET['periodo']
@@ -35,7 +68,7 @@ class ProgramacionesAjaxView(TemplateView):
 		programacion.save()
 		programacion_list = [programacion]
 		data = serializers.serialize('json',programacion_list,fields = ('id'))
-		return HttpResponse(data, content_type = 'application/json')
+		return HttpResponse(data, content_type = 'application/json')"""
 		
 
 class Lista_Empleados(ListView):
