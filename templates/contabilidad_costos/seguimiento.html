@@ -1,0 +1,121 @@
+{% extends 'base/base.html'%}
+{% block title %} Programacion seguimiento{% endblock %}
+{% block extracss %}
+
+{% endblock %}
+{% block portada %}<br><br><br>{% endblock %}
+{% block content %}
+
+	{% if procesos_pendientes %}
+		{% for proceso_perdiente in procesos_pendientes %}
+			<div class="divBorder" style="padding: 50px;"><br>
+				<h4>Proceso: {{proceso_perdiente.proceso.nombre_proceso}}</h4><br>
+				<h5>Asignacion de materia prima</h5>
+				<form method="POST" name="frmMP{{proceso_perdiente.proceso.id}}">
+					<div class="form_group">
+						<label>Materia prima</label>
+						<select name="materiaPrima{{proceso_perdiente.proceso.id}}" class="form-control">
+							<option>--Seleccione--</option>
+							{% if materiales %}
+								{% for materia in materiales %}
+									<option value="{{ materia.codigo_cuenta }}">{{ materia.nombre_cuenta }}</option>
+								{% endfor %}
+							{% else %}
+								<option value="#">No hay materia prima</option>
+							{% endif %}
+						</select>
+					</div>
+					<div class="form_group">
+						<label>Cantidad</label>
+						<input class="form-control" type="text" name="cantidad{{proceso_perdiente.proceso.id}}">
+					</div>
+					<br>
+					<input type="button" class="btn btn-primary" onclick="cargar()" name="btnCargar" value="Cargar">
+				</form>
+				<div id="tbDiv">
+					<table class="table" id="tbMP1">
+						<thead id="thead-dark" class="thead-dark">
+							<tr>
+								<th scope="col">Materia prima</th>
+								<th scope="col">Precio unitario</th>
+								<th scope="col">Cantidad</th>
+								<th scope="col">Monto</th>
+							</tr>
+						</thead>
+					</table>
+				</div>
+				<br>
+				<div class="contador">
+					<label>Total materia prima:</label>
+					<input type="text" class="form-control" name="totalMP{{proceso_perdiente.proceso.id}}" value="0" disabled="">
+				</div><br><br>
+				<h5>Asignacion de mano de obra directa</h5>
+				<form method="POST" name="frmMOD{{proceso_perdiente.proceso.id}}">
+					<div class="form_group">
+						<label>Cargo</label>
+						<select name="cargo{{proceso_perdiente.proceso.id}}" class="form-control">
+							<option>--Seleccione--</option>
+							{% if cargos %}
+								{% for cargo in cargos %}
+									<option value="{{ cargo.id }}/{{ cargo.sueldo_base }}">{{ cargo.nombre_cargo }}</option>
+								{% endfor %}
+							{% else %}
+								<option value="#">No hay cargos</option>
+							{% endif %}
+						</select>
+					</div>
+					<div class="form_group">
+						<label>Cantidad empleados</label>
+						<input class="form-control" type="text"  name="cantMOD{{proceso_perdiente.proceso.id}}">
+					</div>
+					<div class="form_group">
+						<label>Cantidad hrs/empleado</label>
+						<input class="form-control" type="text" name="cantHRSmod{{proceso_perdiente.proceso.id}}">
+					</div><br>
+					<input type="button" class="btn btn-primary" onclick="cargar()" name="btnCargar" value="Cargar">
+				</form>
+				<div id="tbDiv2">
+					<table class="table" id="tbMO1">
+						<thead id="thead-dark" class="thead-dark">
+							<tr>
+								<th scope="col">Cargo</th>
+								<th scope="col">Cantidad empl</th>
+								<th scope="col">Cantidad hrs/emp</th>
+								<th scope="col">Monto</th>
+							</tr>
+						</thead>
+					</table>
+				</div><br>
+				<div class="contador">
+					<label>Total mano de obra directa:</label>
+					<input type="text" class="form-control" name="totalMOD{{proceso_perdiente.proceso.id}}" value="0" disabled="">
+				</div><br><br>
+				<h5>Asignacion de costos indirectos de fabricación</h5>
+				<form method="POST" name="frmCIF{{proceso_perdiente.proceso.id}}">
+					<div class="form_group">
+						<label>Base de asignacion</label>
+						<select class="form-control" name="baseCIF{{proceso_perdiente.proceso.id}}">
+							<option>--Seleccione--</option>
+							<option value="mod">Mano de obra directa</option>
+							<option value="mp">Materia prima</option>
+							<option value="cp">Costos primos</option>
+						</select>
+					</div>
+					<div class="form_group">
+						<label>Porcentaje</label>
+						<input class="form-control" type="text" name="porcentaje{{proceso_perdiente.proceso.id}}">
+					</div><br>
+					<input type="button" class="btn btn-primary" name="cargar" onclick="cargar()" value="Cargar">
+				</form>
+				<br>
+				<div class="contador">
+					<label>Total CIF:</label>
+					<input type="text" class="form-control"  name="totalCIF{{proceso_perdiente.proceso.id}}" value="0" disabled="">
+				</div>
+			</div>
+		{% endfor %}
+	{% else %}
+		<h1>No hay procesos pendientes</h1>
+	{% endif %}
+
+{% endblock %}
