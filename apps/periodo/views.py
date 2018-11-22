@@ -78,17 +78,21 @@ def  listar_transacciones( request,id):
 			idPeriodo = 3
 			fecha = time.strftime("%Y-%m-%d")
 			id_cuenta = 8
-			cant = 20
-			precio_u = 10.00
+			cant = 100
+			precio_u = 8.50
 			tipo = True
-			cv = peps(idPeriodo, fecha,id_cuenta,cant,precio_u,tipo,0)
-			print(cv)
+			cv = list()
+			cv = peps(idPeriodo, fecha,id_cuenta,cant,precio_u,tipo,cv)
+			for x in cv:
+				print(x[0])
+				print(x[1])
+				print(x[2])
+
 			ajuste_peps()
 			return redirect('listar_transacciones', id = id)
 
 	contexto = {
-	'listTransaccion' : listTransaccion,
-	'cv':cv,
+	'listTransaccion' : listTransaccion
 	}
 	return render (request, 'transaccion/listar_transacciones.html' , contexto)
 
