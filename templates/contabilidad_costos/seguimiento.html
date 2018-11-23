@@ -11,7 +11,7 @@
 			<div class="divBorder" style="padding: 50px;"><br>
 				<h4>Proceso: {{proceso_perdiente.proceso.nombre_proceso}}</h4><br>
 				<h5>Asignacion de materia prima</h5>
-				<form method="POST" name="frmMP{{proceso_perdiente.proceso.id}}">
+				<form method="POST" id="frmMP" name="frmMP{{proceso_perdiente.proceso.id}}">
 					<input type="text" id="idProgramacionProceso" name="idProgramacionProceso" value="{{proceso_perdiente.id}}" style="display: none;">
 					<div class="form_group">
 						<label>Materia prima</label>
@@ -19,7 +19,7 @@
 							<option>--Seleccione--</option>
 							{% if materiales %}
 								{% for materia in materiales %}
-									<option value="{{ materia.codigo_cuenta }}">{{ materia.nombre_cuenta }}</option>
+									<option value="{{ materia.id }}">{{ materia.nombre_cuenta }}</option>
 								{% endfor %}
 							{% else %}
 								<option value="#">No hay materia prima</option>
@@ -34,11 +34,10 @@
 					<input type="button" class="btn btn-primary" style="font-size: 1.2em;" id="btnCargarMP" onclick="cargarMP()" name="btnCargarMP" value="Cargar">
 				</form><br>
 				<div id="tbDiv">
-					<table class="table" id="tbMP1">
+					<table class="table" id="tbMP">
 						<thead id="thead-dark" class="thead-dark">
 							<tr>
 								<th scope="col">Materia prima</th>
-								<th scope="col">Precio unitario</th>
 								<th scope="col">Cantidad</th>
 								<th scope="col">Monto</th>
 							</tr>
@@ -48,7 +47,7 @@
 				<br><br>
 				<div class="contador">
 					<label>Total materia prima:</label>
-					<input type="text" class="form-control" name="totalMP{{proceso_perdiente.proceso.id}}" value="0" disabled="">
+					<input type="text" class="form-control" id="contMP" name="totalMP{{proceso_perdiente.proceso.id}}" value="0" disabled="">
 				</div><br><br>
 				<h5>Asignacion de mano de obra directa</h5>
 				<form method="POST" id="frmMOD" name="frmMOD{{proceso_perdiente.proceso.id}}">
@@ -89,7 +88,7 @@
 				</div><br>
 				<div class="contador">
 					<label>Total mano de obra directa:</label>
-					<input type="text" class="form-control" name="totalMOD{{proceso_perdiente.proceso.id}}" value="0" disabled="">
+					<input type="text" class="form-control" id="contMOD" name="totalMOD{{proceso_perdiente.proceso.id}}" value="0" disabled="">
 				</div><br><br>
 				<h5>Asignacion de costos indirectos de fabricación</h5>
 				<form method="POST" name="frmCIF{{proceso_perdiente.proceso.id}}">
@@ -111,9 +110,13 @@
 				<br>
 				<div class="contador">
 					<label>Total CIF:</label>
-					<input type="text" class="form-control"  name="totalCIF{{proceso_perdiente.proceso.id}}" value="0" disabled="">
+					<input type="text" class="form-control" id="contCIF"  name="totalCIF{{proceso_perdiente.proceso.id}}" value="0" disabled="">
 				</div><br><br>
-				<input type="submit" style="margin-left: 1100px; font-size: 1.2em;" class="btn btn-danger" name="btnTerminarProceso" value="Terminar proceso">
+				<form method="POST">
+					{% csrf_token %}
+					<input type="text" id="idProgramacionProceso" name="idProgramacionProcesofrm" value="{{proceso_perdiente.id}}" style="display: none;">
+					<input type="submit" style="margin-left: 1100px; font-size: 1.2em;" class="btn btn-danger" name="btnTerminarProceso" value="Terminar proceso">
+				</form>
 			</div>
 		{% endfor %}
 	{% else %}
@@ -136,7 +139,8 @@
 				url : '/contabilidad_costos/transacciones_programacion/',
 				data : {'programacion_proceso': programacion_proceso, 'producto': producto,'cantidad': cantidad, 'transaccion':transaccion},
 				success : function(data){
-					
+					console.log(data);
+					cargarMP(Object.values(data[0].fields));
 				}
 			});	
 		});
@@ -172,10 +176,34 @@
 				url : '/contabilidad_costos/transacciones_programacion/',
 				data : {'programacion_proceso': programacion_proceso, 'baseAsignacion': baseAsignacion,'porcentajeAsignacion': porcentajeAsignacion, 'transaccion':transaccion},
 				success : function(data){
-					
+					console.log(data);
+					totalCIF(Object.values(data[0].fields));
 				}
 			});	
 		});
+
+		function cargarMP(data){
+			var tr = document.createElement("tr");
+			 var tdMateria = document.createElement("td");
+			 var tdCant = document.createElement("td");
+			 var tdMonto = document.createElement("td");
+			 var materia = document.createTextNode(data[1]);
+			 var cantidad = document.createTextNode(data[2]);
+			 var monto = document.createTextNode(data[3]);
+			 var tabla = document.getElementById("tbMP");
+
+			 tr.setAttribute('id', data[1]);
+			 tdMateria.appendChild(materia);
+			 tdCant.appendChild(cantidad);
+			 tdMonto.appendChild(monto);
+			 tr.appendChild(tdMateria);
+			 tr.appendChild(tdCant);
+			 tr.appendChild(tdMonto);
+			 tabla.appendChild(tr);
+			 document.getElementById("contMP").value = (parseFloat(document.getElementById("contMP").value) + parseFloat(data[3])).toString();
+			 document.getElementById("frmMP").reset(); 
+		}
+
 		function cargarMO(data){ 
 			var tr = document.createElement("tr");
 			var tdCargo= document.createElement("td");
@@ -203,7 +231,11 @@
 			tr.appendChild(tdMonto);
 			tabla.appendChild(tr);
 
+			document.getElementById("contMOD").value = (parseFloat(document.getElementById("contMOD").value) + parseFloat(data[4])).toString();
 			document.getElementById("frmMOD").reset();
+		}
+		function totalCIF(data){
+			document.getElementById("contCIF").value = (parseFloat(document.getElementById("contCIF").value) + parseFloat(data[3])).toString();
 		}
 	</script>
 {% endblock %}

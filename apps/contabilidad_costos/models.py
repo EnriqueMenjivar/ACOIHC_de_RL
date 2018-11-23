@@ -86,13 +86,14 @@ class Asignar_Materia_Prima(models.Model):
 	#nombre_mp = models.CharField(max_length=100)
 	nombre_mp = models.ForeignKey(CuentaHija, null=True, on_delete=models.CASCADE)
 	cantidad_mp = models.FloatField()
-	precio_unitario_mp = models.FloatField()
+	monto = models.FloatField()
 
 
 class Asignar_Cif(models.Model):
 	proceso_prog_cif = models.ForeignKey(Programacion_Proceso, null=True, on_delete=models.CASCADE)
 	base_cif = models.CharField(max_length=100)
 	porcentaje_cif = models.FloatField()
+	monto = models.FloatField()
 
 class Asignar_Mano_Obra(models.Model):
 	proceso_prog_mo = models.ForeignKey(Programacion_Proceso, null=True, on_delete=models.CASCADE)

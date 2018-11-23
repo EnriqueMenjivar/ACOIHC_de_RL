@@ -56,35 +56,103 @@ def seguimiento(request, id_programacion):
 	procesos_pendientes = Programacion_Proceso.objects.filter(programacion__id = id_programacion, terminado = False).order_by('id')[:1]
 	materiales = CuentaHija.objects.filter(codigo_padre='1105') | CuentaHija.objects.filter(codigo_padre='1104')
 	cargos = Cargo.objects.all()
+	if 'btnTerminarProceso' in request.POST:
+		#Se procede a saldar cuenta de proceso finalizado
+		programacion_proceso = request.POST['idProgramacionProcesofrm']
+		periodo = Programacion_Proceso.objects.get(id = programacion_proceso).programacion.periodo_programacion
+		fecha = time.strftime("%Y-%m-%d")
+		transaccion = Transaccion(fecha_transaccion = fecha, descripcion_transaccion = "Saldando cuenta de proceso finalizado", periodo_transaccion = periodo)
+		transaccion.save()
+		prog_proc = request.POST['idProgramacionProcesofrm']
+		cuenta_proceso = Programacion_Proceso.objects.get(id = prog_proc).proceso.cuenta_proceso
+		total = cuenta_proceso.debe
+
+		if Programacion_Proceso.objects.get(id = prog_proc).proceso.id < 7:
+			siguiente_proc_name = Programacion_Proceso.objects.get(id = prog_proc).proceso.proceso_siguiente
+			cuenta_proceso_siguiente = Proceso.objects.get(nombre_proceso = siguiente_proc_name).cuenta_proceso
+			transaccion_saldar = Transaccion_Cuenta(debe_tc = 0.00, haber_tc = total, cuenta_tc = cuenta_proceso, transaccion_tc = transaccion)
+			transaccion_cargar = Transaccion_Cuenta(debe_tc = total, haber_tc = 0.00, cuenta_tc = cuenta_proceso_siguiente, transaccion_tc = transaccion)
+			if transaccion_saldar.haber_tc == transaccion_cargar.debe_tc:
+				transaccion_saldar.save()
+				transaccion_cargar.save()
+
+				nuevo_haber = total
+				nuevo_debe = total
+				CuentaHija.objects.filter(id = cuenta_proceso.id).update(haber = nuevo_haber)
+				CuentaHija.objects.filter(id = cuenta_proceso_siguiente.id).update(debe = nuevo_debe)
+				Programacion_Proceso.objects.filter(id = programacion_proceso).update(terminado = True)
+				prog_proc_obj = Programacion_Proceso.objects.get(id = str(int(programacion_proceso) + 1))
+				asignacion_mp = Asignar_Materia_Prima(cantidad_mp = 0.00, monto = total, nombre_mp = None, proceso_prog_mp = prog_proc_obj)
+				asignacion_mp.save()
+				pass
+			pass
+		else:
+			pt = Programacion_Proceso.objects.get(id = prog_proc).programacion.producto_programacion
+			cuenta_inventario_pt = CuentaHija.objects.get(codigo_cuenta = pt)
+			transaccion_saldar = Transaccion_Cuenta(debe_tc = 0.00, haber_tc = total, cuenta_tc = cuenta_proceso, transaccion_tc = transaccion)
+			transaccion_cargar = Transaccion_Cuenta(debe_tc = total, haber_tc = 0.00, cuenta_tc = cuenta_inventario_pt, transaccion_tc = transaccion)
+			if transaccion_saldar.haber_tc == transaccion_cargar.debe_tc:
+				transaccion_saldar.save()
+				transaccion_cargar.save()
+				nuevo_haber = total
+				nuevo_debe = cuenta_inventario_pt.debe + total
+				CuentaHija.objects.filter(id = cuenta_proceso.id).update(haber = nuevo_haber)
+				CuentaHija.objects.filter(id = cuenta_inventario_pt.id).update(debe = nuevo_debe)
+				Programacion_Proceso.objects.filter(id = programacion_proceso).update(terminado = True)
+				progra = Programacion_Proceso.objects.get(id = programacion_proceso).programacion
+				Programacion.objects.filter(id = progra.id).update(estado_programacion = True)
+				pass
+
+		lista_programacion = Programacion.objects.all()
+		return render(request,'contabilidad_costos/programacion_list.html', {'programaciones':lista_programacion})
+		pass
 	return render(request,'contabilidad_costos/seguimiento.html', {'procesos_pendientes':procesos_pendientes, 'materiales':materiales, 'cargos':cargos} )
 
-"""class ProgramacionesAjaxView(TemplateView):
-
-	def get(self, request, *args, **kwargs):
-		periodo = request.GET['periodo']
-		periodoObject = Periodo.objects.get(id = periodo)
-		fecha = request.GET['fecha']
-		producto = request.GET['producto']
-		productoNombre = Cuenta.objects.get(codigo_cuenta = producto).nombre_cuenta
-		cantidad = request.GET['cantidad']
-		programaciones = Programacion.objects.all().order_by('id')
-		id_programacion =programaciones[len(programaciones) - 1].id + 1
-		programacion = Programacion(id=id_programacion, periodo_programacion = periodoObject, fecha_programacion = fecha, producto_programacion = productoNombre, cantidad_programacion= int(cantidad))
-		programacion.save()
-		programacion_list = [programacion]
-		data = serializers.serialize('json',programacion_list,fields = ('id'))
-		return HttpResponse(data, content_type = 'application/json')"""
 
 class TransaccionesProgramacion(TemplateView):
 
 	def get(self, request, *args, **kwargs):
 		if request.GET['transaccion'] == 'CargarMP':
+			#Se obtendra el monto, a traves de kardex
 			programacion_proceso = request.GET['programacion_proceso']
-			periodo = Programacion_Proceso.objects.get(id = programacion_proceso).programacion.periodo_programacion.id
+			periodo_obj = Programacion_Proceso.objects.get(id = programacion_proceso).programacion.periodo_programacion
+			periodo= periodo_obj.id
 			producto = request.GET['producto']
 			cantidad = request.GET['cantidad']
 			fecha = time.strftime("%Y-%m-%d")
-			costoMP = peps(periodo, fecha, producto,cantidad,0, True, 0)
+			cv = list()
+			costoMP = peps(periodo, fecha, producto,int(cantidad),0, True, cv)
+			monto = 0.00
+			for x in costoMP:
+				monto = monto + x[2]
+				pass
+			ajuste_peps()
+			#Se creara la transaccion para luego cargar y abonar las cuentas correspondientes
+			fecha = time.strftime("%Y-%m-%d")
+			transaccion = Transaccion(fecha_transaccion = fecha, descripcion_transaccion = "Cargando materia prima al proceso productivo", periodo_transaccion = periodo_obj)
+			transaccion.save()
+			cuenta_mp = CuentaHija.objects.get(id = producto)
+			cuenta_proceso = Programacion_Proceso.objects.get(id = programacion_proceso).proceso.cuenta_proceso
+			transaccion_mp = Transaccion_Cuenta(debe_tc = 0.00, haber_tc = monto, cuenta_tc = cuenta_mp, transaccion_tc = transaccion)
+			transaccion_proceso = Transaccion_Cuenta(debe_tc = monto, haber_tc = 0.00, cuenta_tc = cuenta_proceso, transaccion_tc = transaccion)
+			
+			#Se comprobara partida doble y luego aplicar cambios en cuentas hijas
+			if transaccion_mp.haber_tc == transaccion_proceso.debe_tc:
+				transaccion_mp.save()
+				transaccion_proceso.save()
+				nuevo_haber = cuenta_mp.haber + monto
+				nuevo_debe = cuenta_proceso.debe + monto
+				CuentaHija.objects.filter(id = cuenta_mp.id).update(haber = nuevo_haber)
+				CuentaHija.objects.filter(id = cuenta_proceso.id).update(debe = nuevo_debe)
+				prog_proc_obj = Programacion_Proceso.objects.get(id = programacion_proceso) 
+				asignacion_mp = Asignar_Materia_Prima(cantidad_mp = float(cantidad), monto = monto, nombre_mp = cuenta_mp, proceso_prog_mp = prog_proc_obj)
+				asignacion_mp.save()
+				#Se alistara JSON para reflejar datos en la tabla de mp
+				data = serializers.serialize('json',[asignacion_mp],fields = ('proceso_prog_mp','nombre_mp','cantidad_mp','monto'))
+				return HttpResponse(data, content_type = 'application/json')
+				pass
+
+
 			pass
 
 		elif request.GET['transaccion'] == 'CargarMOD':
@@ -124,6 +192,62 @@ class TransaccionesProgramacion(TemplateView):
 			programacion_proceso = request.GET['programacion_proceso']
 			baseAsignacion = request.GET['baseAsignacion']
 			porcentajeAsignacion = request.GET['porcentajeAsignacion']
+			#Se procedera a calcular los montos de mod, mp y cp
+			prog_proc_obj = Programacion_Proceso.objects.get(id = programacion_proceso)
+			asignaciones_mp = Asignar_Materia_Prima.objects.filter(proceso_prog_mp = prog_proc_obj)
+			asignaciones_mod = Asignar_Mano_Obra.objects.filter(proceso_prog_mo = prog_proc_obj)
+
+			monto_mp = 0.00
+			monto_mod = 0.00
+			for x in asignaciones_mp:
+				monto_mp = monto_mp + x.monto
+				pass
+			for x in asignaciones_mod:
+				monto_mod = monto_mod + x.monto
+				pass
+			monto_cp = monto_mp + monto_mod
+			total_cif = 0.00
+
+			#Se calculara los CIF
+			if baseAsignacion == 'mod':
+				total_cif = monto_mod*float(porcentajeAsignacion)
+				pass
+
+			elif baseAsignacion == 'mp':
+				total_cif = monto_mp*float(porcentajeAsignacion)
+				pass
+
+			elif baseAsignacion == 'cp':
+				total_cif = monto_cp*float(porcentajeAsignacion)
+				pass
+
+			#Se procedera a realizar las transacciones
+			fecha = time.strftime("%Y-%m-%d")
+			periodo = Programacion_Proceso.objects.get(id = programacion_proceso).programacion.periodo_programacion
+			transaccion = Transaccion(fecha_transaccion = fecha, descripcion_transaccion = "Cargando CIF a proceso", periodo_transaccion = periodo)
+			transaccion.save()
+
+			cuenta_variacion = CuentaHija.objects.get(codigo_cuenta = 610101)
+			cuenta_proceso = Programacion_Proceso.objects.get(id = programacion_proceso).proceso.cuenta_proceso
+
+			transaccion_proceso = Transaccion_Cuenta(debe_tc = total_cif, haber_tc = 0.00, cuenta_tc = cuenta_proceso, transaccion_tc = transaccion)
+			transaccion_variacion = Transaccion_Cuenta(debe_tc = 0.00, haber_tc = total_cif, cuenta_tc = cuenta_variacion, transaccion_tc = transaccion)
+
+			#Se procede a comprobar partida doble y cerrar transacciones
+
+			if transaccion_proceso.debe_tc == transaccion_variacion.haber_tc:
+				transaccion_proceso.save()
+				transaccion_variacion.save()
+				nuevo_haber = cuenta_variacion.haber + total_cif
+				nuevo_debe = cuenta_proceso.debe + total_cif
+				CuentaHija.objects.filter(id = cuenta_variacion.id).update(haber = nuevo_haber)
+				CuentaHija.objects.filter(id = cuenta_proceso.id).update(debe = nuevo_debe)
+				prog_proc = Programacion_Proceso.objects.get(id = programacion_proceso)
+				asignacion_cif = Asignar_Cif(base_cif = baseAsignacion, porcentaje_cif = float(porcentajeAsignacion), proceso_prog_cif = prog_proc, monto = total_cif)
+				asignacion_cif.save()
+				data = serializers.serialize('json',[asignacion_cif],fields = ('base_cif','porcentaje_cif','proceso_prog_cif','monto'))
+				return HttpResponse(data, content_type = 'application/json')
+				pass
 			pass
 
 		data = serializers.serialize('json',[])
