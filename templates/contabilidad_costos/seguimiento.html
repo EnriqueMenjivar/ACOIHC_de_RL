@@ -183,13 +183,13 @@
 			var tdCantHrsEmp = document.createElement("td");
 			var tdMonto = document.createElement("td");
 
-			var cargo = document.createTextNode(data[0]);
+			var cargo = document.createTextNode(data[1]);
 			var cantEmp = document.createTextNode(data[2]);
 			var cantHrsEmp = document.createTextNode(data[3]);
 			var monto = document.createTextNode(data[4]);
 			var tabla = document.getElementById("tbMO1");
 
-			tr.setAttribute('id',data[0].cargo_mo);
+			tr.setAttribute('id',data[1]);
 			
 			tdCargo.appendChild(cargo);
 			tdCantEmp.appendChild(cantEmp);

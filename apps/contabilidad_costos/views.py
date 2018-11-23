@@ -53,7 +53,7 @@ def programacion_nueva(request):
 
 
 def seguimiento(request, id_programacion):
-	procesos_pendientes = Programacion_Proceso.objects.filter(programacion__id = id_programacion, terminado = False)[:1]
+	procesos_pendientes = Programacion_Proceso.objects.filter(programacion__id = id_programacion, terminado = False).order_by('id')[:1]
 	materiales = CuentaHija.objects.filter(codigo_padre='1105') | CuentaHija.objects.filter(codigo_padre='1104')
 	cargos = Cargo.objects.all()
 	return render(request,'contabilidad_costos/seguimiento.html', {'procesos_pendientes':procesos_pendientes, 'materiales':materiales, 'cargos':cargos} )
@@ -85,7 +85,6 @@ class TransaccionesProgramacion(TemplateView):
 			cantidad = request.GET['cantidad']
 			fecha = time.strftime("%Y-%m-%d")
 			costoMP = peps(periodo, fecha, producto,cantidad,0, True, 0)
-			print(costoMP)
 			pass
 
 		elif request.GET['transaccion'] == 'CargarMOD':
