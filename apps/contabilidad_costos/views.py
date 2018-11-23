@@ -2,11 +2,15 @@ from django.shortcuts import render, HttpResponse, redirect
 from apps.contabilidad_costos.models import *
 from apps.periodo.models import *
 from apps.catalogo.models import *
+from apps.contabilidad_general.models import *
 from apps.contabilidad_costos.forms import EmpleadoForms
+from apps.contabilidad_costos.peps import *
 from django.views.generic import TemplateView, ListView, CreateView
 from django.urls import reverse_lazy
 from datetime import datetime
 from django.core import serializers
+import datetime, time
+from decimal import Decimal
 
 
 def programacion_list(request):
@@ -49,10 +53,11 @@ def programacion_nueva(request):
 
 
 def seguimiento(request, id_programacion):
-	procesos_pendientes = Programacion_Proceso.objects.filter(programacion__id = id_programacion, terminado = False)
+	procesos_pendientes = Programacion_Proceso.objects.filter(programacion__id = id_programacion, terminado = False)[:1]
 	materiales = CuentaHija.objects.filter(codigo_padre='1105') | CuentaHija.objects.filter(codigo_padre='1104')
 	cargos = Cargo.objects.all()
 	return render(request,'contabilidad_costos/seguimiento.html', {'procesos_pendientes':procesos_pendientes, 'materiales':materiales, 'cargos':cargos} )
+
 """class ProgramacionesAjaxView(TemplateView):
 
 	def get(self, request, *args, **kwargs):
@@ -69,7 +74,61 @@ def seguimiento(request, id_programacion):
 		programacion_list = [programacion]
 		data = serializers.serialize('json',programacion_list,fields = ('id'))
 		return HttpResponse(data, content_type = 'application/json')"""
-		
+
+class TransaccionesProgramacion(TemplateView):
+
+	def get(self, request, *args, **kwargs):
+		if request.GET['transaccion'] == 'CargarMP':
+			programacion_proceso = request.GET['programacion_proceso']
+			periodo = Programacion_Proceso.objects.get(id = programacion_proceso).programacion.periodo_programacion.id
+			producto = request.GET['producto']
+			cantidad = request.GET['cantidad']
+			fecha = time.strftime("%Y-%m-%d")
+			costoMP = peps(periodo, fecha, producto,cantidad,0, True, 0)
+			print(costoMP)
+			pass
+
+		elif request.GET['transaccion'] == 'CargarMOD':
+			programacion_proceso = request.GET['programacion_proceso']
+			periodo = Programacion_Proceso.objects.get(id = programacion_proceso).programacion.periodo_programacion
+			cargoSueldo = request.GET['cargo']
+			cargo = cargoSueldo.split("/")[0]
+			sueldo = Decimal((cargoSueldo.split("/")[1]+"0").replace(",","."))
+			cantidadEmpleados = int(request.GET['cantidadEmpleados'])
+			cantidadHRSempleado = int(request.GET['cantidadHRSempleado'])
+			monto = float(sueldo*cantidadEmpleados*cantidadHRSempleado)
+			fecha = time.strftime("%Y-%m-%d")
+			transaccion = Transaccion(fecha_transaccion = fecha, descripcion_transaccion = "Cargando mano de obra a proceso", periodo_transaccion = periodo)
+			transaccion.save()
+			cuenta_sueldo = CuentaHija.objects.get(codigo_cuenta = 410101)
+			codigo_cuenta = Programacion_Proceso.objects.get(id = programacion_proceso).proceso.cuenta_proceso.codigo_cuenta
+			cuenta_proceso = CuentaHija.objects.get(codigo_cuenta = codigo_cuenta)
+			transaccion_sueldo = Transaccion_Cuenta(debe_tc = 0.00, haber_tc = monto, cuenta_tc = cuenta_sueldo, transaccion_tc = transaccion)
+			transaccion_proceso = Transaccion_Cuenta(debe_tc = monto, haber_tc = 0.00, cuenta_tc = cuenta_proceso, transaccion_tc = transaccion)
+			
+			if transaccion_proceso.debe_tc == transaccion_sueldo.haber_tc:
+				transaccion_sueldo.save()
+				transaccion_proceso.save()
+				nuevo_haber = cuenta_sueldo.haber + monto
+				nuevo_debe = cuenta_proceso.debe + monto
+				CuentaHija.objects.filter(id = cuenta_sueldo.id).update(haber = nuevo_haber)
+				CuentaHija.objects.filter(id = cuenta_proceso.id).update(debe = nuevo_debe)
+				prog_proc = Programacion_Proceso.objects.get(id = programacion_proceso)
+				cargo_obj = Cargo.objects.get(id = cargo)
+				asignacion_mo = Asignar_Mano_Obra(cantidad_horas_empleado = float(cantidadHRSempleado), cantidad_empleados = cantidadEmpleados, cargo_mo = cargo_obj, proceso_prog_mo = prog_proc, monto = monto)
+				asignacion_mo.save()
+				data = serializers.serialize('json',[asignacion_mo],fields = ('cantidad_horas_empleado','cantidad_empleados','cargo_mo','proceso_prog_mo', 'monto'))
+				return HttpResponse(data, content_type = 'application/json')
+			pass
+
+		elif request.GET['transaccion'] == 'CargarCIF':
+			programacion_proceso = request.GET['programacion_proceso']
+			baseAsignacion = request.GET['baseAsignacion']
+			porcentajeAsignacion = request.GET['porcentajeAsignacion']
+			pass
+
+		data = serializers.serialize('json',[])
+		return HttpResponse(data, content_type = 'application/json')
 
 class Lista_Empleados(ListView):
 	model = Empleado

@@ -71,6 +71,7 @@ class Programacion(models.Model):
 class Proceso(models.Model):
 	nombre_proceso = models.CharField(max_length=100)
 	proceso_siguiente = models.CharField(max_length=100)
+	cuenta_proceso = models.ForeignKey(CuentaHija, null=True, on_delete=models.CASCADE)
 	def __str__(self):
 		return self.nombre_proceso
 
@@ -98,5 +99,6 @@ class Asignar_Mano_Obra(models.Model):
 	cargo_mo = models.ForeignKey(Cargo, null=True, on_delete=models.CASCADE)
 	cantidad_horas_empleado = models.FloatField()
 	cantidad_empleados = models.IntegerField()
+	monto = models.FloatField()
 
 
