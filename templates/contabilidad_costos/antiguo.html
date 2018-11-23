@@ -1,0 +1,257 @@
+{% extends 'base/base.html'%}
+{% block title %} Programacion nueva {% endblock %}
+{% block extracss %}
+
+{% endblock %}
+{% block portada %}<br><br><br>{% endblock %}
+{% block content %}
+<div class="divBorder">
+	<br>
+	<h4>Datos de la Programacion</h4>
+	
+	<form action="/" id="fmProgramacionNueva" name="programacion_nueva" method="POST">
+		{% csrf_token %}
+		<div class="form-group">
+			<label>Periodo contable</label>
+			<select id="periodo" name="perido" class="form-control">
+			  <option>--Seleccione--</i></option>
+			  {% if periodos %}
+			  	{% for periodo in periodos %}
+			  		<option value="{{ periodo.id }}">{{ periodo.id }}, del {{ periodo.inicio_periodo }} al {{ periodo.final_periodo }} </option>
+			  	{% endfor %}
+			  {% else %}
+			  	<option>No hay periodos</option>
+			  {% endif %}
+			  
+			</select>
+			<small class="form-text text-muted">Seleccione el periodo al cual pertenecera la programacion.</small>
+		</div>
+		<div class="form-group">
+			<label>Fecha de programacion</label>
+			<input id="fecha" type="date" class="form-control" name="fecha">
+		</div>
+		<div class="form-group">
+			<label>Producto a realizar</label>
+			<select id="producto" class="form-control" name="producto">
+			  <option>--Seleccione--</i></option>
+			  {% if productos %}
+			  	{% for producto in productos %}
+			  		<option value="{{ producto.codigo_cuenta }}">{{ producto.codigo_cuenta }} {{ producto.nombre_cuenta }}</option>
+			  	{% endfor %}
+			  {% else %}
+			  	<option>No hay productos</option>
+			  {% endif %}
+			 
+			</select>
+			<small class="form-text text-muted">Seleccione el producto a producir.</small>
+		</div>
+
+		<div class="form-group">
+			<label>Cantidad a realizar</label>
+			<input id="cantidad" type="text" class="form-control" name="cantidad" placeholder="Ingrese la cantidad de producto" min="1">
+		</div>
+
+		<input id="btnGuardar" type="button" class="btn btn-primary" name="" value="Guardar">
+		<button type="submit" class="btn btn-primary" align="center" />Guardar</button>
+		<input type="button" class="btn btn-secondary" name="" value="Cancelar">
+
+	</form>
+</div>
+
+<div class="divBorder">
+	<br>
+	<h4>Proceso 1</h4>
+	<form id="fmProceso1" name="fmProceso1" method="POST">
+		<div class="form_group">
+			<label>Materia prima</label>
+			<select id="materiaPrima" class="form-control">
+				<option>--Seleccione--</option>
+				{% if materiales %}
+					{% for materia in materiales %}
+						<option value="{{ materia.codigo_cuenta }}">{{ materia.nombre_cuenta }}</option>
+					{% endfor %}
+				{% else %}
+				{% endif %}
+			</select>
+		</div>
+		<div class="form_group">
+			<label>Precio unitario</label>
+			<input class="form-control" type="text" id="precio_unit" name="precio_unit">
+		</div>
+		<div class="form_group">
+			<label>Cantidad</label>
+			<input  id="cantMP1" class="form-control" type="text" name="cantMP1">
+		</div>
+		<br>
+		<input type="button" class="btn btn-primary" onclick="cargar()" name="btnCargar" value="Cargar">
+	</form>
+	<div id="tbDiv">
+		<table class="table" id="tbMP1">
+			<thead id="thead-dark" class="thead-dark">
+				<tr>
+					<th scope="col">Materia prima</th>
+					<th scope="col">Precio unitario</th>
+					<th scope="col">Cantidad</th>
+					<th scope="col">Monto</th>
+					<th scope="col">Acciones</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+	<br>
+	<div class="contador">
+		<label>Total materia prima:</label>
+		<input type="text" id="totalMP" name="totalMP" value="0" disabled="">
+	</div>
+	<br>
+	<form method="POST" id="fmProceso1MO">
+		<div class="form_group">
+			<label>Cargo</label>
+			<select id="cargo1" class="form-control">
+				<option>--Seleccione--</option>
+				{% if cargos %}
+					{% for cargo in cargos %}
+						<option value="{{ cargo.id }}/{{ cargo.sueldo_base }}">{{ cargo.nombre_cargo }}</option>
+					{% endfor %}
+				{% else %}
+				{% endif %}
+			</select>
+		</div>
+		<div class="form_group">
+			<label>Cantidad empleados</label>
+			<input class="form-control" type="text" id="cant_mo_p1" name="cant_mo_p1">
+		</div>
+		<div class="form_group">
+			<label>Cantidad hrs/empleado</label>
+			<input class="form-control" type="text" id="cant_hrs_mo_p1" name="cant_hrs_mo_p1">
+		</div>
+		<br>
+		<input type="button" class="btn btn-primary" onclick="cargarMO()" name="btnCargar" value="Cargar">
+	</form>
+	<div id="tbDiv2">
+		<table class="table" id="tbMO1">
+			<thead id="thead-dark" class="thead-dark">
+				<tr>
+					<th scope="col">Cargo</th>
+					<th scope="col">Cantidad empl</th>
+					<th scope="col">Cantidad hrs/emp</th>
+					<th scope="col">Monto</th>
+					<th scope="col">Acciones</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+	<div class="contador">
+		<label>Total mano de obra:</label>
+		<input type="text" id="totalMO" name="totalMO" value="0" disabled="">
+	</div>
+	<br>
+</div>	
+	
+{% endblock %}
+
+{% block extrajs %}
+	<script>
+		document.getElementById("totalMO").value = "0";
+		document.getElementById("totalMP").value = "0";
+		$("#btnGuardar").click(function(){
+			
+			var periodo = $("#periodo").val();
+			var fecha = $("#fecha").val();
+			var producto = $("#producto").val();
+			var cantidad = $("#cantidad").val();
+			$.ajax({
+
+				method : 'GET',
+				url : '/contabilidad_costos/programaciones_ajax/',
+				data : {'periodo': periodo,'fecha': fecha,'producto': producto,'cantidad': cantidad},
+				success : function(data){
+					alert(data[0].pk);
+				}
+			});
+				
+		});
+		function cargar(){ 
+			 var tr = document.createElement("tr");
+			 var tdMateria = document.createElement("td");
+			 var tdPU = document.createElement("td");
+			 var tdCant = document.createElement("td");
+			 var tdMonto = document.createElement("td");
+			 var tdInput = document.createElement("input");
+			 var materia = document.createTextNode(document.getElementById("materiaPrima").value);
+			 var precio = document.createTextNode(document.getElementById("precio_unit").value);
+			 var cantidad = document.createTextNode(document.getElementById("cantMP1").value);
+			 var montoCalculado = parseFloat(document.getElementById("precio_unit").value)*parseInt(document.getElementById("cantMP1").value, 10);
+			 var monto = document.createTextNode(montoCalculado.toString());
+			 var tabla = document.getElementById("tbMP1");
+
+			 tr.setAttribute('id',document.getElementById("materiaPrima").value);
+			 tdInput.setAttribute('class','btn btn-danger');
+			 tdInput.setAttribute('value','Eliminar');
+			 tdInput.setAttribute('onclick','eliminar('+document.getElementById("materiaPrima").value+','+montoCalculado+')');
+			 tdMateria.appendChild(materia);
+			 tdPU.appendChild(precio);
+			 tdCant.appendChild(cantidad);
+			 tdMonto.appendChild(monto);
+			 tr.appendChild(tdMateria);
+			 tr.appendChild(tdPU);
+			 tr.appendChild(tdCant);
+			 tr.appendChild(tdMonto);
+			 tr.appendChild(tdInput);
+			 tabla.appendChild(tr);
+			 document.getElementById("totalMP").value = (parseFloat(document.getElementById("totalMO").value) + parseFloat(document.getElementById("precio_unit").value)*parseInt(document.getElementById("cantMP1").value, 10)).toString();
+			 document.getElementById("fmProceso1").reset(); 
+		}
+		function eliminar(materiaPrima, monto){
+			var tr = document.getElementById(materiaPrima);
+    		var tabla = document.getElementById("tbMP1");
+    		tabla.removeChild(tr);
+    		document.getElementById("totalMP").value = (parseFloat(document.getElementById("totalMP").value) - parseFloat(monto)).toString();
+		}
+
+		function cargarMO(){ 
+			var tr = document.createElement("tr");
+			var tdCargo= document.createElement("td");
+			var tdCantEmp= document.createElement("td");
+			var tdCantHrsEmp = document.createElement("td");
+			var tdMonto = document.createElement("td");
+			var tdAcciones= document.createElement("td");
+			var eliminar = document.createElement("input");
+
+			var valueCargo = document.getElementById("cargo1").value.split("/");
+			var cargo = document.createTextNode(valueCargo[0]);
+			var cantEmp = document.createTextNode(document.getElementById("cant_mo_p1").value);
+			var cantHrsEmp = document.createTextNode(document.getElementById("cant_hrs_mo_p1").value);
+			var montoCalculado = Math.round(parseInt(document.getElementById("cant_mo_p1").value,10)*parseInt(document.getElementById("cant_hrs_mo_p1").value)*(parseFloat(valueCargo[1])*12/(360*8))).toString();
+			var monto = document.createTextNode(montoCalculado);
+			var tabla = document.getElementById("tbMO1");
+
+			tr.setAttribute('id',document.getElementById("cargo1").value);
+			var parametro = document.getElementById("cargo1").value;
+			eliminar.setAttribute('class','btn btn-danger');
+			eliminar.setAttribute('value','Eliminar');
+			eliminar.setAttribute('onclick','eliminarMO('+'"'+parametro+'",'+ parseFloat(montoCalculado) +')');
+
+			tdCargo.appendChild(cargo);
+			tdCantEmp.appendChild(cantEmp);
+			tdCantHrsEmp.appendChild(cantHrsEmp);
+			tdMonto.appendChild(monto);
+			tdAcciones.appendChild(eliminar);
+
+			tr.appendChild(tdCargo);
+			tr.appendChild(tdCantEmp);
+			tr.appendChild(tdCantHrsEmp);
+			tr.appendChild(tdMonto);
+			tr.appendChild(tdAcciones);
+			tabla.appendChild(tr);
+			document.getElementById("totalMO").value = (parseFloat(document.getElementById("totalMO").value) + Math.round(parseInt(document.getElementById("cant_mo_p1").value,10)*parseInt(document.getElementById("cant_hrs_mo_p1").value)*(parseFloat(valueCargo[1])*12/(360*8)))).toString();
+			document.getElementById("fmProceso1MO").reset();
+		}
+		function eliminarMO(cargo1,monto){
+			var tr = document.getElementById(cargo1);
+    		var tabla = document.getElementById("tbMO1");
+    		tabla.removeChild(tr);
+    		document.getElementById("totalMO").value = (parseFloat(document.getElementById("totalMO").value) - monto).toString();
+		}
+	</script>
+{% endblock %}
