@@ -244,6 +244,11 @@ INSERT INTO catalogo_cuentahija VALUES(132, 4103, 'Reparación de maquinaria', '4
 
 INSERT INTO catalogo_cuentahija VALUES(133, 4104, 'costo de lo vendido', '410401', '', 0.0, 0.0, 0.0, 0.0, 36);
 
+INSERT INTO catalogo_cuentahija VALUES(137, 2103, 'Cuentas por Pagar', '210301', '', 0.0, 0.0, 0.0, 0.0, 19);
+
+INSERT INTO catalogo_cuentahija VALUES(138, 1109, 'Cuentas por Cobrar', '110901', '', 0.0, 0.0, 0.0, 0.0, 9);
+
+
 --Resultado acreedoras
 
 INSERT INTO catalogo_cuentahija VALUES(134, 5101, 'Ingreso por ventas', '510101', '', 0.0, 0.0, 0.0, 0.0, 37);
