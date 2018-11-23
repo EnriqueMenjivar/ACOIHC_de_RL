@@ -125,7 +125,7 @@
                         <div class="col-lg-4">
                             <h3>Activos</h3>
                             {%for c in cuentas%}
-                            {%ifequal c.padre.agrupacion.codigo_grup.nombre_grupo 'ACTIVO' %}
+                            {%ifequal c.padre.agrupacion.codigo_grup.nombre_grupo 'ACTIVO'%}
                             {%if c.padre.id != 3 and c.padre.id != 4 and c.padre.id != 5 and c.padre.id != 6 and c.padre.id != 7 and c.padre.id != 8 and c.padre.id != 14 and c.padre.id != 16 %}
                             <div class="row">
                                 <label><input type="checkbox" aria-label="Checkbox for following text input" name="{{c.id}}haber">{{c.nombre_cuenta}}

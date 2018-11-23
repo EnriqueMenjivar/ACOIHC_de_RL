@@ -79,13 +79,81 @@ def transaccion(request):
 
 
 def compra_inventario(request):
+    cuentas = CuentaHija.objects.select_related().all()
     periodo = Periodo.objects.get(estado_periodo=False)
     form1 = TransaccionForm()
     if request.is_ajax():
         iniciar_transaccion(request, form1)
 
+    if 'guardar' in request.POST:
+        if 'cuenta' in request.POST and 'total' in request.POST and 'iva'in request.POST and 'cxp' in request.POST and 'efectivo' in request.POST:
+            t = Transaccion.objects.latest('id')
+            # Cargado
+            c = CuentaHija.objects.get(nombre_cuenta=request.POST['cuenta'])
+            totalCompra = request.POST['total']
+            iva = request.POST['iva']
+
+            tran = Transaccion_Cuenta(
+                transaccion_tc=t,
+                cuenta_tc=c,
+                debe_tc=Decimal(totalCompra),
+                haber_tc=Decimal("0.0"),
+            )
+            tran.save()
+
+            tran1 = Transaccion_Cuenta(
+                transaccion_tc=t,
+                cuenta_tc=CuentaHija.objects.get(id=24),
+                debe_tc=Decimal(iva),
+                haber_tc=Decimal("0.0"),
+            )
+            tran1.save()
+
+            if request.POS['efectivo'] == 'on' and request.POST['cxp'] == 'on':
+                efectivo = request.POST['efectivo']
+                cxp = request.POST['cxp']
+
+                tran = Transaccion_Cuenta(
+                    transaccion_tc=t,
+                    cuenta_tc=CuentaHija.objects.get(id=1),
+                    debe_tc=Decimal("0.0"),
+                    haber_tc=Decimal(efectivo),
+                )
+                tran.save()
+
+                tran1 = Transaccion_Cuenta(
+                    transaccion_tc=t,
+                    cuenta_tc=CuentaHija.objects.get(),
+                    debe_tc=Decimal("0.0"),
+                    haber_tc=Decimal(cxp),
+                )
+                tran1.save()
+
+            else:
+                if request.POST['efectivo'] == 'on':
+                    efectivo = request.POST['efectivo']
+                    tran = Transaccion_Cuenta(
+                        transaccion_tc=t,
+                        cuenta_tc=CuentaHija.objects.get(id=1),
+                        debe_tc=Decimal("0.0"),
+                        haber_tc=Decimal(efectivo),
+                    )
+                    tran.save()
+
+                else:
+                    cxp = request.POST['cxp']
+                    tran1 = Transaccion_Cuenta(
+                        transaccion_tc=t,
+                        cuenta_tc=CuentaHija.objects.get(),
+                        debe_tc=Decimal("0.0"),
+                        haber_tc=Decimal(cxp),
+                    )
+                    tran1.save()
+
+            # Me quede ya solo para asignar valores a guardar y me falta validar partida doble calcular el iva y otras cosas.
+
     contexto = {
-        'form': form1, 'periodo': periodo
+        'form': form1, 'periodo': periodo, 'cuentas': cuentas
     }
     return render(request, 'transaccion/transaccion_especial.html', contexto)
 
@@ -95,14 +163,14 @@ def aumentar_saldo(id_cuenta, monto, opcion):
     if opcion:
         cuenta.debe = cuenta.debe+float(monto)
     else:
-        cuenta.haber=cuenta.haber+float(monto)
-    
-    if cuenta.debe==cuenta.haber:
-        cuenta.saldo_deudor_cuenta=0
-        cuenta.saldo_acreedor_cuenta=0
+        cuenta.haber = cuenta.haber+float(monto)
+
+    if cuenta.debe == cuenta.haber:
+        cuenta.saldo_deudor_cuenta = 0
+        cuenta.saldo_acreedor_cuenta = 0
     else:
-        if cuenta.debe>cuenta.haber:
-            cuenta.saldo_deudor_cuenta=cuenta.debe-cuenta.haber
+        if cuenta.debe > cuenta.haber:
+            cuenta.saldo_deudor_cuenta = cuenta.debe-cuenta.haber
         else:
-            cuenta.saldo_acreedor_cuenta=cuenta.haber-cuenta.debe
+            cuenta.saldo_acreedor_cuenta = cuenta.haber-cuenta.debe
     cuenta.save()
