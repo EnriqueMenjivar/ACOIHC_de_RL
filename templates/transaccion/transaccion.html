@@ -125,7 +125,7 @@
                         <div class="col-lg-4">
                             <h3>Activos</h3>
                             {%for c in cuentas%}
-                            {%ifequal c.padre.agrupacion.codigo_grup.nombre_grupo 'ACTIVO' %}
+                            {%ifequal c.padre.agrupacion.codigo_grup.nombre_grupo 'ACTIVO'%}
                             {%if c.padre.id != 3 and c.padre.id != 4 and c.padre.id != 5 and c.padre.id != 6 and c.padre.id != 7 and c.padre.id != 8 and c.padre.id != 14 and c.padre.id != 16 %}
                             <div class="row">
                                 <label><input type="checkbox" aria-label="Checkbox for following text input" name="{{c.id}}haber">{{c.nombre_cuenta}}
@@ -233,10 +233,11 @@
             <div class="btn-group-vertical">
                 <button type="button" class="btn btn-primary" onclick="location='{%url 'transaccion:compra_inv'%}';">Compra de
                     Inventario</button>
-                <button type="button" class="btn btn-info">Venta de Productos Terminados</button>
-                <button type="button" class="btn btn-primary">Devolucion S/Compra de Inventario</button>
-                <button type="button" class="btn btn-info">Devolucion S/Venta de Inventario</button>
-                <button type="button" class="btn btn-primary">Compra de Maquinaria y Equipo</button>
+                <button type="button" class="btn btn-info"  onclick="location='{%url 'transaccion:venta'%}';">Venta de Productos Terminados</button>
+                <button type="button" class="btn btn-primary" onclick="location='{%url 'transaccion:dev_compra'%}';">Devolucion S/Compra de Inventario</button>
+                
+                <button type="button" class="btn btn-info" onclick="location='{%url 'transaccion:compra_tangibles'%}';">Compra de Bienes Tangibles</button>
+                <button type="button" class="btn btn-primary" onclick="location='{%url 'transaccion:venta_tangibles'%}';">Venta de Bienes Tangibles</button>
             </div>
 
         </div>
@@ -342,6 +343,7 @@
                 <button type="button" class="btn btn-success" onclick="validar()">Registrar Transaccion</button>
             </div>
         </div>
+        
         <div class="row jumbotron container-fluid text-center">
 
             <table class="table">
