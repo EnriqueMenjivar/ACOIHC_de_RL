@@ -98,7 +98,7 @@ def compra_inventario(request):
 
         cv = list()
         cv = peps(periodo.id, t.fecha_transaccion, c.id,int(cant),float(precio_uni), False, cv)
-        ajuste_peps()
+        
 
         tran = Transaccion_Cuenta(
             transaccion_tc=t,
@@ -192,7 +192,7 @@ def devolucion_compra(request):
         cv = list()
         cv = peps(periodo.id, t.fecha_transaccion, c.id,
                   int(cant), float(precio_uni), True, cv)
-        ajuste_peps()
+        
 
         if cv:
             tran = Transaccion_Cuenta(
@@ -292,7 +292,7 @@ def venta(request):
         cv = peps(periodo.id, t.fecha_transaccion,
                   c.id, int(cant), 0, True, cv)
 
-        ajuste_peps()
+        
 
         costo = 0
 
