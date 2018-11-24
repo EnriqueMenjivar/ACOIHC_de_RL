@@ -23,7 +23,7 @@ def iniciar_transaccion(request, form1):
 
 def transaccion(request):
     cuentas = CuentaHija.objects.select_related().all()
-    periodo = Periodo.objects.get(estado_periodo=False)
+    periodo = Periodo.objects.latest('id')
     cuentasDebe = []
     cuentasHaber = []
 
@@ -81,7 +81,7 @@ def transaccion(request):
 
 def compra_inventario(request):
     cuentas = CuentaHija.objects.select_related().all()
-    periodo = Periodo.objects.get(estado_periodo=False)
+    periodo = Periodo.objects.latest('id')
     form1 = TransaccionForm()
     if request.is_ajax():
         iniciar_transaccion(request, form1)
@@ -97,8 +97,7 @@ def compra_inventario(request):
         cant = request.POST['cantidad']
 
         cv = list()
-        cv = peps(periodo.id, t.fecha_transaccion, c.id,
-                  int(cant), float(precio_uni), False, cv)
+        cv = peps(periodo.id, t.fecha_transaccion, c.id,int(cant),float(precio_uni), False, cv)
         ajuste_peps()
 
         tran = Transaccion_Cuenta(
@@ -174,8 +173,9 @@ def compra_inventario(request):
 
 def devolucion_compra(request):
     cuentas = CuentaHija.objects.select_related().all()
-    periodo = Periodo.objects.get(estado_periodo=False)
+    periodo = Periodo.objects.latest('id')
     form1 = TransaccionForm()
+    error=False
     if request.is_ajax():
         iniciar_transaccion(request, form1)
 
@@ -194,50 +194,30 @@ def devolucion_compra(request):
                   int(cant), float(precio_uni), True, cv)
         ajuste_peps()
 
-        tran = Transaccion_Cuenta(
-            transaccion_tc=t,
-            cuenta_tc=c,
-            haber_tc=Decimal(totalCompra),
-            debe_tc=Decimal("0.0"),
-        )
-        tran.save()
-        aumentar_saldo(c.id, totalCompra, False)
+        if cv:
+            tran = Transaccion_Cuenta(
+                transaccion_tc=t,
+                cuenta_tc=c,
+                haber_tc=Decimal(totalCompra),
+                debe_tc=Decimal("0.0"),
+            )
+            tran.save()
+            aumentar_saldo(c.id, totalCompra, False)
 
-        tran1 = Transaccion_Cuenta(
-            transaccion_tc=t,
-            cuenta_tc=CuentaHija.objects.get(id=24),
-            haber_tc=Decimal(iva),
-            debe_tc=Decimal("0.0"),
-        )
-        tran1.save()
-        aumentar_saldo(24, iva, False)
+            tran1 = Transaccion_Cuenta(
+                transaccion_tc=t,
+                cuenta_tc=CuentaHija.objects.get(id=24),
+                haber_tc=Decimal(iva),
+                debe_tc=Decimal("0.0"),
+            )
+            tran1.save()
+            aumentar_saldo(24, iva, False)
 
-        if 'efectivo0' in request.POST and 'cxp0' in request.POST:
-            if request.POST['efectivo0'] == 'on' and request.POST['cxp0'] == 'on':
-                efectivo = request.POST['efectivo']
-                cxp = request.POST['cxp']
-
-                tran = Transaccion_Cuenta(
-                    transaccion_tc=t,
-                    cuenta_tc=CuentaHija.objects.get(id=1),
-                    haber_tc=Decimal("0.0"),
-                    debe_tc=Decimal(efectivo),
-                )
-                tran.save()
-                aumentar_saldo(1, efectivo, True)
-
-                tran1 = Transaccion_Cuenta(
-                    transaccion_tc=t,
-                    cuenta_tc=CuentaHija.objects.get(id=137),
-                    haber_tc=Decimal("0.0"),
-                    debe_tc=Decimal(cxp),
-                )
-                tran1.save()
-                aumentar_saldo(137, cxp, True)
-        else:
-            if 'efectivo0' in request.POST:
-                if request.POST['efectivo0'] == 'on':
+            if 'efectivo0' in request.POST and 'cxp0' in request.POST:
+                if request.POST['efectivo0'] == 'on' and request.POST['cxp0'] == 'on':
                     efectivo = request.POST['efectivo']
+                    cxp = request.POST['cxp']
+
                     tran = Transaccion_Cuenta(
                         transaccion_tc=t,
                         cuenta_tc=CuentaHija.objects.get(id=1),
@@ -247,28 +227,54 @@ def devolucion_compra(request):
                     tran.save()
                     aumentar_saldo(1, efectivo, True)
 
+                    tran1 = Transaccion_Cuenta(
+                        transaccion_tc=t,
+                        cuenta_tc=CuentaHija.objects.get(id=137),
+                        haber_tc=Decimal("0.0"),
+                        debe_tc=Decimal(cxp),
+                    )
+                    tran1.save()
+                    aumentar_saldo(137, cxp, True)
             else:
-                cxp = request.POST['cxp']
-                tran1 = Transaccion_Cuenta(
-                    transaccion_tc=t,
-                    cuenta_tc=CuentaHija.objects.get(id=137),
-                    haber_tc=Decimal("0.0"),
-                    debe_tc=Decimal(cxp),
-                )
-                tran1.save()
-                aumentar_saldo(137, cxp, True)
+                if 'efectivo0' in request.POST:
+                    if request.POST['efectivo0'] == 'on':
+                        efectivo = request.POST['efectivo']
+                        tran = Transaccion_Cuenta(
+                            transaccion_tc=t,
+                            cuenta_tc=CuentaHija.objects.get(id=1),
+                            haber_tc=Decimal("0.0"),
+                            debe_tc=Decimal(efectivo),
+                        )
+                        tran.save()
+                        aumentar_saldo(1, efectivo, True)
 
-        return redirect('transaccion:transacciones')
+                else:
+                    cxp = request.POST['cxp']
+                    tran1 = Transaccion_Cuenta(
+                        transaccion_tc=t,
+                        cuenta_tc=CuentaHija.objects.get(id=137),
+                        haber_tc=Decimal("0.0"),
+                        debe_tc=Decimal(cxp),
+                    )
+                    tran1.save()
+                    aumentar_saldo(137, cxp, True)
+
+            return redirect('transaccion:transacciones')
+        else:
+            error = True
+            contexto = {
+                'form': form1, 'periodo': periodo, 'cuentas': cuentas, 'error': error
+            }
 
     contexto = {
-        'form': form1, 'periodo': periodo, 'cuentas': cuentas
+        'form': form1, 'periodo': periodo, 'cuentas': cuentas, 'error': error
     }
     return render(request, 'transaccion/transaccion_devo_compra.html', contexto)
 
 
 def venta(request):
     cuentas = CuentaHija.objects.select_related().all()
-    periodo = Periodo.objects.get(estado_periodo=False)
+    periodo = Periodo.objects.latest('id')
     error = False
     form1 = TransaccionForm()
     if request.is_ajax():
@@ -371,7 +377,7 @@ def venta(request):
 
 def compra_tangibles(request):
     cuentas = CuentaHija.objects.select_related().all()
-    periodo = Periodo.objects.get(estado_periodo=False)
+    periodo = Periodo.objects.latest('id')
     form1 = TransaccionForm()
     if request.is_ajax():
         iniciar_transaccion(request, form1)
@@ -459,7 +465,7 @@ def compra_tangibles(request):
 
 def venta_tangibles(request):
     cuentas = CuentaHija.objects.select_related().all()
-    periodo = Periodo.objects.get(estado_periodo=False)
+    periodo = Periodo.objects.latest('id')
     form1 = TransaccionForm()
     if request.is_ajax():
         iniciar_transaccion(request, form1)

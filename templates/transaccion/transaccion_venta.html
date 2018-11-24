@@ -40,7 +40,7 @@
     <br><br><br><br>
     <div class="col-lg-12 form-group">
         <select class="form-control" name="cuenta" required>
-            <option>Seleccione Cuenta</option>
+            
             {%for c in cuentas%}
             {%if c.padre.id == 3 %}
             <option>{{c.nombre_cuenta}}</option>
