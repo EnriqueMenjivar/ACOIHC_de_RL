@@ -13,6 +13,7 @@ function partidaDoble() {
         acumhab = acumhab + parseFloat(haber[j].value);
         
     }
+    console.log(acumdeb);
     document.getElementById("resultadodeb").innerHTML = acumdeb;
     document.getElementById("resultadohab").innerHTML = acumhab;
 }
