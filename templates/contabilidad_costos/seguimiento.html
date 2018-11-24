@@ -9,8 +9,8 @@
 	{% if procesos_pendientes %}
 		{% for proceso_perdiente in procesos_pendientes %}
 			<div class="divBorder" style="padding: 50px;"><br>
-				<h4>Proceso: {{proceso_perdiente.proceso.nombre_proceso}}</h4><br>
-				<h5>Asignacion de materia prima</h5>
+				<h4>Proceso: <b>{{proceso_perdiente.proceso.nombre_proceso}}</b></h4><br>
+				<h5 style="color:  #2874a6  ;">Asignacion de materia prima</h5>
 				<form method="POST" id="frmMP" name="frmMP{{proceso_perdiente.proceso.id}}">
 					<input type="text" id="idProgramacionProceso" name="idProgramacionProceso" value="{{proceso_perdiente.id}}" style="display: none;">
 					<div class="form_group">
@@ -49,7 +49,7 @@
 					<label>Total materia prima:</label>
 					<input type="text" class="form-control" id="contMP" name="totalMP{{proceso_perdiente.proceso.id}}" value="0" disabled="">
 				</div><br><br>
-				<h5>Asignacion de mano de obra directa</h5>
+				<h5 style="color:  #2874a6  ;">Asignacion de mano de obra directa</h5>
 				<form method="POST" id="frmMOD" name="frmMOD{{proceso_perdiente.proceso.id}}">
 					<div class="form_group">
 						<label>Cargo</label>
@@ -90,7 +90,7 @@
 					<label>Total mano de obra directa:</label>
 					<input type="text" class="form-control" id="contMOD" name="totalMOD{{proceso_perdiente.proceso.id}}" value="0" disabled="">
 				</div><br><br>
-				<h5>Asignacion de costos indirectos de fabricación</h5>
+				<h5 style="color:  #2874a6  ;">Asignacion de costos indirectos de fabricación</h5>
 				<form method="POST" name="frmCIF{{proceso_perdiente.proceso.id}}">
 					<div class="form_group">
 						<label>Base de asignacion</label>
@@ -115,14 +115,14 @@
 				<form method="POST">
 					{% csrf_token %}
 					<input type="text" id="idProgramacionProceso" name="idProgramacionProcesofrm" value="{{proceso_perdiente.id}}" style="display: none;">
-					<input type="submit" style="margin-left: 1100px; font-size: 1.2em;" class="btn btn-danger" name="btnTerminarProceso" value="Terminar proceso">
+					<input type="submit" style="margin-left: 1100px; font-size: 1.2em;" class="btn btn-success" name="btnTerminarProceso" value="Terminar proceso">
 				</form>
 			</div>
 		{% endfor %}
 	{% else %}
 		<h1>No hay procesos pendientes</h1>
 	{% endif %}
-
+<input type="button" class="btn btn-danger" style="font-size: 1.2em;" onclick="location.href = '{% url 'programaciones_lista' %}'" value="Regresar"><br><br>
 {% endblock %}
 
 {% block extrajs %}

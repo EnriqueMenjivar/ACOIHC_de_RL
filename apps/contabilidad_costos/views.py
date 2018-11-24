@@ -108,6 +108,22 @@ def seguimiento(request, id_programacion):
 		pass
 	return render(request,'contabilidad_costos/seguimiento.html', {'procesos_pendientes':procesos_pendientes, 'materiales':materiales, 'cargos':cargos} )
 
+def ver_detalles(request, id_programacion):
+	#Se recibe el id_porgramacion para recoger todos los procesos asociados a la programacion y recorrerlos luego en el template
+	programacion = Programacion.objects.get(id = id_programacion)
+	producto = CuentaHija.objects.get(codigo_cuenta = programacion.producto_programacion)
+	programacion_procesos = Programacion_Proceso.objects.filter(programacion = programacion)
+	return render(request, 'contabilidad_costos/ver_detalles.html', {'programacion_procesos':programacion_procesos, 'producto':producto, 'programacion':programacion})
+
+def ver_detalles_proceso(request, id_proceso):
+	programacion_proceso = Programacion_Proceso.objects.get(id = id_proceso)
+	programacion = programacion_proceso.programacion
+	asignaciones_mp = Asignar_Materia_Prima.objects.filter(proceso_prog_mp = programacion_proceso)
+	asignaciones_mo = Asignar_Mano_Obra.objects.filter(proceso_prog_mo = programacion_proceso)
+	asignaciones_cif = Asignar_Cif.objects.filter(proceso_prog_cif = programacion_proceso)
+	contexto = {'programacion': programacion, 'programacion_proceso': programacion_proceso, 'asignaciones_mp':asignaciones_mp, 'asignaciones_mo':asignaciones_mo, 'asignaciones_cif':asignaciones_cif}
+	print(contexto)
+	return render(request, 'contabilidad_costos/ver_detalles_proceso.html', contexto)
 
 class TransaccionesProgramacion(TemplateView):
 
@@ -126,7 +142,7 @@ class TransaccionesProgramacion(TemplateView):
 			for x in costoMP:
 				monto = monto + x[2]
 				pass
-			ajuste_peps()
+				#Aqui iva ajuste_peps()
 			#Se creara la transaccion para luego cargar y abonar las cuentas correspondientes
 			fecha = time.strftime("%Y-%m-%d")
 			transaccion = Transaccion(fecha_transaccion = fecha, descripcion_transaccion = "Cargando materia prima al proceso productivo", periodo_transaccion = periodo_obj)
