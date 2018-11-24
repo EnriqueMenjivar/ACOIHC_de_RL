@@ -14,8 +14,10 @@
 </div>
 
 <div class="col-lg-2">
+
 </div>
-<div class="col-lg-8">
+<div class="
+        col-lg-8">
     <div class="row jumbotron container-fluid">
         <form method="POST" class="formulario" data-url="/transaccion/">
 
@@ -53,7 +55,7 @@
     <hr />
     <!--Transacciones-->
     <!--Compras de Inventarios-->
-    
+
     <div class="row jumbotron container-fluid text-center">
         <div class="row">
             <form action="" method="POST">
@@ -65,7 +67,7 @@
                     {% block Debe%}
 
                     <div class="row container-fluid">
-                           
+
                         <div class="col-lg-12 form-group">
                             <select class="form-control" name="cuenta">
                                 <option>Seleccione Cuenta</option>
@@ -85,7 +87,8 @@
                             <label>Cantidad:</label>
                         </div>
                         <div class="col-lg-8 form-group">
-                            <input type="number" class="form-control" name="cantidad" id="cant" onchange="operaciones()" required>
+                            <input type="number" class="form-control" name="cantidad" id="cant" onchange="operaciones()"
+                                required>
                         </div>
                     </div>
                     <div class="row container-fluid">
@@ -93,7 +96,8 @@
                             <label>Precio Unitario:</label>
                         </div>
                         <div class="col-lg-8 form-group">
-                            <input type="text" class="form-control" name="precio_unit" onchange="operaciones()" id="pu" required>
+                            <input type="text" class="form-control" name="precio_unit" onchange="operaciones()" id="pu"
+                                required>
                         </div>
                     </div>
                     <div class="row container-fluid">
@@ -101,7 +105,7 @@
                             <label>Total Compra: </label>
                         </div>
                         <div class="col-lg-8 form-group">
-                            <input type="text" class="debe form-control" name="total"  id="tot">
+                            <input type="text" class="debe form-control" name="total" id="tot">
                         </div>
                     </div>
                     <div class="row container-fluid">
@@ -109,7 +113,7 @@
                             <label>IVA Credito Fiscal: </label>
                         </div>
                         <div class="col-lg-8 form-group">
-                            <input type="text" class="debe form-control" name="iva"  id="iva">
+                            <input type="text" class="debe form-control" name="iva" id="iva">
                         </div>
                     </div>
 
@@ -130,7 +134,8 @@
                             </label>
                         </div>
                         <div class="col-lg-7 form-group">
-                            <input type="text" class="haber form-control" name="efectivo" onchange="partidaDoble()" value="0" required>
+                            <input type="text" class="haber form-control" name="efectivo" onchange="partidaDoble()"
+                                value="0" required>
                         </div>
                     </div>
                     <div class="row">
@@ -140,7 +145,8 @@
                             </label>
                         </div>
                         <div class="col-lg-7 form-group">
-                            <input type="text" class="haber form-control" name="cxp" onchange="partidaDoble()" value="0" required>
+                            <input type="text" class="haber form-control" name="cxp" onchange="partidaDoble()" value="0"
+                                required>
                         </div>
 
                     </div>
@@ -176,51 +182,53 @@
 
             </tbody>
         </table>
+        <div class="row text-center">
+            <br><br>
+            <button type="button" class="btn btn-danger ml-2" onclick="location='{%url 'transaccion:transacciones'%}';"">Regresar</button>
+        </div>
 
     </div>
 </div>
-</div>
 
+<script type="
+                text/javascript" src="{% static 'js/partidaDoble.js' %}"></script>
 
-</div>
-<script type="text/javascript" src="{% static 'js/partidaDoble.js' %}"></script>
+                <script type="text/javascript">
+                    function operaciones() {
+                        var precio = document.getElementById('pu').value;
+                        var cantidad = document.getElementById('cant').value;
+                        if (precio == '' || cantidad == '') {
+                            document.getElementById('tot').value = 0;
+                        } else {
+                            document.getElementById('tot').value = parseFloat(precio) * parseFloat(cantidad);
+                        }
+                        if (document.getElementById('tot') != '0') {
+                            var tot = document.getElementById('tot').value;
+                            document.getElementById('iva').value = (parseFloat(tot) * 0.13).toFixed(2);
+                        } else {
+                            document.getElementById('iva').value = 0;
+                        }
 
-<script type="text/javascript">
-    function operaciones() {
-        var precio = document.getElementById('pu').value;
-        var cantidad = document.getElementById('cant').value;
-        if (precio == '' || cantidad == '') {
-            document.getElementById('tot').value = 0;
-        } else {
-            document.getElementById('tot').value = parseFloat(precio) * parseFloat(cantidad);
-        }
-        if (document.getElementById('tot') != '0') {
-            var tot = document.getElementById('tot').value;
-            document.getElementById('iva').value = (parseFloat(tot) * 0.13).toFixed(2);
-        } else {
-            document.getElementById('iva').value = 0;
-        }
-
-    }
-</script>
-<script type="text/javascript">
-    function validar() {
-        acumdeb = parseFloat(document.getElementById("resultadodeb").innerHTML);
-        acumhab = parseFloat(document.getElementById("resultadohab").innerHTML);
-        if (acumdeb != acumhab) {
-            document.getElementById("error").classList.remove("hidden");
-            $('body, html').animate({
-                scrollTop: '0px'
-            }, 300);
-        } else {
-            document.getElementById('save').click();
-        }
-    }
-</script>
+                    }
+                </script>
+                <script type="text/javascript">
+                    function validar() {
+                        acumdeb = parseFloat(document.getElementById("resultadodeb").innerHTML);
+                        acumhab = parseFloat(document.getElementById("resultadohab").innerHTML);
+                        if (acumdeb != acumhab) {
+                            document.getElementById("error").classList.remove("hidden");
+                            $('body, html').animate({
+                                scrollTop: '0px'
+                            }, 300);
+                        } else {
+                            document.getElementById('save').click();
+                        }
+                    }
+                </script>
 
 
 
-<script type="text/javascript" src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+                <script type="text/javascript" src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
 
-<script src="{% static 'js/prueba.js'%}"></script>
-{%endblock%}
+                <script src="{% static 'js/prueba.js'%}"></script>
+                {%endblock%}
