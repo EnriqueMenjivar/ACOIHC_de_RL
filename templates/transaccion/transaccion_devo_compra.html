@@ -1,13 +1,6 @@
 {% extends 'transaccion/transaccion_compra.html'%}
 {% load staticfiles%}
-{%if error%}
-<div class="hidden alert alert-warning alert-dismissible show text-center" role="alert" id="error">
-    <strong>Advertencia!</strong> No se encuentra esa cantidad en existencias en el inventario.
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
-</div>
-{%endif%}
+
 {%block Debe%}
 <p>Selecciones las cuentas que se cargaran, pueden ser ambas. </p>
 <br>

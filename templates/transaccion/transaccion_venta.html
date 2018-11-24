@@ -1,25 +1,37 @@
 {% extends 'transaccion/transaccion_compra.html'%}
 {% load staticfiles%}
+{%block validacion%}
+{%if error%}
+<div class="alert alert-warning alert-dismissible show text-center" role="alert">
+    <strong>Advertencia!</strong> No se encuentra esa cantidad en existencias en el inventario.
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{%endif%}
+{%endblock%}
+
 {%block Debe%}
-<p>Selecciones las cuentas que se cargaran, pueden ser ambas. </p>
+<p>Porcentaje de ganancia sera sobre el costo de lo vendido.</p>
 <br>
 <div class="row">
     <div class="col-lg-8 form-group">
         <label>Porcentaje de Ganancia:</label>
     </div>
     <div class="col-lg-4 form-group">
-        <input type="text" class="form-control" name="porcentaje">
+        <input type="text" class="form-control" name="porcentaje" required>
     </div>
 </div>
 <div class="row">
+    {%for c in cuentas%}
+    {%if c.id == 1 or c.id == 138 %}
     <div class="col-lg-12 form-group">
-        <label><input type="checkbox" aria-label="Checkbox for following text input" name="efectivo0">Caja General: </label>
+        <label><input type="radio" name="cargo" value="{{c.id}}"> {{c.nombre_cuenta}}</label>
     </div>
-</div>
-<div class="row">
-    <div class="col-lg-12 form-group">
-        <label><input type="checkbox" aria-label="Checkbox for following text input" name="cxc0">Cuentas por Cobrar:</label>
-    </div>
+    {%endif%}
+    {%empty%}
+    <h2>No hay cuentas</h2>
+    {%endfor%}
 </div>
 
 {%endblock%}
@@ -45,10 +57,12 @@
         <label>Cantidad:</label>
     </div>
     <div class="col-lg-8 form-group">
-        <input type="number" class="form-control" name="cantidad" id="cant" onchange="operaciones()" required>
+        <input type="number" class="form-control" name="cantidad" id="cant" required>
     </div>
 </div>
+
+{%block boton%}
+{%endblock%}
 {%block resultado%}
 {%endblock%}
-<hr/>
 {%endblock%}

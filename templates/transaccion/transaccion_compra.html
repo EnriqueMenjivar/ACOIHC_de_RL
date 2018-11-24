@@ -5,6 +5,8 @@
 {% endblock %}
 
 {% block content%}
+{%block validacion%}
+{%endblock%}
 <!--Validacion partida doble-->
 <div class="hidden alert alert-danger alert-dismissible show text-center" role="alert" id="error">
     <strong>Advertencia!</strong> No se cumple partida doble. Revisar datos de transaccion.
@@ -16,8 +18,7 @@
 <div class="col-lg-2">
 
 </div>
-<div class="
-        col-lg-8">
+<div class="col-lg-8">
     <div class="row jumbotron container-fluid">
         <form method="POST" class="formulario" data-url="/transaccion/">
 
@@ -152,14 +153,25 @@
                     </div>
                     {%endblock%}
                 </div>
+
                 <button type="submit" name="guardar" id="save" hidden> </button>
             </form>
         </div><br><br><br>
+        {%block boton%}
         <div class="row">
             <button type="button" class="btn btn-success" onclick="validar()">Registrar Transaccion</button>
         </div>
-    </div>
+        {%endblock%}
+        {%if request.path == '/transaccion/venta'%}
+        <div class="row">
+            <button type="button" class="btn btn-success" onclick="document.getElementById('save').click();">Registrar
+                Transaccion</button>
+        </div>
+        {%endif%}
 
+    </div>
+    {%block espacio%}
+    {%endblock%}
     <!--Resultados-->
     {%block resultado%}
     <div class="row jumbotron container-fluid ">
@@ -185,10 +197,12 @@
         </table>
 
         {%endblock%}
+        {%block regresar%}
         <div class="row text-center">
             <br><br>
             <button type="button" class="btn btn-danger ml-2" onclick="location='{%url 'transaccion:transacciones'%}';"">Regresar</button>
         </div>
+        {%endblock%}
 
     </div>
 </div>
