@@ -75,20 +75,18 @@ def  listar_transacciones( request,id):
 
 	if request.method == 'POST': #Prueba para el metodo pesp
 		if 'btnPeps' in request.POST:
-			idPeriodo = 1
+			idPeriodo = 3
 			fecha = time.strftime("%Y-%m-%d")
-			id_cuenta = 15
-			cant = 100
-			precio_u = 9.50
-			tipo = False
+			id_cuenta = 7
+			cant = 30
+			precio_u = 9
+			tipo = True
 			cv = list()
 			cv = peps(idPeriodo,fecha,id_cuenta,cant,precio_u,tipo,cv)
 			for x in cv:
 				print(x[0])
 				print(x[1])
 				print(x[2])
-
-			ajuste_peps()
 			return redirect('listar_transacciones', id = id)
 
 	contexto = {

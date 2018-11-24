@@ -20,9 +20,9 @@ def peps(idPeriodo, fecha,id_cuenta,cant,precio_u,tipo,lista):
 				kardex_afectado.cantidad_existencia += cant #se le suma la cantidad 
 				kardex_afectado.precio_unitario_peps += (cant*precio_u) #se suma al monto del kardex
 				kardex_afectado.save()
-				existe_cabeza = Entrada_Salida.objects.filter(cabeza_kardex = True).exists() # traeme el registro que esta en la cabeza
+				existe_cabeza = Entrada_Salida.objects.filter(cabeza_kardex = True,kardex = kardex_afectado).exists() # traeme el registro que esta en la cabeza
 				if existe_cabeza: # si existe una entrada en ese kardex 
-					cola = Entrada_Salida.objects.get(cola_kardex = True)#Se trae el ultimo kardex registrado
+					cola = Entrada_Salida.objects.get(cola_kardex = True,kardex = kardex_afectado)#Se trae el ultimo kardex registrado
 					cola.cola_kardex = False 
 					cola.siguiente_kardex = "P"
 					cola.save()
@@ -47,6 +47,7 @@ def peps(idPeriodo, fecha,id_cuenta,cant,precio_u,tipo,lista):
 						tipo_movimientor= tipo
 						)
 					nuevaColar.save()
+					ajuste_peps(kardex_afectado)
 				else: # si no existe una entrada en ese kardex creamos la primera
 					nuevaCola = Entrada_Salida(
 						periodo_es= periodo,
@@ -69,11 +70,12 @@ def peps(idPeriodo, fecha,id_cuenta,cant,precio_u,tipo,lista):
 						tipo_movimientor= tipo
 						)
 					nuevaColar.save()
+					ajuste_peps(kardex_afectado)
 			if tipo == True: #si es salida del kardex
 				if cant != 0 and cant <= kardex_afectado.cantidad_existencia:
-					existe_cabeza = Entrada_Salida.objects.filter(cabeza_kardex = True).exists() 
+					existe_cabeza = Entrada_Salida.objects.filter(cabeza_kardex = True,kardex = kardex_afectado).exists() 
 					if existe_cabeza: # si existe una entrada en ese kardex
-						cabeza = Entrada_Salida.objects.get(cabeza_kardex = True)
+						cabeza = Entrada_Salida.objects.get(cabeza_kardex = True,kardex = kardex_afectado)
 						#si la cantidad que sea sacar es menor a la cantidad disponible del registro cabeza, solo se le resta la cantidad y monto  a ese mismo
 						if cant < cabeza.cantidad_unidades:
 							nuevaColar = Entrada_Salida_Respaldo(
@@ -160,13 +162,13 @@ def peps(idPeriodo, fecha,id_cuenta,cant,precio_u,tipo,lista):
 
 	return lista
 
-def ajuste_peps():
+def ajuste_peps(kardex_afectado):
 	existe_es = Entrada_Salida.objects.filter(siguiente_kardex="P").exists()
 	if existe_es:
 		es_ajuste = Entrada_Salida.objects.get(siguiente_kardex="P")
-		existe_cola = Entrada_Salida.objects.filter(cola_kardex = True).exists()
+		existe_cola = Entrada_Salida.objects.filter(cola_kardex = True,kardex = kardex_afectado).exists()
 		if existe_cola:
-			cola = Entrada_Salida.objects.get(cola_kardex = True)
+			cola = Entrada_Salida.objects.get(cola_kardex = True,kardex = kardex_afectado)
 			es_ajuste.siguiente_kardex = str(cola.id)
 			es_ajuste.save()
 	return
