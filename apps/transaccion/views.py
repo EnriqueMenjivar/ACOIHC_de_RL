@@ -5,6 +5,7 @@ from apps.catalogo.models import CuentaHija
 from apps.contabilidad_general.models import Transaccion, Transaccion_Cuenta
 from django.http import JsonResponse
 from decimal import Decimal
+from apps.contabilidad_costos.peps import *
 
 # Create your views here.
 
@@ -95,6 +96,11 @@ def compra_inventario(request):
         precio_uni = request.POST['precio_unit']
         cant = request.POST['cantidad']
 
+        cv = list()
+        cv = peps(periodo.id, t.fecha_transaccion, c.id,
+                  int(cant), float(precio_uni), False, cv)
+        ajuste_peps()
+
         tran = Transaccion_Cuenta(
             transaccion_tc=t,
             cuenta_tc=c,
@@ -183,6 +189,11 @@ def devolucion_compra(request):
         precio_uni = request.POST['precio_unit']
         cant = request.POST['cantidad']
 
+        cv = list()
+        cv = peps(periodo.id, t.fecha_transaccion, c.id,
+                  int(cant), float(precio_uni), True, cv)
+        ajuste_peps()
+
         tran = Transaccion_Cuenta(
             transaccion_tc=t,
             cuenta_tc=c,
@@ -261,6 +272,66 @@ def venta(request):
     form1 = TransaccionForm()
     if request.is_ajax():
         iniciar_transaccion(request, form1)
+    
+    if 'guardar' in request.POST:
+
+        t = Transaccion.objects.latest('id')
+        # Cargado
+        c = CuentaHija.objects.get(nombre_cuenta=request.POST['cuenta'])
+        cant = request.POST['cantidad']
+
+        cv = list()
+        cv = peps(periodo.id, t.fecha_transaccion, c.id,
+                  int(cant), float(precio_uni), True, cv)
+        ajuste_peps()
+
+        if 'efectivo0' in request.POST and 'cxc0' in request.POST:
+            if request.POST['efectivo0'] == 'on' and request.POST['cxp0'] == 'on':
+                efectivo = request.POST['efectivo']
+                cxp = request.POST['cxc']
+
+                tran = Transaccion_Cuenta(
+                    transaccion_tc=t,
+                    cuenta_tc=CuentaHija.objects.get(id=1),
+                    haber_tc=Decimal("0.0"),
+                    debe_tc=Decimal(efectivo),
+                )
+                tran.save()
+                aumentar_saldo(1, efectivo, True)
+
+                tran1 = Transaccion_Cuenta(
+                    transaccion_tc=t,
+                    cuenta_tc=CuentaHija.objects.get(id=137),
+                    haber_tc=Decimal("0.0"),
+                    debe_tc=Decimal(cxp),
+                )
+                tran1.save()
+                aumentar_saldo(137, cxp, True)
+        else:
+            if 'efectivo0' in request.POST:
+                if request.POST['efectivo0'] == 'on':
+                    efectivo = request.POST['efectivo']
+                    tran = Transaccion_Cuenta(
+                        transaccion_tc=t,
+                        cuenta_tc=CuentaHija.objects.get(id=1),
+                        haber_tc=Decimal("0.0"),
+                        debe_tc=Decimal(efectivo),
+                    )
+                    tran.save()
+                    aumentar_saldo(1, efectivo, True)
+
+            else:
+                cxp = request.POST['cxp']
+                tran1 = Transaccion_Cuenta(
+                    transaccion_tc=t,
+                    cuenta_tc=CuentaHija.objects.get(id=137),
+                    haber_tc=Decimal("0.0"),
+                    debe_tc=Decimal(cxp),
+                )
+                tran1.save()
+                aumentar_saldo(137, cxp, True)
+
+        return redirect('transaccion:transacciones')
 
     contexto = {
         'form': form1, 'periodo': periodo, 'cuentas': cuentas
@@ -346,7 +417,7 @@ def compra_tangibles(request):
                     haber_tc=Decimal(cxp),
                 )
                 tran1.save()
-                aumentar_saldo(137, cxp , False)
+                aumentar_saldo(137, cxp, False)
 
         return redirect('transaccion:transacciones')
 

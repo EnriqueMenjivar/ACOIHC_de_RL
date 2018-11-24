@@ -233,11 +233,11 @@
             <div class="btn-group-vertical">
                 <button type="button" class="btn btn-primary" onclick="location='{%url 'transaccion:compra_inv'%}';">Compra de
                     Inventario</button>
-                <button type="button" class="btn btn-info">Venta de Productos Terminados</button>
+                <button type="button" class="btn btn-info"  onclick="location='{%url 'transaccion:venta'%}';">Venta de Productos Terminados</button>
                 <button type="button" class="btn btn-primary" onclick="location='{%url 'transaccion:dev_compra'%}';">Devolucion S/Compra de Inventario</button>
-                <button type="button" class="btn btn-info">Devolucion S/Venta de Inventario</button>
-                <button type="button" class="btn btn-primary" onclick="location='{%url 'transaccion:compra_tangibles'%}';">Compra de Bienes Tangibles</button>
-                <button type="button" class="btn btn-info" onclick="location='{%url 'transaccion:venta_tangibles'%}';">Venta de Bienes Tangibles</button>
+                
+                <button type="button" class="btn btn-info" onclick="location='{%url 'transaccion:compra_tangibles'%}';">Compra de Bienes Tangibles</button>
+                <button type="button" class="btn btn-primary" onclick="location='{%url 'transaccion:venta_tangibles'%}';">Venta de Bienes Tangibles</button>
             </div>
 
         </div>
@@ -343,6 +343,7 @@
                 <button type="button" class="btn btn-success" onclick="validar()">Registrar Transaccion</button>
             </div>
         </div>
+        
         <div class="row jumbotron container-fluid text-center">
 
             <table class="table">

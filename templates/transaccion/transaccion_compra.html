@@ -161,6 +161,7 @@
     </div>
 
     <!--Resultados-->
+    {%block resultado%}
     <div class="row jumbotron container-fluid ">
 
         <table class="table text-center">
@@ -182,6 +183,8 @@
 
             </tbody>
         </table>
+
+        {%endblock%}
         <div class="row text-center">
             <br><br>
             <button type="button" class="btn btn-danger ml-2" onclick="location='{%url 'transaccion:transacciones'%}';"">Regresar</button>
@@ -192,7 +195,6 @@
 
 <script type="
                 text/javascript" src="{% static 'js/partidaDoble.js' %}"></script>
-
                 <script type="text/javascript">
                     function operaciones() {
                         var precio = document.getElementById('pu').value;

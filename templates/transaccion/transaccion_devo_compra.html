@@ -1,11 +1,19 @@
 {% extends 'transaccion/transaccion_compra.html'%}
 {% load staticfiles%}
+{%if error%}
+<div class="hidden alert alert-warning alert-dismissible show text-center" role="alert" id="error">
+    <strong>Advertencia!</strong> No se encuentra esa cantidad en existencias en el inventario.
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{%endif%}
 {%block Debe%}
-<p>Selecciones las cuentas que se abonaran, pueden ser ambas. </p>
+<p>Selecciones las cuentas que se cargaran, pueden ser ambas. </p>
 <br>
 <div class="row">
     <div class="col-lg-5 form-group">
-        <label><input type="checkbox" aria-label="Checkbox for following text input" name="efectivo0" >Caja
+        <label><input type="checkbox" aria-label="Checkbox for following text input" name="efectivo0">Caja
             General:
         </label>
     </div>
@@ -15,7 +23,7 @@
 </div>
 <div class="row">
     <div class="col-lg-5 form-group">
-        <label><input type="checkbox" aria-label="Checkbox for following text input" name="cxp0" >Cuentas
+        <label><input type="checkbox" aria-label="Checkbox for following text input" name="cxp0">Cuentas
             por Pagar:
         </label>
     </div>
