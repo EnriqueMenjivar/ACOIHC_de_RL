@@ -180,7 +180,8 @@ def balance_comprobacion(request, periodo_id):
 def estado_resultado(request, periodo_id):
 	balances = BalancePeriodo.objects.filter(Q(periodo_balance=periodo_id), 
 											Q(cuenta_balance__agrupacion__codigo_agrupacion=41)|
-											Q(cuenta_balance__agrupacion__codigo_agrupacion=51)).\
+											Q(cuenta_balance__agrupacion__codigo_agrupacion=51)|
+											Q(cuenta_balance__agrupacion__codigo_agrupacion=61)).\
 											order_by('-cuenta_balance__nombre_cuenta')
 	fecha_0=balances[0].periodo_balance.inicio_periodo
 	fecha_1=balances[0].periodo_balance.final_periodo
@@ -206,7 +207,8 @@ def estado_resultado(request, periodo_id):
 def utilidad_periodo(request, periodo_id):
 	balances = BalancePeriodo.objects.filter(Q(periodo_balance=periodo_id), 
 											Q(cuenta_balance__agrupacion__codigo_agrupacion=41)|
-											Q(cuenta_balance__agrupacion__codigo_agrupacion=51))
+											Q(cuenta_balance__agrupacion__codigo_agrupacion=51)|
+											Q(cuenta_balance__agrupacion__codigo_agrupacion=61))
 	ingresos=0
 	gastos=0
 

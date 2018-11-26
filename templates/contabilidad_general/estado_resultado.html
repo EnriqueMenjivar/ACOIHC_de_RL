@@ -12,16 +12,16 @@
   		<thead>
     		<tr>
       			<th scope="col">Cuenta</th>
+            <th scope="col">Gastos y Costos</th>
       			<th scope="col">Ingresos</th>
-      			<th scope="col">Gastos y Costos</th>
     		</tr>
   		</thead>
   		<tbody>
   		{% for balance in balances %}
     	<tr class="table-dark">
       		<td>{{balance.cuenta_balance.nombre_cuenta}}</td>
+          <td>{{balance.saldo_deudor}}</td>
           <td>{{balance.saldo_acreedor}}</td>
-      		<td>{{balance.saldo_deudor}}</td>
     	</tr>
     	{% endfor %}
     	<tr>
