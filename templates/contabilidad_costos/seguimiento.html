@@ -1,0 +1,241 @@
+{% extends 'base/base.html'%}
+{% block title %} Programacion seguimiento{% endblock %}
+{% block extracss %}
+
+{% endblock %}
+{% block portada %}<br><br><br>{% endblock %}
+{% block content %}
+
+	{% if procesos_pendientes %}
+		{% for proceso_perdiente in procesos_pendientes %}
+			<div class="divBorder" style="padding: 50px;"><br>
+				<h4>Proceso: <b>{{proceso_perdiente.proceso.nombre_proceso}}</b></h4><br>
+				<h5 style="color:  #2874a6  ;">Asignacion de materia prima</h5>
+				<form method="POST" id="frmMP" name="frmMP{{proceso_perdiente.proceso.id}}">
+					<input type="text" id="idProgramacionProceso" name="idProgramacionProceso" value="{{proceso_perdiente.id}}" style="display: none;">
+					<div class="form_group">
+						<label>Materia prima</label>
+						<select id="selectMP" name="materiaPrima{{proceso_perdiente.proceso.id}}" class="form-control">
+							<option>--Seleccione--</option>
+							{% if materiales %}
+								{% for materia in materiales %}
+									<option value="{{ materia.id }}">{{ materia.nombre_cuenta }}</option>
+								{% endfor %}
+							{% else %}
+								<option value="#">No hay materia prima</option>
+							{% endif %}
+						</select>
+					</div>
+					<div class="form_group">
+						<label>Cantidad</label>
+						<input class="form-control" id="txtCantidad" type="text" name="cantidad{{proceso_perdiente.proceso.id}}">
+					</div>
+					<br>
+					<input type="button" class="btn btn-primary" style="font-size: 1.2em;" id="btnCargarMP" onclick="cargarMP()" name="btnCargarMP" value="Cargar">
+				</form><br>
+				<div id="tbDiv">
+					<table class="table" id="tbMP">
+						<thead id="thead-dark" class="thead-dark">
+							<tr>
+								<th scope="col">Materia prima</th>
+								<th scope="col">Cantidad</th>
+								<th scope="col">Monto</th>
+							</tr>
+						</thead>
+					</table>
+				</div>
+				<br><br>
+				<div class="contador">
+					<label>Total materia prima:</label>
+					<input type="text" class="form-control" id="contMP" name="totalMP{{proceso_perdiente.proceso.id}}" value="0" disabled="">
+				</div><br><br>
+				<h5 style="color:  #2874a6  ;">Asignacion de mano de obra directa</h5>
+				<form method="POST" id="frmMOD" name="frmMOD{{proceso_perdiente.proceso.id}}">
+					<div class="form_group">
+						<label>Cargo</label>
+						<select id="selectCargo" name="cargo{{proceso_perdiente.proceso.id}}" class="form-control">
+							<option>--Seleccione--</option>
+							{% if cargos %}
+								{% for cargo in cargos %}
+									<option value="{{ cargo.id }}/{{ cargo.sueldo_base }}">{{ cargo.nombre_cargo }}</option>
+								{% endfor %}
+							{% else %}
+								<option value="#">No hay cargos</option>
+							{% endif %}
+						</select>
+					</div>
+					<div class="form_group">
+						<label>Cantidad empleados</label>
+						<input class="form-control" type="text" id="cantEmpleados"  name="cantMOD{{proceso_perdiente.proceso.id}}">
+					</div>
+					<div class="form_group">
+						<label>Cantidad hrs/empleado</label>
+						<input class="form-control" type="text" id="cantHRSempleado" name="cantHRSmod{{proceso_perdiente.proceso.id}}">
+					</div><br>
+					<input type="button" class="btn btn-primary" style="font-size: 1.2em;" id="btnCargarMOD" onclick="cargarMOD()" name="btnCargarMOD" value="Cargar">
+				</form><br>
+				<div id="tbDiv2">
+					<table class="table" id="tbMO1">
+						<thead id="thead-dark" class="thead-dark">
+							<tr>
+								<th scope="col">Cargo</th>
+								<th scope="col">Cantidad empleados</th>
+								<th scope="col">Cantidad hrs/emp</th>
+								<th scope="col">Monto</th>
+							</tr>
+						</thead>
+					</table>
+				</div><br>
+				<div class="contador">
+					<label>Total mano de obra directa:</label>
+					<input type="text" class="form-control" id="contMOD" name="totalMOD{{proceso_perdiente.proceso.id}}" value="0" disabled="">
+				</div><br><br>
+				<h5 style="color:  #2874a6  ;">Asignacion de costos indirectos de fabricación</h5>
+				<form method="POST" name="frmCIF{{proceso_perdiente.proceso.id}}">
+					<div class="form_group">
+						<label>Base de asignacion</label>
+						<select id="selectBaseAsignacion" class="form-control" name="baseCIF{{proceso_perdiente.proceso.id}}">
+							<option>--Seleccione--</option>
+							<option value="mod">Mano de obra directa</option>
+							<option value="mp">Materia prima</option>
+							<option value="cp">Costos primos</option>
+						</select>
+					</div>
+					<div class="form_group">
+						<label>Porcentaje</label>
+						<input class="form-control" id="porcentajeAsignacion" type="text" name="porcentaje{{proceso_perdiente.proceso.id}}">
+					</div><br>
+					<input type="button" class="btn btn-primary" style="font-size: 1.2em;" id="btnCargarCIF" name="btnCargarCIF" onclick="cargarCIF()" value="Cargar">
+				</form>
+				<br>
+				<div class="contador">
+					<label>Total CIF:</label>
+					<input type="text" class="form-control" id="contCIF"  name="totalCIF{{proceso_perdiente.proceso.id}}" value="0" disabled="">
+				</div><br><br>
+				<form method="POST">
+					{% csrf_token %}
+					<input type="text" id="idProgramacionProceso" name="idProgramacionProcesofrm" value="{{proceso_perdiente.id}}" style="display: none;">
+					<input type="submit" style="margin-left: 1100px; font-size: 1.2em;" class="btn btn-success" name="btnTerminarProceso" value="Terminar proceso">
+				</form>
+			</div>
+		{% endfor %}
+	{% else %}
+		<h1>No hay procesos pendientes</h1>
+	{% endif %}
+<input type="button" class="btn btn-danger" style="font-size: 1.2em;" onclick="location.href = '{% url 'programaciones_lista' %}'" value="Regresar"><br><br>
+{% endblock %}
+
+{% block extrajs %}
+	<script>
+		$("#btnCargarMP").click(function(){
+			
+			var programacion_proceso = $("#idProgramacionProceso").val();
+			var producto = $("#selectMP").val();
+			var cantidad = $("#txtCantidad").val();
+			var transaccion = "CargarMP";
+			$.ajax({
+
+				method : 'GET',
+				url : '/contabilidad_costos/transacciones_programacion/',
+				data : {'programacion_proceso': programacion_proceso, 'producto': producto,'cantidad': cantidad, 'transaccion':transaccion},
+				success : function(data){
+					console.log(data);
+					cargarMP(Object.values(data[0].fields));
+				}
+			});	
+		});
+
+		$("#btnCargarMOD").click(function(){
+			
+			var programacion_proceso = $("#idProgramacionProceso").val();
+			var cargo = $("#selectCargo").val();
+			var cantidadEmpleados = $("#cantEmpleados").val();
+			var cantidadHRSempleado = $("#cantHRSempleado").val();
+			var transaccion = "CargarMOD";
+			$.ajax({
+
+				method : 'GET',
+				url : '/contabilidad_costos/transacciones_programacion/',
+				data : {'programacion_proceso': programacion_proceso, 'cargo': cargo,'cantidadEmpleados': cantidadEmpleados, 'cantidadHRSempleado':cantidadHRSempleado, 'transaccion':transaccion},
+				success : function(data){
+					console.log(data);
+					cargarMO(Object.values(data[0].fields));
+				}
+			});	
+		});
+
+		$("#btnCargarCIF").click(function(){
+			
+			var programacion_proceso = $("#idProgramacionProceso").val();
+			var baseAsignacion = $("#selectBaseAsignacion").val();
+			var porcentajeAsignacion = $("#porcentajeAsignacion").val();
+			var transaccion = "CargarCIF";
+			$.ajax({
+
+				method : 'GET',
+				url : '/contabilidad_costos/transacciones_programacion/',
+				data : {'programacion_proceso': programacion_proceso, 'baseAsignacion': baseAsignacion,'porcentajeAsignacion': porcentajeAsignacion, 'transaccion':transaccion},
+				success : function(data){
+					console.log(data);
+					totalCIF(Object.values(data[0].fields));
+				}
+			});	
+		});
+
+		function cargarMP(data){
+			var tr = document.createElement("tr");
+			 var tdMateria = document.createElement("td");
+			 var tdCant = document.createElement("td");
+			 var tdMonto = document.createElement("td");
+			 var materia = document.createTextNode(data[1]);
+			 var cantidad = document.createTextNode(data[2]);
+			 var monto = document.createTextNode(data[3]);
+			 var tabla = document.getElementById("tbMP");
+
+			 tr.setAttribute('id', data[1]);
+			 tdMateria.appendChild(materia);
+			 tdCant.appendChild(cantidad);
+			 tdMonto.appendChild(monto);
+			 tr.appendChild(tdMateria);
+			 tr.appendChild(tdCant);
+			 tr.appendChild(tdMonto);
+			 tabla.appendChild(tr);
+			 document.getElementById("contMP").value = (parseFloat(document.getElementById("contMP").value) + parseFloat(data[3])).toString();
+			 document.getElementById("frmMP").reset(); 
+		}
+
+		function cargarMO(data){ 
+			var tr = document.createElement("tr");
+			var tdCargo= document.createElement("td");
+			var tdCantEmp= document.createElement("td");
+			var tdCantHrsEmp = document.createElement("td");
+			var tdMonto = document.createElement("td");
+
+			var cargo = document.createTextNode(data[1]);
+			var cantEmp = document.createTextNode(data[2]);
+			var cantHrsEmp = document.createTextNode(data[3]);
+			var monto = document.createTextNode(data[4]);
+			var tabla = document.getElementById("tbMO1");
+
+			tr.setAttribute('id',data[1]);
+			
+			tdCargo.appendChild(cargo);
+			tdCantEmp.appendChild(cantEmp);
+			tdCantHrsEmp.appendChild(cantHrsEmp);
+			tdMonto.appendChild(monto);
+			
+
+			tr.appendChild(tdCargo);
+			tr.appendChild(tdCantEmp);
+			tr.appendChild(tdCantHrsEmp);
+			tr.appendChild(tdMonto);
+			tabla.appendChild(tr);
+
+			document.getElementById("contMOD").value = (parseFloat(document.getElementById("contMOD").value) + parseFloat(data[4])).toString();
+			document.getElementById("frmMOD").reset();
+		}
+		function totalCIF(data){
+			document.getElementById("contCIF").value = (parseFloat(document.getElementById("contCIF").value) + parseFloat(data[3])).toString();
+		}
+	</script>
+{% endblock %}

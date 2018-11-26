@@ -1,0 +1,53 @@
+{% extends 'transaccion/transaccion_compra.html'%}
+{% load staticfiles%}
+{%block Debe%}
+<div class="row container-fluid">
+
+    <div class="col-lg-12 form-group">
+        <select class="form-control" name="cuenta">
+            
+            {%for c in cuentas%}
+            {%if c.padre.id == 13 %}
+            <option>{{c.nombre_cuenta}}</option>
+            {% endif %}
+
+            {% empty %}
+            <h2 align="center" class="mb-4">No hay Cuentas</h2>
+            {% endfor %}
+        </select>
+    </div>
+</div>
+<div class="row container-fluid">
+    <div class="col-lg-4 form-group">
+        <label>Cantidad:</label>
+    </div>
+    <div class="col-lg-8 form-group">
+        <input type="number" class="form-control" name="cantidad" id="cant" onchange="operaciones()" required value="1">
+    </div>
+</div>
+<div class="row container-fluid">
+    <div class="col-lg-4 form-group">
+        <label>Precio Unitario:</label>
+    </div>
+    <div class="col-lg-8 form-group">
+        <input type="text" class="form-control" name="precio_unit" onchange="operaciones()" id="pu" required>
+    </div>
+</div>
+<div class="row container-fluid">
+    <div class="col-lg-4 form-group">
+        <label>Total Compra: </label>
+    </div>
+    <div class="col-lg-8 form-group">
+        <input type="text" class="debe form-control" name="total" id="tot">
+    </div>
+</div>
+<div class="row container-fluid">
+    <div class="col-lg-4 form-group">
+        <label>IVA Credito Fiscal: </label>
+    </div>
+    <div class="col-lg-8 form-group">
+        <input type="text" class="debe form-control" name="iva" id="iva">
+    </div>
+</div>
+
+{%endblock%}

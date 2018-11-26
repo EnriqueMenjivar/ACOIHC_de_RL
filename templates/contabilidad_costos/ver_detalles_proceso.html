@@ -1,0 +1,96 @@
+{% extends 'base/base.html'%}
+{% block title %} Programacion seguimiento{% endblock %}
+{% block extracss %}
+
+{% endblock %}
+{% block portada %}<br><br><br>{% endblock %}
+{% block content %}
+
+	{% if programacion_proceso %}
+		<h3>Proceso: <b>{{ programacion_proceso.proceso.nombre_proceso }}</b></h3><br>
+
+		<h5 style="color:  #2874a6  ;">Asignaciones de materia prima</h5>
+		{% if asignaciones_mp %}
+			<table class="table">
+				<thead id="thead-dark" class="thead-dark">
+					<tr>
+						<th scope="col">Materia prima</th>
+						<th scope="col">Cantidad</th>
+						<th scope="col">Monto</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for asignacion_mp in asignaciones_mp %}
+						<tr>
+							{% if asignacion_mp.nombre_mp.nombre_cuenta == "" %}
+								<td>Cargado del proceso anterior</td>
+								<td>--</td>
+							{% else %}
+								<td>{{ asignacion_mp.nombre_mp.nombre_cuenta }}</td>
+								<td>{{ asignacion_mp.cantidad_mp }}</td>
+							{% endif %}
+							<td>{{ asignacion_mp.monto }}</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table><br>
+		{% endif %}
+		<h5 style="color:   #2874a6 ;">Asignaciones de mano de obra directa</h5>
+		{% if asignaciones_mo %}
+			<table class="table">
+				<thead id="thead-dark" class="thead-dark">
+					<tr>
+						<th scope="col">Cargo emp</th>
+						<th scope="col">Sueldo base/hr</th>
+						<th scope="col">Cantidad emp</th>
+						<th scope="col">Cantidas hrs/emp</th>
+						<th scope="col">Monto</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for asignacion_mo in asignaciones_mo %}
+						<tr>
+							<td>{{ asignacion_mo.cargo_mo.nombre_cargo }}</td>
+							<td>{{ asignacion_mo.cargo_mo.sueldo_base }}</td>
+							<td>{{ asignacion_mo.cantidad_empleados }}</td>
+							<td>{{ asignacion_mo.cantidad_horas_empleado }}</td>
+							<td>{{ asignacion_mo.monto }}</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table><br>
+		{% endif %}
+		<h5 style="color:  #2874a6 ;">Asigaciones de costos indirectos de fabricacion</h5>
+		{% if asignaciones_cif %}
+			<table class="table">
+				<thead id="thead-dark" class="thead-dark">
+					<tr>
+						<th scope="col">Base de asignacion</th>
+						<th scope="col">Porcentaje</th>
+						<th scope="col">Monto</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for asignacion_cif in asignaciones_cif %}
+						<tr>
+							{% if asignacion_cif.base_cif == "mp" %}
+								<td>Materia prima</td>
+							{% endif %}
+							{% if asignacion_cif.base_cif == "mod" %}
+								<td>Mano de obra directa</td>
+							{% endif %}
+							{% if asignacion_cif.base_cif == "cp" %}
+								<td>Costos primos</td>
+							{% endif %}
+							<td>{{ asignacion_cif.porcentaje_cif }}</td>
+							<td>{{ asignacion_cif.monto }}</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table><br>
+		{% endif %}
+	{% endif %}
+	{% if programacion %}
+	<input type="button" style="font-size: 1.2em;" class="btn btn-danger" onclick="location.href = '{% url 'detalles' programacion.id  %}'" value="Regresar"><br><br>
+	{% endif %}
+{% endblock %}

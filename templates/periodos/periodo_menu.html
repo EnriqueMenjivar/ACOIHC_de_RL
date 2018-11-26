@@ -42,13 +42,24 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <a href="#">
+                                                        {% if periodoActual.estado_periodo == False %}
+
+                                                        <a href="{% url 'transaccion:transacciones' %}">
                                                             <div class="panel-footer">
                                                                 <span class="pull-left">Ver</span>
                                                                 <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                                                                 <div class="clearfix"></div>
                                                             </div>
                                                         </a>
+                                                        {% else %}
+                                                        <a data-toggle = "modal" href="#advertencia2" >
+                                                            <div class="panel-footer">
+                                                                <span class="pull-left">Ver</span>
+                                                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                                                <div class="clearfix"></div>
+                                                            </div>
+                                                        </a>
+                                                        {%endif%}
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-3 col-md-6">
@@ -118,7 +129,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <a href="#">
+                                                        <a href="{% url 'libro_mayor' periodoActual.id %}">
                                                             <div class="panel-footer">
                                                                 <span class="pull-left">Ver</span>
                                                                 <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -154,7 +165,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <a href="#">
+                                                        <a href="{% url 'lista_kardex' %}">
                                                             <div class="panel-footer">
                                                                 <span class="pull-left">Ver</span>
                                                                 <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -176,7 +187,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <a href="#">
+                                                        <a href="{% url 'empleado_lista'%}">
                                                             <div class="panel-footer">
                                                                 <span class="pull-left">Ver</span>
                                                                 <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -198,7 +209,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <a href="#">
+                                                        <a href="{%url 'empleado_registrar'%}">
                                                             <div class="panel-footer">
                                                                 <span class="pull-left">Ver</span>
                                                                 <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -263,5 +274,25 @@
                                 </div>
                             </div>
                         </div>
-                    </div>           
+                    </div>  
+                    <!-- Ventana modal que informa al usuario que no se puede registrar transaccion dado que ha ha finalizado periodo--> 
+            <div class="modal fade" id="advertencia2">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <!-- Header de ventana-->
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Periodo Finalizado</h5>
+                                    <button tyle="button" class="close" data-dismiss="modal" aria-hidden = "true">&times;</button>
+                                </div>
+                                <!-- Contenido de la ventana -->
+                                <div class="modal-body">
+                                        <p class="text-align">No puede ingresar una nueva transaccion dado que el periodo ha finalizado</p> 
+                                </div>
+                                <!--Footer-->
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" data-dismiss= "modal" name="btnModal">Aceptar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>          
 {% endblock %}

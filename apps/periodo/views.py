@@ -57,7 +57,7 @@ def  periodo_menu_estados( request,id):
 def  listar_transacciones( request,id):
 	listTransaccion = list() # creamos la lista que enviaremos al contexto
 	list_interna = list() # me permitira guardar en la primera posicion la transaccion, y en la segunda posicion una lista de transaccion_cuenta
-	
+	cv = 0
 	periodo_existe = Periodo.objects.filter(id = id).exists()
 	if periodo_existe:
 		periodo = Periodo.objects.get(id=id)
@@ -75,18 +75,33 @@ def  listar_transacciones( request,id):
 
 	if request.method == 'POST': #Prueba para el metodo pesp
 		if 'btnPeps' in request.POST:
-			idPeriodo = 1
+			idPeriodo = 3
 			fecha = time.strftime("%Y-%m-%d")
-			id_cuenta = 1
-			cant = 80
-			precio_u = 48.00
-			tipo = False
-			peps(idPeriodo, fecha,id_cuenta,cant,precio_u,tipo)
-			ajuste_peps()
-			return redirect('listar_transacciones')
+			id_cuenta = 7
+			cant = 30
+			precio_u = 9
+			tipo = True
+			cv = list()
+			cv = peps(idPeriodo,fecha,id_cuenta,cant,precio_u,tipo,cv)
+			for x in cv:
+				print(x[0])
+				print(x[1])
+				print(x[2])
+			return redirect('listar_transacciones', id = id)
 
 	contexto = {
-	'listTransaccion' : listTransaccion,
+	'listTransaccion' : listTransaccion
 	}
 	return render (request, 'transaccion/listar_transacciones.html' , contexto)
 
+def  libro_mayor( request,id):
+	periodoActual = Periodo.objects.get(id = id)
+	if periodoActual.estado_periodo == False:
+		cuentas = Cuenta.objects.all()
+	else:
+		cuentas = BalancePeriodo.objects.filter(periodo_balance = periodoActual)
+	contexto = {
+	'periodoActual' : periodoActual,
+	'cuentas': cuentas,
+	}
+	return render (request, 'periodos/libro_mayor.html' , contexto)
