@@ -7,34 +7,290 @@
 {% endblock %}
 
 {%block content%}
+<!-- Modal Debe-->
+<div class="modal" id="debe1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Seleccione cuentas para Debe</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="" method="GET">
+                <div class="modal-body">
+                    <div class="row container-fluid">
 
-<br><br><br>
+                        <div class="col-lg-4">
+                            <h3>Activos</h3>
+                            <!--Modificar aqui cuando se realicen los ajustes ya deben de aparecer las cuentas depres y todo lo demas-->
+                            {%if periodo.periodo_ajuste%}
+                            {%for c in cuentas%}
+                            {%ifequal c.padre.agrupacion.codigo_grup.nombre_grupo 'ACTIVO' %}
+                            {%if c.padre.id != 3 and c.padre.id != 4 and c.padre.id != 5 and c.padre.id != 6 and c.padre.id != 7 and c.padre.id != 8 and c.padre.id != 13 and c.padre.id != 16 %}
+                            <div class="row">
+                                <label><input type="checkbox" aria-label="Checkbox for following text input" name="{{c.id}}debe">{{c.nombre_cuenta}}
+                                </label>
+                            </div>{%endif%}
+                            {%endifequal%}
+
+                            {% empty %}
+                            <h2 align="center" class="mb-4">No hay Cuentas</h2>
+                            {%endfor%}
+
+                            {%else%}
+
+                            {%for c in cuentas%}
+                            {%ifequal c.padre.agrupacion.codigo_grup.nombre_grupo 'ACTIVO' %}
+                            {%if c.padre.id != 3 and c.padre.id != 4 and c.padre.id != 5 and c.padre.id != 6 and c.padre.id != 7 and c.padre.id != 8 and c.padre.id != 14 and c.padre.id != 16 and c.padre.id != 13 %}
+                            <div class="row">
+                                <label><input type="checkbox" aria-label="Checkbox for following text input" name="{{c.id}}debe">{{c.nombre_cuenta}}
+                                </label>
+                            </div>
+                            {%endif%}
+                            {%endifequal%}
+
+                            {% empty %}
+                            <h2 align="center" class="mb-4">No hay Cuentas</h2>
+                            {%endfor%}
+                            {%endif%}
+                        </div>
+                        <div class="col-lg-4">
+                            <h3>Pasivo</h3>
+                            {%for c in cuentas%}
+                            {%ifequal c.padre.agrupacion.codigo_grup.nombre_grupo 'PASIVO' %}
+                            {%if c.padre.id != 22 %}
+                            <div class="row">
+                                <label><input type="checkbox" aria-label="Checkbox for following text input" name="{{c.id}}debe">{{c.nombre_cuenta}}
+                                </label>
+                            </div>
+                            {%endif%}
+                            {%endifequal%}
+
+                            {% empty %}
+                            <h2 align="center" class="mb-4">No hay Cuentas</h2>
+                            {%endfor%}
+                        </div>
+                        <div class="col-lg-4">
+                            <h3>Patrimonio</h3>
+                            {%for c in cuentas%}
+                            {%ifequal c.padre.agrupacion.codigo_grup.nombre_grupo 'PATRIMONIO' %}
+                            <div class="row">
+                                <label><input type="checkbox" aria-label="Checkbox for following text input" name="{{c.id}}debe">{{c.nombre_cuenta}}
+                                </label>
+                            </div>
+                            {%endifequal%}
+
+                            {% empty %}
+                            <h2 align="center" class="mb-4">No hay Cuentas</h2>
+                            {%endfor%}
+                        </div>
+                        <br><br><br>
+                        <div class="col-lg-4">
+                            <h3>Cuentas de Resultado</h3>
+                            {%for c in cuentas%}
+                            {%if c.padre.agrupacion.codigo_grup.id == 4 or c.padre.agrupacion.codigo_grup.id == 5 %}
+                            <div class="row">
+                                <label><input type="checkbox" aria-label="Checkbox for following text input" name="{{c.id}}debe">{{c.nombre_cuenta}}
+                                </label>
+                            </div>
+                            {%endif%}
+
+                            {% empty %}
+                            <h2 align="center" class="mb-4">No hay Cuentas</h2>
+                            {%endfor%}
+                        </div>
+                        <div class="col-lg-4">
+                            <h3>Cuentas de Costos</h3>
+                            {%for c in cuentas%}
+                            {%if c.padre.agrupacion.codigo_grup.id == 6 %}
+                            <div class="row">
+                                <label><input type="checkbox" aria-label="Checkbox for following text input" name="{{c.id}}debe">{{c.nombre_cuenta}}
+                                </label>
+                            </div>
+                            {%endif%}
+
+                            {% empty %}
+                            <h2 align="center" class="mb-4">No hay Cuentas</h2>
+                            {%endfor%}
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Regresar</button>
+                    <button type="submit" class="btn btn-primary" name="cargar">Agregar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Haber-->
+<div class="modal" id="haber1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Seleccione cuentas para Haber</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="" method="GET">
+                <div class="modal-body">
+                    <div class="row container-fluid">
+
+                        <div class="col-lg-4">
+                            <h3>Activos</h3>
+                            {%if periodo.periodo_ajuste%}
+                            {%for c in cuentas%}
+                            {%ifequal c.padre.agrupacion.codigo_grup.nombre_grupo 'ACTIVO' %}
+                            {%if c.padre.id != 3 and c.padre.id != 4 and c.padre.id != 5 and c.padre.id != 6 and c.padre.id != 7 and c.padre.id != 8 and c.padre.id != 13 and c.padre.id != 16 %}
+                            <div class="row">
+                                <label><input type="checkbox" aria-label="Checkbox for following text input" name="{{c.id}}haber">{{c.nombre_cuenta}}
+                                </label>
+                            </div>
+                            {%endif%}
+                            {%endifequal%}
+
+                            {% empty %}
+                            <h2 align="center" class="mb-4">No hay Cuentas</h2>
+                            {%endfor%}
+                            {%else%}
+
+                            {%for c in cuentas%}
+                            {%ifequal c.padre.agrupacion.codigo_grup.nombre_grupo 'ACTIVO'%}
+                            {%if c.padre.id != 3 and c.padre.id != 4 and c.padre.id != 5 and c.padre.id != 6 and c.padre.id != 7 and c.padre.id != 8 and c.padre.id != 14 and c.padre.id != 16 and c.padre.id != 13 %}
+                            <div class="row">
+                                <label><input type="checkbox" aria-label="Checkbox for following text input" name="{{c.id}}haber">{{c.nombre_cuenta}}
+                                </label>
+                            </div>
+                            {%endif%}
+                            {%endifequal%}
+
+                            {% empty %}
+                            <h2 align="center" class="mb-4">No hay Cuentas</h2>
+                            {%endfor%}
+                            {%endif%}
+                        </div>
+                        <div class="col-lg-4">
+                            <h3>Pasivo</h3>
+                            {%for c in cuentas%}
+                            {%ifequal c.padre.agrupacion.codigo_grup.nombre_grupo 'PASIVO' %}
+                            {%if c.padre.id != 22 %}
+                            <div class="row">
+                                <label><input type="checkbox" aria-label="Checkbox for following text input" name="{{c.id}}haber">{{c.nombre_cuenta}}
+                                </label>
+                            </div>
+                            {%endif%}
+                            {%endifequal%}
+
+                            {% empty %}
+                            <h2 align="center" class="mb-4">No hay Cuentas</h2>
+                            {%endfor%}
+                        </div>
+
+                        <div class="col-lg-4">
+                            <h3>Patrimonio</h3>
+                            {%for c in cuentas%}
+                            {%ifequal c.padre.agrupacion.codigo_grup.nombre_grupo 'PATRIMONIO' %}
+                            <div class="row">
+                                <label><input type="checkbox" aria-label="Checkbox for following text input" name="{{c.id}}haber">{{c.nombre_cuenta}}
+                                </label>
+                            </div>
+                            {%endifequal%}
+
+                            {% empty %}
+                            <h2 align="center" class="mb-4">No hay Cuentas</h2>
+                            {%endfor%}
+                        </div>
+
+                        <br><br><br>
+                        <div class="col-lg-4">
+                            <h3>Cuentas de Resultado</h3>
+                            {%for c in cuentas%}
+                            {%if c.padre.agrupacion.codigo_grup.id == 4 or c.padre.agrupacion.codigo_grup.id == 5 %}
+                            <div class="row">
+                                <label><input type="checkbox" aria-label="Checkbox for following text input" name="{{c.id}}haber">{{c.nombre_cuenta}}
+                                </label>
+                            </div>
+                            {%endif%}
+
+                            {% empty %}
+                            <h2 align="center" class="mb-4">No hay Cuentas</h2>
+                            {%endfor%}
+                        </div>
+                        <div class="col-lg-4">
+                            <h3>Cuentas de Costos</h3>
+                            {%for c in cuentas%}
+                            {%if c.padre.agrupacion.codigo_grup.id == 6 %}
+                            <div class="row">
+                                <label><input type="checkbox" aria-label="Checkbox for following text input" name="{{c.id}}haber">{{c.nombre_cuenta}}
+                                </label>
+                            </div>
+                            {%endif%}
+
+                            {% empty %}
+                            <h2 align="center" class="mb-4">No hay Cuentas</h2>
+                            {%endfor%}
+
+                            {%for c in cuentasdebe%}
+                            <input type="checkbox" aria-label="Checkbox for following text input" name="{{c.id}}habers"
+                                hidden checked>
+                            {%endfor%}
+                        </div>
+
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Regresar</button>
+                    <button type="submit" class="btn btn-primary" name="abonar">Agregar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
 <div>
     <!--Validacion partida doble-->
-    <div class="alert alert-danger alert-dismissible show text-center" role="alert">
+    <div class="hidden alert alert-danger alert-dismissible show text-center" role="alert" id="error">
         <strong>Advertencia!</strong> No se cumple partida doble. Revisar datos de transaccion.
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-
-
+   
     <div class="row">
+        
         <div class="col-lg-3 btn-group-vertical text-center">
+                {%if not periodo.periodo_ajuste%}
             <h3 class="h4">Transacciones Especiales</h3>
             <div class="btn-group-vertical">
-                <button type="button" class="btn btn-primary">Compra de Inventario</button>
-                <button type="button" class="btn btn-info">Venta de Inventario</button>
-                <button type="button" class="btn btn-primary">Devoluciones de Inventario</button>
+                <button type="button" class="btn btn-primary" onclick="location='{%url 'transaccion:compra_inv'%}';">Compra
+                    de
+                    Inventario</button>
+                <button type="button" class="btn btn-info" onclick="location='{%url 'transaccion:venta'%}';">Venta de
+                    Productos Terminados</button>
+                <button type="button" class="btn btn-primary" onclick="location='{%url 'transaccion:dev_compra'%}';">Devolucion
+                    S/Compra de Inventario</button>
+
+                <button type="button" class="btn btn-info" onclick="location='{%url 'transaccion:compra_tangibles'%}';">Compra
+                    de Bienes Tangibles</button>
+                <button type="button" class="btn btn-primary" onclick="location='{%url 'transaccion:venta_tangibles'%}';">Venta
+                    de Bienes Tangibles</button>
             </div>
+            
+        {%endif%}
 
         </div>
+
         <div class="col-lg-9">
 
             <div class="row jumbotron container-fluid">
                 <form method="POST" class="formulario" data-url="/transaccion/">
                     <div class="col-lg-8">
-
                         {%csrf_token%}
                         <div class="form-group row mr-2 ml-2">
 
@@ -73,38 +329,66 @@
                     {%csrf_token%}
                     <div class="col-lg-6">
                         <!-- Boton modal Debe -->
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#debe1" id="ad">
+                            Agregar Cuentas Debe
+                        </button>
+                        <br><br><br>
                         <h3>Debe</h3>
-                        <input name="transaccion_tc" type="text" id="recibedeb" hidden>
-                        <button type="button" class="btn btn-primary" id="btndebe">
-                            Agregar Cuentas
-                        </button>
-                        <br><br>
-                        <div id="debe"></div>
-                    </div>
-                    <button type="submit" id="btn1">Prueba</button>
-                </form>
+                        <div class="row container-fluid">
+                            <div class="col-lg-6 form-group">
+                                {%for c in cuentasdebe%}
+                                <div class="row form-group">
+                                    <input type="text" readonly value="{{c.nombre_cuenta}}" class="form-control">
+                                </div>
+                                {%endfor%}
+                            </div>
+                            <div class="col-lg-4 form-group">
+                                {%for c in cuentasdebe%}
+                                <div class="row form-group">
+                                    <input type="text" class="debe form-control" name="{{c.id}}deb" onchange="partidaDoble()">
+                                </div>
+                                {%endfor%}
+                            </div>
+                            <div class="col-lg-2"></div>
 
-                <form action="POST">
+                        </div>
+
+                    </div>
+
                     <div class="col-lg-6">
-                        <!-- Boton modal Haber -->
-                        <h3>Haber</h3>
-                        <button type="button" class="btn btn-primary" id="btnhaber">
-                            Agregar Cuentas
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#haber1" id="ah">
+                            Agregar Cuentas Haber
                         </button>
-                        <br><br>
-                        <input name="transaccion_tc" type="text" id="recibehab" hidden>
-                        <div id="haber"></div>
-                        <button hidden type="submit" id="btn2">Prueba</button>
-                    </div>
-                </form>
-            </div>
-            <div class="row">
-                <button type="button" class="btn btn-success" onclick="guardar()">
-                    Registrar Transaccion
-                </button>
-            </div>
+                        <!-- Boton modal Haber -->
+                        <br><br><br>
+                        <h3>Haber</h3>
+                        <div class="row">
+                            <div class="col-lg-6 form-group">
+                                {%for c in cuentashaber%}
+                                <div class="row form-group">
+                                    <input type="text" readonly value="{{c.nombre_cuenta}}" class="form-control">
+                                </div>
+                                {%endfor%}
+                            </div>
+                            <div class="col-lg-4 form-group">
+                                {%for c in cuentashaber%}
+                                <div class="row form-group">
+                                    <input type="text" class="haber form-control" name="{{c.id}}abon" onchange="partidaDoble()">
+                                </div>
+                                {%endfor%}
+                            </div>
+                            <div class="col-lg-2"></div>
+                        </div>
 
+                    </div>
+                    <button type="submit" name="guardar" id="save" hidden> </button>
+                </form>
+            </div><br><br><br>
+            <div class="row">
+                <button type="button" class="btn btn-success" onclick="validar()">Registrar Transaccion</button>
+            </div>
         </div>
+
         <div class="row jumbotron container-fluid text-center">
 
             <table class="table">
@@ -119,8 +403,8 @@
                 <tbody>
                     <tr>
 
-                        <td id="resultado">Valores</td>
-                        <td>Valores</td>
+                        <td id="resultadodeb">0.0</td>
+                        <td id="resultadohab">0.0</td>
 
                     </tr>
 
@@ -134,17 +418,33 @@
 
 
 
+
+
+
+
 {%endblock%}
 
 {% block extrajs %}
+<script type="text/javascript" src="{% static 'js/partidaDoble.js' %}">
+</script>
+<script type="text/javascript">
+    function validar() {
+        acumdeb = parseFloat(document.getElementById("resultadodeb").innerHTML);
+        acumhab = parseFloat(document.getElementById("resultadohab").innerHTML);
+        if (acumdeb != acumhab) {
+            document.getElementById("error").classList.remove("hidden");
+            $('body, html').animate({
+                scrollTop: '0px'
+            }, 300);
+        } else {
+            document.getElementById('save').click();
+        }
 
 
-<<<<<<< HEAD
-=======
-<script type="text/javascript" src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
->>>>>>> 86abccd00fba90857c62bb26ac620ef03283d571
+    }
+</script>
 
-
+<!--
 <script type="text/javascript">
 
     document.getElementById("btndebe").addEventListener("click", function () {
@@ -213,13 +513,10 @@
         ndiv2.appendChild(nin1);
         ndiv3.appendChild(nin2);
 
-    })
+    })-->
 
 </script>
-<<<<<<< HEAD
 <script type="text/javascript" src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
 
-=======
->>>>>>> 86abccd00fba90857c62bb26ac620ef03283d571
-<script src="{% static 'js/prueba.js'%}"></script>|
+<script src="{% static 'js/prueba.js'%}"></script>
 {% endblock %}

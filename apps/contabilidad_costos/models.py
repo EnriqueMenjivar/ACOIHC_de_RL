@@ -1,11 +1,11 @@
 from django.db import models
-from apps.catalogo.models import Cuenta
+from apps.catalogo.models import Cuenta, CuentaHija
 from apps.contabilidad_general.models import Transaccion_Cuenta
 from apps.periodo.models import Periodo
 # Create your models here.
 
 class Kardex(models.Model):
-	cuenta_kardex = models.ForeignKey(Cuenta, null=True, on_delete=models.CASCADE)
+	cuenta_kardex = models.ForeignKey(CuentaHija, null=True, on_delete=models.CASCADE)
 	cantidad_existencia = models.IntegerField()
 	precio_unitario_peps = models.FloatField()
 
@@ -67,33 +67,39 @@ class Programacion(models.Model):
 	def __str__(self):
 		return self.producto_programacion
 
+
 class Proceso(models.Model):
-	programacion = models.ForeignKey(Programacion, null=True, on_delete=models.CASCADE)
-	proceso_siguiente = models.CharField(max_length=100)
 	nombre_proceso = models.CharField(max_length=100)
-
-
+	proceso_siguiente = models.CharField(max_length=100)
+	cuenta_proceso = models.ForeignKey(CuentaHija, null=True, on_delete=models.CASCADE)
 	def __str__(self):
 		return self.nombre_proceso
 
-class Asignar_Materia_Prima(models.Model):
-	proceso_mp = models.ForeignKey(Proceso, null=True, on_delete=models.CASCADE)
-	nombre_mp = models.CharField(max_length=100)
-	cantidad_mp = models.FloatField()
-	precio_unitario_mp = models.FloatField()
+class Programacion_Proceso(models.Model):
+	programacion = models.ForeignKey(Programacion, null=True, on_delete=models.CASCADE)
+	proceso = models.ForeignKey(Proceso, null=True, on_delete=models.CASCADE)
+	terminado = models.BooleanField(default= False)
 
-	def __str__(self):
-		return self.nombre_mp
+
+class Asignar_Materia_Prima(models.Model):
+	proceso_prog_mp = models.ForeignKey(Programacion_Proceso, null=True, on_delete=models.CASCADE)
+	#nombre_mp = models.CharField(max_length=100)
+	nombre_mp = models.ForeignKey(CuentaHija, null=True, on_delete=models.CASCADE)
+	cantidad_mp = models.FloatField()
+	monto = models.FloatField()
+
 
 class Asignar_Cif(models.Model):
-	proceso_cif = models.ForeignKey(Proceso, null=True, on_delete=models.CASCADE)
+	proceso_prog_cif = models.ForeignKey(Programacion_Proceso, null=True, on_delete=models.CASCADE)
 	base_cif = models.CharField(max_length=100)
 	porcentaje_cif = models.FloatField()
+	monto = models.FloatField()
 
 class Asignar_Mano_Obra(models.Model):
-	proceso_mo = models.ForeignKey(Proceso, null=True, on_delete=models.CASCADE)
+	proceso_prog_mo = models.ForeignKey(Programacion_Proceso, null=True, on_delete=models.CASCADE)
 	cargo_mo = models.ForeignKey(Cargo, null=True, on_delete=models.CASCADE)
 	cantidad_horas_empleado = models.FloatField()
 	cantidad_empleados = models.IntegerField()
+	monto = models.FloatField()
 
 

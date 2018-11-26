@@ -1,0 +1,250 @@
+{% extends 'base/base.html'%}
+{% load staticfiles%}
+{% block extracss %}
+<link href="{%static '/plantilla/lib/bootstrap/css/bootstrap.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content%}
+{%block validacion%}
+{%endblock%}
+<!--Validacion partida doble-->
+<div class="hidden alert alert-danger alert-dismissible show text-center" role="alert" id="error">
+    <strong>Advertencia!</strong> No se cumple partida doble. Revisar datos de transaccion.
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="col-lg-2">
+
+</div>
+<div class="col-lg-8">
+    <div class="row jumbotron container-fluid">
+        <form method="POST" class="formulario" data-url="/transaccion/">
+
+            <div class="col-lg-8">
+                {% csrf_token%}
+                <div class="form-group row">
+                    <div>
+                        <input type="text" name="periodo_transaccion" value="{{periodo.id}}" hidden>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-lg-5 col-form-label">Fecha transaccion:</label>
+                    <div class="col-lg-7">
+                        {{form.fecha_transaccion}}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-lg-5 col-form-label"> Descripcion:</label>
+
+                    <div class="col-lg-7">
+                        {{form.descripcion_transaccion}}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <br><br>
+                <button type="submit" class="btn btn-success" name="inicio_transaccion" id="1">
+                    Iniciar Transaccion
+                </button>
+        </form>
+
+    </div>
+    <br><br><br><br><br><br>
+    <hr />
+    <!--Transacciones-->
+    <!--Compras de Inventarios-->
+
+    <div class="row jumbotron container-fluid text-center">
+        <div class="row">
+            <form action="" method="POST">
+                {%csrf_token%}
+                <div class="col-lg-6">
+
+                    <h3>Debe</h3>
+
+                    {% block Debe%}
+
+                    <div class="row container-fluid">
+
+                        <div class="col-lg-12 form-group">
+                            <select class="form-control" name="cuenta">
+                                
+                                {%for c in cuentas%}
+                                {%if c.padre.id == 3 or c.padre.id == 4 or c.padre.id == 5 or c.padre.id == 6 %}
+                                <option>{{c.nombre_cuenta}}</option>
+                                {% endif %}
+
+                                {% empty %}
+                                <h2 align="center" class="mb-4">No hay Cuentas</h2>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row container-fluid">
+                        <div class="col-lg-4 form-group">
+                            <label>Cantidad:</label>
+                        </div>
+                        <div class="col-lg-8 form-group">
+                            <input type="number" class="form-control" name="cantidad" id="cant" onchange="operaciones()"
+                                required>
+                        </div>
+                    </div>
+                    <div class="row container-fluid">
+                        <div class="col-lg-4 form-group">
+                            <label>Precio Unitario:</label>
+                        </div>
+                        <div class="col-lg-8 form-group">
+                            <input type="text" class="form-control" name="precio_unit" onchange="operaciones()" id="pu"
+                                required>
+                        </div>
+                    </div>
+                    <div class="row container-fluid">
+                        <div class="col-lg-4 form-group">
+                            <label>Total Compra: </label>
+                        </div>
+                        <div class="col-lg-8 form-group">
+                            <input type="text" class="debe form-control" name="total" id="tot">
+                        </div>
+                    </div>
+                    <div class="row container-fluid">
+                        <div class="col-lg-4 form-group">
+                            <label>IVA Credito Fiscal: </label>
+                        </div>
+                        <div class="col-lg-8 form-group">
+                            <input type="text" class="debe form-control" name="iva" id="iva">
+                        </div>
+                    </div>
+
+                    {%endblock%}
+
+                </div>
+
+                <div class="col-lg-6">
+
+                    <h3>Haber</h3>
+                    {% block Haber%}
+                    <p>Selecciones las cuentas que se abonaran, pueden ser ambas. </p>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-5 form-group">
+                            <label><input type="checkbox" aria-label="Checkbox for following text input" name="efectivo0">Caja
+                                General:
+                            </label>
+                        </div>
+                        <div class="col-lg-7 form-group">
+                            <input type="text" class="haber form-control" name="efectivo" onchange="partidaDoble()"
+                                value="0" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-5 form-group">
+                            <label><input type="checkbox" aria-label="Checkbox for following text input" name="cxp0">Cuentas
+                                por Pagar:
+                            </label>
+                        </div>
+                        <div class="col-lg-7 form-group">
+                            <input type="text" class="haber form-control" name="cxp" onchange="partidaDoble()" value="0"
+                                required>
+                        </div>
+
+                    </div>
+                    {%endblock%}
+                </div>
+
+                <button type="submit" name="guardar" id="save" hidden> </button>
+            </form>
+        </div><br><br><br>
+        {%block boton%}
+        <div class="row">
+            <button type="button" class="btn btn-success" onclick="validar()">Registrar Transaccion</button>
+        </div>
+        {%endblock%}
+        {%if request.path == '/transaccion/venta'%}
+        <div class="row">
+            <button type="button" class="btn btn-success" onclick="document.getElementById('save').click();">Registrar
+                Transaccion</button>
+        </div>
+        {%endif%}
+
+    </div>
+    {%block espacio%}
+    {%endblock%}
+    <!--Resultados-->
+    {%block resultado%}
+    <div class="row jumbotron container-fluid ">
+
+        <table class="table text-center">
+            <h3>Total de la Transaccion</h3>
+            <thead class="thead-dark ">
+                <tr>
+
+                    <th scope="col">Saldo Debe</th>
+                    <th scope="col ">Saldo Haber</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+
+                    <td id="resultadodeb">0.0</td>
+                    <td id="resultadohab">0.0</td>
+
+                </tr>
+
+            </tbody>
+        </table>
+
+        {%endblock%}
+        {%block regresar%}
+        <div class="row text-center">
+            <br><br>
+            <button type="button" class="btn btn-danger ml-2" onclick="location='{%url 'transaccion:transacciones'%}';"">Regresar</button>
+        </div>
+        {%endblock%}
+
+    </div>
+</div>
+
+<script type="
+                text/javascript" src="{% static 'js/partidaDoble.js' %}"></script>
+                <script type="text/javascript">
+                    function operaciones() {
+                        var precio = document.getElementById('pu').value;
+                        var cantidad = document.getElementById('cant').value;
+                        if (precio == '' || cantidad == '') {
+                            document.getElementById('tot').value = 0;
+                        } else {
+                            document.getElementById('tot').value = parseFloat(precio) * parseFloat(cantidad);
+                        }
+                        if (document.getElementById('tot') != '0') {
+                            var tot = document.getElementById('tot').value;
+                            document.getElementById('iva').value = (parseFloat(tot) * 0.13).toFixed(2);
+                        } else {
+                            document.getElementById('iva').value = 0;
+                        }
+
+                    }
+                </script>
+                <script type="text/javascript">
+                    function validar() {
+                        acumdeb = parseFloat(document.getElementById("resultadodeb").innerHTML);
+                        acumhab = parseFloat(document.getElementById("resultadohab").innerHTML);
+                        if (acumdeb != acumhab) {
+                            document.getElementById("error").classList.remove("hidden");
+                            $('body, html').animate({
+                                scrollTop: '0px'
+                            }, 300);
+                        } else {
+                            document.getElementById('save').click();
+                        }
+                    }
+                </script>
+
+
+
+                <script type="text/javascript" src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+
+                <script src="{% static 'js/prueba.js'%}"></script>
+                {%endblock%}

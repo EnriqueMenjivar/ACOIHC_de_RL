@@ -3,7 +3,7 @@
 }
 .prueba{
 	margin-top: 5.2%;
-	background: #eaeded;
+	/*background: #eaeded;*/
 	height: 50%;
 	width: 100%;
 	padding-top: 3%;
@@ -60,10 +60,19 @@
 	border-color: #54acac;
 }
 
+<<<<<<< HEAD
 #b_comprobacion{
+=======
+h4{
+	text-align: center;
+}
+
+#estados_financieros{
+>>>>>>> 8b000c3719a5fc3543423474f11f628dbc9043a4
   width: 70%;
   overflow: auto;
   margin: auto;
+
 }
 
 .btnNueva{

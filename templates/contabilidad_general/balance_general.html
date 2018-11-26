@@ -4,11 +4,11 @@
 
 	{% if balances %}
 	<h4 class="text-center">Huelic Chocolatl</h4>
-	<h5 class="text-center">Balance de General</h5>
+	<h5 class="text-center">Balance General</h5>
 	<h5 class="text-center">Al {{fecha_final}}</h5>
 
 	<br>
-	<table class="table table-hover" id="b_comprobacion">
+	<table class="table table-hover" id="estados_financieros">
   		<thead>
     		<tr>
       			<th scope="col">Cuenta</th>
@@ -40,8 +40,9 @@
     	</tbody>
     </table>
     	
-    	<br><br><br>
+    	<br><br>
     	<h3 class="text-center">{{mensaje}}</h3>
+      <hr>
     {% else %}
     <h2 class="text-center">El balance de comprobación no está disponible para este periodo</h2>
     {% endif %}

@@ -32,7 +32,7 @@ class Cuenta(models.Model):
 
 class CuentaHija(models.Model):
 	padre = models.ForeignKey(Cuenta, null=True, on_delete=models.CASCADE)
-	codigo_padre = models.CharField(max_length=5, blank = True, null= True)
+	codigo_padre = models.IntegerField(blank = True, null= True)
 	nombre_cuenta = models.CharField(max_length=100)
 	codigo_cuenta = models.IntegerField(blank=True)
 	descripcion_cuenta = models.CharField(max_length=100)

@@ -1,0 +1,40 @@
+{% extends 'base/base.html'%}
+{% block title %} Programacion seguimiento{% endblock %}
+{% block extracss %}
+
+{% endblock %}
+{% block portada %}<br><br><br>{% endblock %}
+{% block content %}
+
+	{% if programacion_procesos %}
+			{% if producto %}
+				<h3>Procesos realizados en la fabricacion de <b>{{ producto.nombre_cuenta }}</b></h3>
+			{% endif %}
+			{% if programacion %}
+				<h5>Programada para el <b><i>{{ programacion.fecha_programacion }}</i></b></h5>
+			{% endif %}
+			<table class="table">
+				<thead id="thead-dark" class="thead-dark">
+					<tr>
+						<th scope="col">ID</th>
+						<th scope="col">Nombre proceso</th>
+						<th scope="col">Finalizado</th>
+						<th scope="col">Acciones</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for programacion_proceso in programacion_procesos %}
+						<tr>
+							<td>{{ programacion_proceso.id }}</td>
+							<td>{{ programacion_proceso.proceso.nombre_proceso }}</td>
+							<td>{{ programacion_proceso.terminado }}</td>
+							<td><input type="button" onclick="location.href = '{% url 'detalles_proceso' programacion_proceso.id  %}'" class="btn btn-primary" name="btnDetalles_proceso" value="Ver detalles"></td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table><br>
+	{% else %}
+		<h3>No hay procesos registrados con esta programacion</h3>
+	{% endif %}
+	<input type="button" style="font-size: 1.2em;" class="btn btn-danger" onclick="location.href = '{% url 'programaciones_lista' %}'" value="Regresar"><br><br>
+{% endblock %}
