@@ -238,6 +238,11 @@ th {
   h3 {
     page-break-after: avoid;
   }
+
+  h1 {
+  
+    color:rgb(205,44,20);
+  }
   .navbar {
     display: none;
   }

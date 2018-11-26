@@ -43,8 +43,9 @@ class Lista_Empleados(ListView):
 	template_name = 'contabilidad_costos/empleado_list'
 
 
-def planilla_general(request):
-	return render(request,'contabilidad_costos/planillaGeneral.html')
+class planilla_general(ListView):
+	model = Planilla
+	template_name = 'contabilidad_costos/planillaGeneral.html'
 
 
 def planilla_empleado(request, id_empleado):
@@ -68,9 +69,11 @@ def registra_Empleado(request):
 			iss = salario_Mensual*0.075;
 			afp = salario_Mensual*0.065;
 			insaforp = salario_Mensual*0.01;
-			vacaciones = 0;
-			aguinaldo = 0;
-			salario_total = salario_Mensual + iss + afp + insaforp ;
+			v = (salario_Mensual*0.5/12)*(1.3) + (salario_Mensual*0.5/12)*(0.075 + 0.065);
+			vacaciones = round(v,2);
+			a = (salario_Mensual*19/(12*30));
+			aguinaldo = round(a,2);
+			salario_total = salario_Mensual + iss + afp + insaforp + vacaciones+ aguinaldo;
 	
 
 			
@@ -82,3 +85,9 @@ def registra_Empleado(request):
 		form1 = EmpleadoForms()
 
 	return render(request, 'contabilidad_costos/empleado_registrar.html',{'form1': form1 })
+
+
+def lista_Empleados(request):
+	empleados = Empleado.objects.all()
+	planillas = Planillas.objects.all()
+	return render(request,'contabilidad_costos/programacion_list.html', {'empleados':empleados, 'planillas':planillas})
