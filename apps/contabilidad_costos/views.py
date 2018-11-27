@@ -317,13 +317,12 @@ def registra_Empleado(request):
 
 	return render(request, 'contabilidad_costos/empleado_registrar.html',{'form1': form1 })
 
-<<<<<<< HEAD
 
 def lista_Empleados(request):
 	empleados = Empleado.objects.all()
 	planillas = Planillas.objects.all()
 	return render(request,'contabilidad_costos/programacion_list.html', {'empleados':empleados, 'planillas':planillas})
-=======
+
 def lista_kardex(request):
 	lista_kardex = list() # creamos la lista que enviaremos al contexto
 	list_interna = list() # me permitira guardar en la primera posicion el kardex, y en la segunda posicion una lista de precio_un y cant
@@ -354,4 +353,3 @@ def kardex(request,id):
 	'es':es
 	}
 	return render(request,'contabilidad_costos/kardex.html',contexto)
->>>>>>> 8b000c3719a5fc3543423474f11f628dbc9043a4
