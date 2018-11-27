@@ -78,7 +78,7 @@ def seguimiento(request, id_programacion):
 
 				nuevo_haber = total
 				nuevo_debe = total
-				CuentaHija.objects.filter(id = cuenta_proceso.id).update(haber = nuevo_haber)
+				CuentaHija.objects.filter(id = cuenta_proceso.id).update(debe = 0.0, haber = 0.0)
 				CuentaHija.objects.filter(id = cuenta_proceso_siguiente.id).update(debe = nuevo_debe)
 				Programacion_Proceso.objects.filter(id = programacion_proceso).update(terminado = True)
 				prog_proc_obj = Programacion_Proceso.objects.get(id = str(int(programacion_proceso) + 1))
@@ -96,11 +96,13 @@ def seguimiento(request, id_programacion):
 				transaccion_cargar.save()
 				nuevo_haber = total
 				nuevo_debe = cuenta_inventario_pt.debe + total
-				CuentaHija.objects.filter(id = cuenta_proceso.id).update(haber = nuevo_haber)
+				CuentaHija.objects.filter(id = cuenta_proceso.id).update(debe = 0.00, haber = 0.00)
 				CuentaHija.objects.filter(id = cuenta_inventario_pt.id).update(debe = nuevo_debe)
 				Programacion_Proceso.objects.filter(id = programacion_proceso).update(terminado = True)
 				progra = Programacion_Proceso.objects.get(id = programacion_proceso).programacion
-				Programacion.objects.filter(id = progra.id).update(estado_programacion = True)
+				cantidad = float(Programacion_Proceso.objects.get(id = programacion_proceso).programacion.cantidad_programacion)
+				costo_unitario = float(total)/cantidad
+				Programacion.objects.filter(id = progra.id).update(estado_programacion = True, costo_unitario = costo_unitario)
 				pass
 
 		lista_programacion = Programacion.objects.all()
@@ -122,7 +124,6 @@ def ver_detalles_proceso(request, id_proceso):
 	asignaciones_mo = Asignar_Mano_Obra.objects.filter(proceso_prog_mo = programacion_proceso)
 	asignaciones_cif = Asignar_Cif.objects.filter(proceso_prog_cif = programacion_proceso)
 	contexto = {'programacion': programacion, 'programacion_proceso': programacion_proceso, 'asignaciones_mp':asignaciones_mp, 'asignaciones_mo':asignaciones_mo, 'asignaciones_cif':asignaciones_cif}
-	print(contexto)
 	return render(request, 'contabilidad_costos/ver_detalles_proceso.html', contexto)
 
 class TransaccionesProgramacion(TemplateView):
