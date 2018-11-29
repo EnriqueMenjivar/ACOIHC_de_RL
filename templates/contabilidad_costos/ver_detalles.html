@@ -34,7 +34,7 @@
 				</tbody>
 			</table><br>
 	{% else %}
-		<h3>No hay procesos registrados con esta programacion</h3>
+		<h3>No hay procesos finalizados en esta programacion</h3>
 	{% endif %}
 	<input type="button" style="font-size: 1.2em;" class="btn btn-danger" onclick="location.href = '{% url 'programaciones_lista' %}'" value="Regresar"><br><br>
 {% endblock %}

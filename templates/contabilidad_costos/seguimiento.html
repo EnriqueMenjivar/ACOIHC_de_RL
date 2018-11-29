@@ -91,7 +91,7 @@
 					<input type="text" class="form-control" id="contMOD" name="totalMOD{{proceso_perdiente.proceso.id}}" value="0" disabled="">
 				</div><br><br>
 				<h5 style="color:  #2874a6  ;">Asignacion de costos indirectos de fabricación</h5>
-				<form method="POST" name="frmCIF{{proceso_perdiente.proceso.id}}">
+				<form method="POST" id="frmCIF" name="frmCIF{{proceso_perdiente.proceso.id}}">
 					<div class="form_group">
 						<label>Base de asignacion</label>
 						<select id="selectBaseAsignacion" class="form-control" name="baseCIF{{proceso_perdiente.proceso.id}}">
@@ -236,6 +236,7 @@
 		}
 		function totalCIF(data){
 			document.getElementById("contCIF").value = (parseFloat(document.getElementById("contCIF").value) + parseFloat(data[3])).toString();
+			document.getElementById("frmCIF").reset();
 		}
 	</script>
 {% endblock %}
