@@ -57,7 +57,7 @@ def seguimiento(request, id_programacion):
 	materialesLista = CuentaHija.objects.filter(codigo_padre='1105') | CuentaHija.objects.filter(codigo_padre='1104')
 	materiales = []
 	for x in materialesLista:
-		if x.debe > 0:
+		if x.debe > 0 and (x.debe - x.haber) > 0:
 			materiales.append(x)
 			pass
 		pass
