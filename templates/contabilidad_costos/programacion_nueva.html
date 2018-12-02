@@ -7,7 +7,7 @@
 {% block content %}
 <div class="divBorder">
 	<br>
-	<h4>Datos de la Programacion</h4>
+	<h4 style="text-align: center; color: #1f618d;">Datos de la Programacion</h4>
 	
 	<form id="fmProgramacionNueva" name="programacion_nueva" method="POST">
 		{% csrf_token %}
@@ -51,8 +51,9 @@
 		</div>
 
 		<input id="btnGuardarProgra" type="submit" class="btn btn-primary" name="btnGuardarProgra" value="Guardar">
-		<input type="button" class="btn btn-danger" name="btnCancelar" value="Cancelar">
+		<input type="button" class="btn btn-danger" onclick="getElementById('fmProgramacionNueva').reset();" name="btnCancelar" value="Cancelar">
 
 	</form>
 </div>
+<input type="button" style="font-size: 1.2em; color:  #b3b6b7;" class="btn btn-secondary" onclick="location.href = '{% url 'programaciones_lista' %}'" value="Regresar"><br><br>
 {% endblock %}
