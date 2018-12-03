@@ -8,7 +8,6 @@
 {% block portada %}<br><br><br>{% endblock %}
 {% block content %}
 <h4 class="text-center">Kardex de Materia Prima y Productos Terminados.</h4>
-
 <!-- Tabla de materia prima -->
             <div class="row">
                 <div class="col-lg-12">
@@ -36,7 +35,7 @@
                                             
                                         </tr>
                                     	{%for list in lista_kardex%}
-                                            {%if list.0.cuenta_kardex.codigo_padre == '1105' %}
+                                            {%if list.0.cuenta_kardex.codigo_padre == 1105 %}
                                         <tr>
                                             <td>{{list.0.cuenta_kardex}}</td>
                                             <td>{{list.0.cantidad_existencia}}</td>
@@ -52,7 +51,7 @@
                                         {%endfor%}
                                         <tr><th colspan="5">Producto Terminado</th></tr>
                                         {%for list in lista_kardex%}
-                                            {%if list.0.cuenta_kardex.codigo_padre == '1103' %}
+                                            {%if list.0.cuenta_kardex.codigo_padre == 1103 %}
                                         <tr>
                                             <td>{{list.0.cuenta_kardex}}</td>
                                             <td>{{list.0.cantidad_existencia}}</td>

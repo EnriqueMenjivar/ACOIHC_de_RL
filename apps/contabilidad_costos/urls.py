@@ -12,7 +12,7 @@ urlpatterns = [
     path('empleado_lista/', Lista_Empleados.as_view(), name= "empleado_lista"),
     path('empleado_registrar/', registra_Empleado, name= 'empleado_registrar'),
     path('empleado_general/', planilla_general.as_view(), name= 'empleado_general'),
-    path('empleado_planilla/(¿P<id_empleado>\d+)/', planilla_empleado , name = 'empleado_planilla'),
+    path('empleado_planilla/<id>/', planilla_empleado , name = 'empleado_planilla'),
     path('lista_kardex/', lista_kardex, name= 'lista_kardex'),
     path('lista_kardex/kardex/<id>/', kardex, name= 'kardex'),
    

@@ -293,9 +293,9 @@ class planilla_general(ListView):
 	template_name = 'contabilidad_costos/planillaGeneral.html'
 
 
-def planilla_empleado(request, id_empleado):
-	empleado = Empleado.objects.get(id = id_empleado)
-	planilla = Planilla.objects.get(id = id_empleado)
+def planilla_empleado(request, id):
+	empleado = Empleado.objects.get(id = id)
+	planilla = Planilla.objects.get(empleado_planilla = empleado)
 
 	return render(request, 'contabilidad_costos/planillaEmpleado.html', {'empleado':empleado, 'planilla':planilla} )
 
