@@ -10,7 +10,9 @@
       <th scope="col">Nombre de la cuenta</th>
       <th scope="col">Saldo deudor</th>
       <th scope="col">Saldo acreedor</th>
+      {% if user.is_superuser == True %}
       <th scope="col">Acciones</th>
+      {% endif %}
     </tr>
   </thead>
   <tbody>
@@ -21,14 +23,16 @@
       <td>{{hija.nombre_cuenta}}</td>
       <td>{{hija.saldo_deudor_cuenta}}</td>
       <td>{{hija.saldo_acreedor_cuenta}}</td>
+      {% if user.is_superuser == True %}
       <td>
-      	<div class="col-md-10">
+        <div class="col-md-10">
               <div class="col-md-10">
                   <a href="{% url 'contabilidad_general:hija-editar' hija.id %}" class="btn btn-block btn-success font-weight-bold">Editar</a>
               </div>
             </div>
         </div>
       </td>
+      {% endif %}
     </tr>
     {% endfor %}
     {% else %}

@@ -88,10 +88,11 @@
                   <li>
                     <a class="page-scroll" href="{% url 'periodo_contable'%}"><i class="fas fa-info"></i>Periodos Contables</a>
                   </li>
+                  {% if user.is_staff == True %}
                   <li>
                     <a class="page-scroll" href="{%url 'contabilidad_general:mostrar-cuentas'%}"><i class="fas fa-info"></i>Catalogo de Cuentas</a>
                   </li>
-                  
+                  {% endif %}
                   <li>
                     <a class="page-scroll" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i>Salir</a>
                   </li>

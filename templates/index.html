@@ -86,7 +86,9 @@
                     <a class="page-scroll" href="{% url 'periodo_contable'%}"><i class="fas fa-info"></i>Periodos Contables</a>
                   </li>
                   <li>
+                    {% if user.is_staff %}
                     <a class="page-scroll" href="{%url 'contabilidad_general:mostrar-cuentas'%}"><i class="fas fa-info"></i>Catalogo de Cuentas</a>
+                    {% endif %}
                   </li>
                   
                   <li>
