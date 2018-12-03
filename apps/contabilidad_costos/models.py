@@ -64,6 +64,7 @@ class Programacion(models.Model):
 	producto_programacion = models.CharField(max_length=100)
 	cantidad_programacion = models.IntegerField()
 	estado_programacion = models.BooleanField(default= False)
+	costo_unitario = models.FloatField(default=0.00)
 	def __str__(self):
 		return self.producto_programacion
 

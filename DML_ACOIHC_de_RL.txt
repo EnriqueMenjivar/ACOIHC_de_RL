@@ -285,3 +285,13 @@ INSERT INTO public.contabilidad_costos_kardex(
 INSERT INTO public.contabilidad_costos_kardex(
 	id, cantidad_existencia, precio_unitario_peps, cuenta_kardex_id)
 	VALUES (9, 0, 0, 19);
+
+--Procesos values
+
+INSERT INTO contabilidad_costos_proceso VALUES(1,'Mezclado','Elaboración de subproductos',137);
+INSERT INTO contabilidad_costos_proceso VALUES(2,'Molienda','Mezclado',138);
+INSERT INTO contabilidad_costos_proceso VALUES(3,'Conchado','Molienda',139);
+INSERT INTO contabilidad_costos_proceso VALUES(4,'Templado','Conchado',140);
+INSERT INTO contabilidad_costos_proceso VALUES(5,'Moldeado','Templado',141);
+INSERT INTO contabilidad_costos_proceso VALUES(6,'Empacado','Moldeado',142);
+INSERT INTO contabilidad_costos_proceso VALUES(7,'Finalizar programacion','Empacado',143);

@@ -91,7 +91,7 @@
 					<input type="text" class="form-control" id="contMOD" name="totalMOD{{proceso_perdiente.proceso.id}}" value="0" disabled="">
 				</div><br><br>
 				<h5 style="color:  #2874a6  ;">Asignacion de costos indirectos de fabricación</h5>
-				<form method="POST" name="frmCIF{{proceso_perdiente.proceso.id}}">
+				<form method="POST" id="frmCIF" name="frmCIF{{proceso_perdiente.proceso.id}}">
 					<div class="form_group">
 						<label>Base de asignacion</label>
 						<select id="selectBaseAsignacion" class="form-control" name="baseCIF{{proceso_perdiente.proceso.id}}">
@@ -139,8 +139,12 @@
 				url : '/contabilidad_costos/transacciones_programacion/',
 				data : {'programacion_proceso': programacion_proceso, 'producto': producto,'cantidad': cantidad, 'transaccion':transaccion},
 				success : function(data){
-					console.log(data);
-					cargarMP(Object.values(data[0].fields));
+					if (data != []) {
+						console.log(data);
+						cargarMP(Object.values(data[0].fields));
+					}else{
+						alert("No hay suficiente stock!");
+					}
 				}
 			});	
 		});
@@ -183,25 +187,29 @@
 		});
 
 		function cargarMP(data){
-			var tr = document.createElement("tr");
-			 var tdMateria = document.createElement("td");
-			 var tdCant = document.createElement("td");
-			 var tdMonto = document.createElement("td");
-			 var materia = document.createTextNode(data[1]);
-			 var cantidad = document.createTextNode(data[2]);
-			 var monto = document.createTextNode(data[3]);
-			 var tabla = document.getElementById("tbMP");
+			if (data == []) {
+				alert("No hay suficiente stock");
+			}else{
+				 var tr = document.createElement("tr");
+				 var tdMateria = document.createElement("td");
+				 var tdCant = document.createElement("td");
+				 var tdMonto = document.createElement("td");
+				 var materia = document.createTextNode(data[1]);
+				 var cantidad = document.createTextNode(data[2]);
+				 var monto = document.createTextNode(data[3]);
+				 var tabla = document.getElementById("tbMP");
 
-			 tr.setAttribute('id', data[1]);
-			 tdMateria.appendChild(materia);
-			 tdCant.appendChild(cantidad);
-			 tdMonto.appendChild(monto);
-			 tr.appendChild(tdMateria);
-			 tr.appendChild(tdCant);
-			 tr.appendChild(tdMonto);
-			 tabla.appendChild(tr);
-			 document.getElementById("contMP").value = (parseFloat(document.getElementById("contMP").value) + parseFloat(data[3])).toString();
-			 document.getElementById("frmMP").reset(); 
+				 tr.setAttribute('id', data[1]);
+				 tdMateria.appendChild(materia);
+				 tdCant.appendChild(cantidad);
+				 tdMonto.appendChild(monto);
+				 tr.appendChild(tdMateria);
+				 tr.appendChild(tdCant);
+				 tr.appendChild(tdMonto);
+				 tabla.appendChild(tr);
+				 document.getElementById("contMP").value = (parseFloat(document.getElementById("contMP").value) + parseFloat(data[3])).toString();
+				 document.getElementById("frmMP").reset(); 
+			}
 		}
 
 		function cargarMO(data){ 
@@ -236,6 +244,7 @@
 		}
 		function totalCIF(data){
 			document.getElementById("contCIF").value = (parseFloat(document.getElementById("contCIF").value) + parseFloat(data[3])).toString();
+			document.getElementById("frmCIF").reset();
 		}
 	</script>
 {% endblock %}

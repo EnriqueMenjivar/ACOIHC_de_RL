@@ -16,13 +16,13 @@
 			</tr>
 		</thead>
 		<tbody>
-		{% for empleado in object_list %}	
+		{% for empleado in object_list  %}	
 			<tr id="{{empleado.id}}">
 				<td>{{empleado.id}}</td>
 				<td><b>{{empleado.dui_empleado}}</b></td>
 				<td>{{empleado.nombre_empleado}}</td>
 				<td>{{empleado.apellido_empleado}}</td>
-				<td><a class= "btn btn-primary" href="{% url 'empleado_planilla' empleado.id %}"> Ver Planilla</a></td>
+				<td><a class= "btn btn-primary" href="{% url 'empleado_planilla' empleado.id  %}"> Ver Planilla</a></td>
 			</tr>
 		{% endfor %}
 		</tbody>

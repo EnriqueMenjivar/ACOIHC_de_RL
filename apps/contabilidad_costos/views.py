@@ -54,7 +54,13 @@ def programacion_nueva(request):
 
 def seguimiento(request, id_programacion):
 	procesos_pendientes = Programacion_Proceso.objects.filter(programacion__id = id_programacion, terminado = False).order_by('id')[:1]
-	materiales = CuentaHija.objects.filter(codigo_padre='1105') | CuentaHija.objects.filter(codigo_padre='1104')
+	materialesLista = CuentaHija.objects.filter(codigo_padre='1105') | CuentaHija.objects.filter(codigo_padre='1104')
+	materiales = []
+	for x in materialesLista:
+		if x.debe > 0 and (x.debe - x.haber) > 0:
+			materiales.append(x)
+			pass
+		pass
 	cargos = Cargo.objects.all()
 	if 'btnTerminarProceso' in request.POST:
 		#Se procede a saldar cuenta de proceso finalizado
@@ -78,7 +84,7 @@ def seguimiento(request, id_programacion):
 
 				nuevo_haber = total
 				nuevo_debe = total
-				CuentaHija.objects.filter(id = cuenta_proceso.id).update(haber = nuevo_haber)
+				CuentaHija.objects.filter(id = cuenta_proceso.id).update(debe = 0.0, haber = 0.0)
 				CuentaHija.objects.filter(id = cuenta_proceso_siguiente.id).update(debe = nuevo_debe)
 				Programacion_Proceso.objects.filter(id = programacion_proceso).update(terminado = True)
 				prog_proc_obj = Programacion_Proceso.objects.get(id = str(int(programacion_proceso) + 1))
@@ -96,11 +102,13 @@ def seguimiento(request, id_programacion):
 				transaccion_cargar.save()
 				nuevo_haber = total
 				nuevo_debe = cuenta_inventario_pt.debe + total
-				CuentaHija.objects.filter(id = cuenta_proceso.id).update(haber = nuevo_haber)
+				CuentaHija.objects.filter(id = cuenta_proceso.id).update(debe = 0.00, haber = 0.00)
 				CuentaHija.objects.filter(id = cuenta_inventario_pt.id).update(debe = nuevo_debe)
 				Programacion_Proceso.objects.filter(id = programacion_proceso).update(terminado = True)
 				progra = Programacion_Proceso.objects.get(id = programacion_proceso).programacion
-				Programacion.objects.filter(id = progra.id).update(estado_programacion = True)
+				cantidad = float(Programacion_Proceso.objects.get(id = programacion_proceso).programacion.cantidad_programacion)
+				costo_unitario = float(total)/cantidad
+				Programacion.objects.filter(id = progra.id).update(estado_programacion = True, costo_unitario = costo_unitario)
 				pass
 
 		lista_programacion = Programacion.objects.all()
@@ -112,7 +120,7 @@ def ver_detalles(request, id_programacion):
 	#Se recibe el id_porgramacion para recoger todos los procesos asociados a la programacion y recorrerlos luego en el template
 	programacion = Programacion.objects.get(id = id_programacion)
 	producto = CuentaHija.objects.get(codigo_cuenta = programacion.producto_programacion)
-	programacion_procesos = Programacion_Proceso.objects.filter(programacion = programacion)
+	programacion_procesos = Programacion_Proceso.objects.filter(programacion = programacion, terminado = True)
 	return render(request, 'contabilidad_costos/ver_detalles.html', {'programacion_procesos':programacion_procesos, 'producto':producto, 'programacion':programacion})
 
 def ver_detalles_proceso(request, id_proceso):
@@ -122,7 +130,6 @@ def ver_detalles_proceso(request, id_proceso):
 	asignaciones_mo = Asignar_Mano_Obra.objects.filter(proceso_prog_mo = programacion_proceso)
 	asignaciones_cif = Asignar_Cif.objects.filter(proceso_prog_cif = programacion_proceso)
 	contexto = {'programacion': programacion, 'programacion_proceso': programacion_proceso, 'asignaciones_mp':asignaciones_mp, 'asignaciones_mo':asignaciones_mo, 'asignaciones_cif':asignaciones_cif}
-	print(contexto)
 	return render(request, 'contabilidad_costos/ver_detalles_proceso.html', contexto)
 
 class TransaccionesProgramacion(TemplateView):
@@ -138,35 +145,42 @@ class TransaccionesProgramacion(TemplateView):
 			fecha = time.strftime("%Y-%m-%d")
 			cv = list()
 			costoMP = peps(periodo, fecha, producto,int(cantidad),0, True, cv)
-			monto = 0.00
-			for x in costoMP:
-				monto = monto + x[2]
+			monto = 0.00	
+			if costoMP == []:
+				print('No alcanza')
+				data = []
+				return HttpResponse(data)
 				pass
-				#Aqui iva ajuste_peps()
-			#Se creara la transaccion para luego cargar y abonar las cuentas correspondientes
-			fecha = time.strftime("%Y-%m-%d")
-			transaccion = Transaccion(fecha_transaccion = fecha, descripcion_transaccion = "Cargando materia prima al proceso productivo", periodo_transaccion = periodo_obj)
-			transaccion.save()
-			cuenta_mp = CuentaHija.objects.get(id = producto)
-			cuenta_proceso = Programacion_Proceso.objects.get(id = programacion_proceso).proceso.cuenta_proceso
-			transaccion_mp = Transaccion_Cuenta(debe_tc = 0.00, haber_tc = monto, cuenta_tc = cuenta_mp, transaccion_tc = transaccion)
-			transaccion_proceso = Transaccion_Cuenta(debe_tc = monto, haber_tc = 0.00, cuenta_tc = cuenta_proceso, transaccion_tc = transaccion)
-			
-			#Se comprobara partida doble y luego aplicar cambios en cuentas hijas
-			if transaccion_mp.haber_tc == transaccion_proceso.debe_tc:
-				transaccion_mp.save()
-				transaccion_proceso.save()
-				nuevo_haber = cuenta_mp.haber + monto
-				nuevo_debe = cuenta_proceso.debe + monto
-				CuentaHija.objects.filter(id = cuenta_mp.id).update(haber = nuevo_haber)
-				CuentaHija.objects.filter(id = cuenta_proceso.id).update(debe = nuevo_debe)
-				prog_proc_obj = Programacion_Proceso.objects.get(id = programacion_proceso) 
-				asignacion_mp = Asignar_Materia_Prima(cantidad_mp = float(cantidad), monto = monto, nombre_mp = cuenta_mp, proceso_prog_mp = prog_proc_obj)
-				asignacion_mp.save()
-				#Se alistara JSON para reflejar datos en la tabla de mp
-				data = serializers.serialize('json',[asignacion_mp],fields = ('proceso_prog_mp','nombre_mp','cantidad_mp','monto'))
-				return HttpResponse(data, content_type = 'application/json')
-				pass
+			else:
+					#Aqui iva ajuste_peps()
+				#Se creara la transaccion para luego cargar y abonar las cuentas correspondientes
+				for x in costoMP:
+					monto = monto + x[2]
+					pass
+				print(monto)
+				fecha = time.strftime("%Y-%m-%d")
+				transaccion = Transaccion(fecha_transaccion = fecha, descripcion_transaccion = "Cargando materia prima al proceso productivo", periodo_transaccion = periodo_obj)
+				transaccion.save()
+				cuenta_mp = CuentaHija.objects.get(id = producto)
+				cuenta_proceso = Programacion_Proceso.objects.get(id = programacion_proceso).proceso.cuenta_proceso
+				transaccion_mp = Transaccion_Cuenta(debe_tc = 0.00, haber_tc = monto, cuenta_tc = cuenta_mp, transaccion_tc = transaccion)
+				transaccion_proceso = Transaccion_Cuenta(debe_tc = monto, haber_tc = 0.00, cuenta_tc = cuenta_proceso, transaccion_tc = transaccion)
+				
+				#Se comprobara partida doble y luego aplicar cambios en cuentas hijas
+				if transaccion_mp.haber_tc == transaccion_proceso.debe_tc:
+					transaccion_mp.save()
+					transaccion_proceso.save()
+					nuevo_haber = cuenta_mp.haber + monto
+					nuevo_debe = cuenta_proceso.debe + monto
+					CuentaHija.objects.filter(id = cuenta_mp.id).update(haber = nuevo_haber)
+					CuentaHija.objects.filter(id = cuenta_proceso.id).update(debe = nuevo_debe)
+					prog_proc_obj = Programacion_Proceso.objects.get(id = programacion_proceso) 
+					asignacion_mp = Asignar_Materia_Prima(cantidad_mp = float(cantidad), monto = monto, nombre_mp = cuenta_mp, proceso_prog_mp = prog_proc_obj)
+					asignacion_mp.save()
+					#Se alistara JSON para reflejar datos en la tabla de mp
+					data = serializers.serialize('json',[asignacion_mp],fields = ('proceso_prog_mp','nombre_mp','cantidad_mp','monto'))
+					return HttpResponse(data, content_type = 'application/json')
+					pass
 
 
 			pass
@@ -274,8 +288,9 @@ class Lista_Empleados(ListView):
 	template_name = 'contabilidad_costos/empleado_list'
 
 
-def planilla_general(request):
-	return render(request,'contabilidad_costos/planillaGeneral.html')
+class planilla_general(ListView):
+	model = Planilla
+	template_name = 'contabilidad_costos/planillaGeneral.html'
 
 
 def planilla_empleado(request, id_empleado):
@@ -299,9 +314,11 @@ def registra_Empleado(request):
 			iss = salario_Mensual*0.075;
 			afp = salario_Mensual*0.065;
 			insaforp = salario_Mensual*0.01;
-			vacaciones = 0;
-			aguinaldo = 0;
-			salario_total = salario_Mensual + iss + afp + insaforp ;
+			v = (salario_Mensual*0.5/12)*(1.3) + (salario_Mensual*0.5/12)*(0.075 + 0.065);
+			vacaciones = round(v,2);
+			a = (salario_Mensual*19/(12*30));
+			aguinaldo = round(a,2);
+			salario_total = salario_Mensual + iss + afp + insaforp + vacaciones+ aguinaldo;
 	
 
 			
@@ -313,6 +330,12 @@ def registra_Empleado(request):
 		form1 = EmpleadoForms()
 
 	return render(request, 'contabilidad_costos/empleado_registrar.html',{'form1': form1 })
+
+
+def lista_Empleados(request):
+	empleados = Empleado.objects.all()
+	planillas = Planillas.objects.all()
+	return render(request,'contabilidad_costos/programacion_list.html', {'empleados':empleados, 'planillas':planillas})
 
 def lista_kardex(request):
 	lista_kardex = list() # creamos la lista que enviaremos al contexto
