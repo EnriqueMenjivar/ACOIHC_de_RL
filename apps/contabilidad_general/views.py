@@ -67,7 +67,6 @@ def hijas_show(request, cuenta_id):
 	return render(request, 'contabilidad_general/hijas_show.html', {'hijas':hijas,})
 
 def cuenta_update(request, cuenta_id):
-	grupos = Grupo.objects.all()
 	cuenta = Cuenta.objects.get(id=cuenta_id)
 	if request.method == 'GET':
 		form = CuentaForm(instance=cuenta)
@@ -79,7 +78,6 @@ def cuenta_update(request, cuenta_id):
 	contexto = {
 		'form':form,
 		'cuenta':cuenta,
-		'grupos':grupos,
 	}
 	return render(request, 'contabilidad_general/cuenta_update.html', contexto)
 
