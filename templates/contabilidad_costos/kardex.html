@@ -33,13 +33,13 @@
                                     </thead>
                                     <tbody>
                                         
-                                        {%if es%}
-                                        {%for l in es%}
+                                        {%if listota%}
+                                        {%for l in listota%}
                                         <tr class="info">
-                                            <td>{{l.cantidad_unidades}}</td>
-                                            <td>${{l.precio_unitario}}0</td>
+                                            <td>{{l.0.cantidad_unidades}}</td>
+                                            <td>${{l.0.precio_unitario}}0</td>
                                             <td>
-                                                
+                                                ${{l.1}}0
                                             </td>
                                         </tr>
                                         {%endfor%}
@@ -92,24 +92,24 @@
                                             <th style="text-align:center;">Precio unitario</th>
                                             <th style="text-align:center;">Monto</th>
                                         </tr>
-                                        {%if esr%}
-                                    	   {%for list in esr%}
-                                                {%if list.tipo_movimientor == False%}
+                                        {%if listita%}
+                                    	   {%for list in listita%}
+                                                {%if list.0.tipo_movimientor == False%}
                                         <tr>
-                                            <td style="text-align:center;">{{list.fecha_esr}}</td>
-                                            <td style="text-align:center;">{{list.cantidad_unidadesr}}</td>
-                                            <td style="text-align:center;">${{list.precio_unitarior}}0</td>
-                                            <td style="text-align:center;"></td>
+                                            <td style="text-align:center;">{{list.0.fecha_esr}}</td>
+                                            <td style="text-align:center;">{{list.0.cantidad_unidadesr}}</td>
+                                            <td style="text-align:center;">${{list.0.precio_unitarior}}0</td>
+                                            <td style="text-align:center;">${{list.1}}0</td>
                                             <td></td><td></td><td></td>
                                             
                                         </tr>
                                                 {%else%}
                                         <tr>
-                                            <td style="text-align:center;">{{list.fecha_esr}}</td>
+                                            <td style="text-align:center;">{{list.0.fecha_esr}}</td>
                                             <td></td><td></td><td></td>
-                                            <td style="text-align:center;">{{list.cantidad_unidadesr}}</td>
-                                            <td style="text-align:center;">${{list.precio_unitarior}}0</td>
-                                            <td style="text-align:center;"></td>
+                                            <td style="text-align:center;">{{list.0.cantidad_unidadesr}}</td>
+                                            <td style="text-align:center;">${{list.0.precio_unitarior}}0</td>
+                                            <td style="text-align:center;">${{list.1}}0</td>
                                         </tr>
 
                                                 {%endif%}

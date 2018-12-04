@@ -305,9 +305,7 @@ def registra_Empleado(request):
 	if request.method == 'POST':
 		form1 = EmpleadoForms(request.POST)
 		if form1.is_valid():
-
 			form1.save()
-			
 			periodo = Periodo.objects.get(id=1)
 			empleado = Empleado.objects.last()
 			salario_Mensual = empleado.cargo_empleado.sueldo_base
@@ -316,7 +314,12 @@ def registra_Empleado(request):
 			insaforp = salario_Mensual*0.01;
 			v = (salario_Mensual*0.5/12)*(1.3) + (salario_Mensual*0.5/12)*(0.075 + 0.065);
 			vacaciones = round(v,2);
-			a = (salario_Mensual*19/(12*30));
+			if empleado.años_empleado < 3:
+				a = (salario_Mensual*15/(12*30));
+			if empleado.años_empleado > 3 and empleado.años_empleado < 10 :
+				a = (salario_Mensual*19/(12*30));
+			if empleado.años_empleado > 10 :
+				a = (salario_Mensual*21/(12*30));
 			aguinaldo = round(a,2);
 			salario_total = salario_Mensual + iss + afp + insaforp + vacaciones+ aguinaldo;
 	
@@ -355,15 +358,31 @@ def lista_kardex(request):
 	return render(request,'contabilidad_costos/lista_kardex.html',contexto)
 
 def kardex(request,id):
+	listita = list()
+	listota = list()
+	lista_interna = list()
 	kardex_existe = Kardex.objects.filter(id = id).exists #vemos si el kardex existe
 	if kardex_existe:
 		kardex = Kardex.objects.get(id = id)
 		periodo_actual = Periodo.objects.get(estado_periodo =False)
 		esr = Entrada_Salida_Respaldo.objects.filter(kardexr=kardex,periodo_esr=periodo_actual)
 		es = Entrada_Salida.objects.filter(kardex=kardex, cantidad_unidades__gt = 0 )
+		
+		for e in esr:
+			lista_interna.append(e)
+			lista_interna.append(round(e.cantidad_unidadesr*e.precio_unitarior,2))
+			listita.append(lista_interna)
+			lista_interna=[]
+		for reg in es:
+			lista_interna.append(reg)
+			lista_interna.append(round(reg.cantidad_unidades*reg.precio_unitario,2))
+			listota.append(lista_interna)
+			lista_interna=[]
 	contexto={
 	'kardex':kardex,
 	'esr':esr,
-	'es':es
+	'es':es,
+	'listita':listita,
+	'listota':listota,
 	}
 	return render(request,'contabilidad_costos/kardex.html',contexto)
