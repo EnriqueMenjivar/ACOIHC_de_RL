@@ -15,7 +15,7 @@
 					<input type="text" id="idProgramacionProceso" name="idProgramacionProceso" value="{{proceso_perdiente.id}}" style="display: none;">
 					<div class="form_group">
 						<label>Materia prima</label>
-						<select id="selectMP" name="materiaPrima{{proceso_perdiente.proceso.id}}" class="form-control">
+						<select style="height: 35px;" id="selectMP" name="materiaPrima{{proceso_perdiente.proceso.id}}" class="form-control">
 							<option>--Seleccione--</option>
 							{% if materiales %}
 								{% for materia in materiales %}
@@ -53,7 +53,7 @@
 				<form method="POST" id="frmMOD" name="frmMOD{{proceso_perdiente.proceso.id}}">
 					<div class="form_group">
 						<label>Cargo</label>
-						<select id="selectCargo" name="cargo{{proceso_perdiente.proceso.id}}" class="form-control">
+						<select style="height: 35px;" id="selectCargo" name="cargo{{proceso_perdiente.proceso.id}}" class="form-control">
 							<option>--Seleccione--</option>
 							{% if cargos %}
 								{% for cargo in cargos %}
@@ -94,11 +94,8 @@
 				<form method="POST" id="frmCIF" name="frmCIF{{proceso_perdiente.proceso.id}}">
 					<div class="form_group">
 						<label>Base de asignacion</label>
-						<select id="selectBaseAsignacion" class="form-control" name="baseCIF{{proceso_perdiente.proceso.id}}">
-							<option>--Seleccione--</option>
+						<select style="height: 35px;" id="selectBaseAsignacion" class="form-control" name="baseCIF{{proceso_perdiente.proceso.id}}">
 							<option value="mod">Mano de obra directa</option>
-							<option value="mp">Materia prima</option>
-							<option value="cp">Costos primos</option>
 						</select>
 					</div>
 					<div class="form_group">
