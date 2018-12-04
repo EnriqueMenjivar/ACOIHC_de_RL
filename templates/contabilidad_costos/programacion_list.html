@@ -3,7 +3,10 @@
 {% block portada %}<br><br><br>{% endblock %}
 {% block content %}
 <br>
+<h3 style="text-align: center; color:  #54758e;">Lista de programaciones</h3><br>
+{% if user.is_staff == True or user.is_superuser == True %}
 &nbsp;&nbsp;<a href="{% url 'programaciones_nueva' %}"><i class="fas fa-plus-square fa-2x"> Agregar nueva programacion</i></a> 
+{% endif %}
 {% if programaciones %}	
 	<table id="tbProgramaciones" class="table">
 		<thead id="thead-dark" class="thead-dark">
@@ -31,7 +34,9 @@
 						<input style="width: 107px;" class="btn btn-primary" type="button" name="btnDetalles" value="Ver detalles" onclick=" location.href='{% url 'detalles' programacion.id %}' ">
 					{% else %}
 						<input style="width: 107px;" class="btn btn-primary" type="button" name="btnDetalles" value="Ver detalles" onclick=" location.href='{% url 'detalles' programacion.id %}' ">
-						<input class="btn btn-success" type="button" name="btnSeguimiento" value="Seguimiento" onclick=" location.href='{% url 'seguimiento' programacion.id %}' ">
+						{% if user.is_staff == True or user.is_superuser == True %}
+							<input class="btn btn-success" type="button" name="btnSeguimiento" value="Seguimiento" onclick=" location.href='{% url 'seguimiento' programacion.id %}' ">
+						{% endif %}
 					{% endif %}
 				</td>
 			</tr>
