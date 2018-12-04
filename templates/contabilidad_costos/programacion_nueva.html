@@ -13,7 +13,7 @@
 		{% csrf_token %}
 		<div class="form-group">
 			<label>Periodo contable</label>
-			<select id="periodoSeleccionado" name="periodoSeleccionado" class="form-control">
+			<select style="height: 30px;" id="periodoSeleccionado" name="periodoSeleccionado" class="form-control">
 			  <option>--Seleccione--</i></option>
 			  {% if periodos %}
 			  	{% for periodo in periodos %}
@@ -31,7 +31,7 @@
 		</div>
 		<div class="form-group">
 			<label>Producto a realizar</label>
-			<select id="producto" class="form-control" name="producto">
+			<select style="height: 30px;" id="producto" class="form-control" name="producto">
 			  <option>--Seleccione--</i></option>
 			  {% if productos %}
 			  	{% for producto in productos %}

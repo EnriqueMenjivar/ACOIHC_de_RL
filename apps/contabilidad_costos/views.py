@@ -18,7 +18,7 @@ def programacion_list(request):
 	return render(request,'contabilidad_costos/programacion_list.html', {'programaciones':lista_programacion})
 
 def programacion_nueva(request):
-	periodos = Periodo.objects.all()
+	periodos = Periodo.objects.filter(estado_periodo = True)
 	productos = CuentaHija.objects.filter(codigo_padre='1103')
 	contexto = {'periodos':periodos, 'productos':productos}
 
