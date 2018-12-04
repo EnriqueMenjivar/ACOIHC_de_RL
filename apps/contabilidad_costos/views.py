@@ -2,12 +2,13 @@ from django.shortcuts import render, HttpResponse, redirect
 from apps.contabilidad_costos.models import *
 from apps.periodo.models import *
 from apps.catalogo.models import *
+from apps.contabilidad_costos import peps
 from apps.contabilidad_general.models import *
 from apps.contabilidad_costos.forms import EmpleadoForms
 from apps.contabilidad_costos.peps import *
 from django.views.generic import TemplateView, ListView, CreateView
 from django.urls import reverse_lazy
-from datetime import datetime
+from datetime import datetime, date
 from django.core import serializers
 import datetime, time
 from decimal import Decimal
@@ -18,7 +19,7 @@ def programacion_list(request):
 	return render(request,'contabilidad_costos/programacion_list.html', {'programaciones':lista_programacion})
 
 def programacion_nueva(request):
-	periodos = Periodo.objects.filter(estado_periodo = True)
+	periodos = Periodo.objects.filter(estado_periodo = False)
 	productos = CuentaHija.objects.filter(codigo_padre='1103')
 	contexto = {'periodos':periodos, 'productos':productos}
 
@@ -109,6 +110,7 @@ def seguimiento(request, id_programacion):
 				cantidad = float(Programacion_Proceso.objects.get(id = programacion_proceso).programacion.cantidad_programacion)
 				costo_unitario = float(total)/cantidad
 				Programacion.objects.filter(id = progra.id).update(estado_programacion = True, costo_unitario = costo_unitario)
+				peps(progra.periodo_programacion.id, date.today(), cuenta_inventario_pt.id,cantidad,costo_unitario,False,[])
 				pass
 
 		lista_programacion = Programacion.objects.all()

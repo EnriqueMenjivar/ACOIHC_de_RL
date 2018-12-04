@@ -38,7 +38,11 @@
                                                                 </div>
                                                                 <div class="col-xs-9 text-right">
                                                                     <div class="huge"></div>
+                                                                    {% if periodoActual.periodo_ajuste == False %}
                                                                     <div>Registro de transacción</div>
+                                                                    {%else%}
+                                                                    <div>Registro de transacción de ajustes</div>
+                                                                    {%endif%}
                                                                 </div>
                                                             </div>
                                                         </div>

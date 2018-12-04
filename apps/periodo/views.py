@@ -148,11 +148,39 @@ def  listar_transacciones( request,id):
 def  libro_mayor( request,id):
 	periodoActual = Periodo.objects.get(id = id)
 	if periodoActual.estado_periodo == False:
-		cuentas = Cuenta.objects.all()
+		cuentas = sumarMayor()
 	else:
 		cuentas = BalancePeriodo.objects.filter(periodo_balance = periodoActual)
 	contexto = {
 	'periodoActual' : periodoActual,
 	'cuentas': cuentas,
 	}
+
 	return render (request, 'periodos/libro_mayor.html' , contexto)
+
+def sumarMayor():
+	cuenta_h=CuentaHija.objects.all()
+	cuenta_p=Cuenta.objects.all()
+
+	for hija in cuenta_h:
+		saldo=hija.debe-hija.haber
+		if saldo>0:
+			hija.saldo_deudor_cuenta=saldo
+		else:
+			hija.saldo_acreedor_cuenta=abs(saldo)
+
+	for padre in cuenta_p:
+		for hija in cuenta_h:
+			if padre.codigo_cuenta==hija.codigo_padre:
+				padre.debe += hija.saldo_deudor_cuenta
+				padre.haber += hija.saldo_acreedor_cuenta
+
+	for padre in cuenta_p:
+		saldo=padre.debe-padre.haber
+		padre.debe = round(padre.debe,2)
+		padre.haber = round(padre.haber,2)
+		if saldo>0:
+			padre.saldo_deudor_cuenta=round(saldo,2)
+		else:
+			padre.saldo_acreedor_cuenta=round(abs(saldo),2)
+	return cuenta_p
