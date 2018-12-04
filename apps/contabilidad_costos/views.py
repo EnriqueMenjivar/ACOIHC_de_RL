@@ -190,7 +190,7 @@ class TransaccionesProgramacion(TemplateView):
 			periodo = Programacion_Proceso.objects.get(id = programacion_proceso).programacion.periodo_programacion
 			cargoSueldo = request.GET['cargo']
 			cargo = cargoSueldo.split("/")[0]
-			sueldo = Decimal((cargoSueldo.split("/")[1]+"0").replace(",","."))
+			sueldo = Decimal((cargoSueldo.split("/")[1]+"0").replace(",","."))/720
 			cantidadEmpleados = int(request.GET['cantidadEmpleados'])
 			cantidadHRSempleado = int(request.GET['cantidadHRSempleado'])
 			monto = float(sueldo*cantidadEmpleados*cantidadHRSempleado)
