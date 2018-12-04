@@ -169,8 +169,8 @@ def balance_comprobacion(request, periodo_id):
 
 	context={
 		'balances':balances,
-		'acreedor': acreedor,
-		'deudor': deudor,
+		'acreedor': round(acreedor,2),
+		'deudor': round(deudor,2),
 		'mensaje': mensaje,
 		'fecha_inicio': fecha_0,
 		'fecha_final': fecha_1,
@@ -283,8 +283,8 @@ def balance_general(request, periodo_id):
 
 	context={
 		'balances':balances,
-		'debe':debe,
-		'haber': haber,
+		'debe': round(debe,2),
+		'haber': round(haber,2),
 		'capital_social': capital_s,
 		'mensaje': mensaje,
 		'fecha_final': fecha_1,
