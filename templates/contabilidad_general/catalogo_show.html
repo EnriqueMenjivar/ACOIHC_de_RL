@@ -24,9 +24,10 @@
       <td>{{cuenta.saldo_deudor_cuenta}}</td>
       <td>{{cuenta.saldo_acreedor_cuenta}}</td>
       <td>
-        {% if user.is_superuser == True %}
+        
       	<div class="col-md-11">
             <div class="row">
+              {% if user.is_staff == True %}
               <div class="col-md-4">
                   <a href="{% url 'contabilidad_general:mostrar-hijas' cuenta.id %}" class="btn btn-block btn-info font-weight-bold">Cuentas hija</a>
               </div>  
@@ -36,20 +37,14 @@
               <div class="col-md-5">
                   <a href="{% url 'contabilidad_general:crear-hija' cuenta.id %}" class="btn btn-block btn-primary font-weight-bold">Agregar cuenta hija</a>
               </div>
-            </div>
-        </div>
-        {% else %}
-        <div class="col-md-11">
-            <div class="row">
-              <div class="col-md-5">
+              {% else %}
+              <div class="col-md-10">
                   <a href="{% url 'contabilidad_general:mostrar-hijas' cuenta.id %}" class="btn btn-block btn-info font-weight-bold">Cuentas hija</a>
-              </div>
-              <div class="col-md-6">
-                  <a href="{% url 'contabilidad_general:crear-hija' cuenta.id %}" class="btn btn-block btn-primary font-weight-bold">Agregar cuenta hija</a>
-              </div>
+              </div>  
+              {% endif %}
             </div>
         </div>
-        {% endif %}
+        
       </td>
     </tr>
     {% endfor %}

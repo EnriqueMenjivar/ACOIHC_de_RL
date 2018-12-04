@@ -73,7 +73,7 @@
                             <select class="form-control" name="cuenta">
                                 
                                 {%for c in cuentas%}
-                                {%if c.padre.id == 3 or c.padre.id == 4 or c.padre.id == 5 or c.padre.id == 6 %}
+                                {%if c.padre.id == 4 or c.padre.id == 5 or c.padre.id == 6 %}
                                 <option>{{c.nombre_cuenta}}</option>
                                 {% endif %}
 
