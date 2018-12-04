@@ -8,7 +8,6 @@
 	<table id="tbEmpleados" class="table">
 		<thead id="thead-dark" class="thead-dark">
 			<tr>
-				<th scope="col">ID</th>
 				<th scope="col">DUI</th>
 				<th scope="col">NOMBRES</th>
 				<th scope="col">APELLIDOS</th>
@@ -18,7 +17,6 @@
 		<tbody>
 		{% for empleado in object_list  %}	
 			<tr id="{{empleado.id}}">
-				<td>{{empleado.id}}</td>
 				<td><b>{{empleado.dui_empleado}}</b></td>
 				<td>{{empleado.nombre_empleado}}</td>
 				<td>{{empleado.apellido_empleado}}</td>
@@ -28,7 +26,7 @@
 		</tbody>
 	</table>
 {% else %}
-	<b>No hay ninguna Empledo</b>
+	<b>No se encuentra registrado ningún empleado</b>
 {% endif %}
 
 

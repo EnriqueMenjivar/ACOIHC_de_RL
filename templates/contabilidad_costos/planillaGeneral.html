@@ -13,8 +13,11 @@
 				<th scope="col">NOMBRE EMPLEADO</th>
 				<th scope="col">CARGO</th>
 				<th scope="col">SALARIO BASE</th>
-				<th scope="col">HORAS EXTRA</th>
+				<th scope="col">ISSS</th>
+				<th scope="col">AFP</th>
+				<th scope="col">INSAFORP</th>
 				<th scope="col">VACACIONES</th>
+				<th scope="col">AGUINALDO</th>
 				<th scope="col">TOTAL DEVENGADO</th>
 				<th scope="col">FIRMA</th>
 			</tr>
@@ -25,10 +28,13 @@
 				<td>{{planilla.id}}</td>
 				<td><b>{{planilla.empleado_planilla.nombre_empleado}}</b></td>
 				<td><b>{{planilla.empleado_planilla.cargo_empleado}}</b></td>
-				<td><b>{{planilla.empleado_planilla.cargo_empleado.sueldo_base}}</b></td>
-				<td><b>{{planilla.empleado_planilla.años_empleado}}</b></td>
-				<td><b>{{planilla.vacacion_planilla}}</b></td>
-				<td><b>{{planilla.salario_total}}</b></td>
+				<td><b>${{planilla.empleado_planilla.cargo_empleado.sueldo_base}}0</b></td>
+				<td><b>${{planilla.isss_planilla}}0</b></td>
+				<td><b>${{planilla.afp_planilla}}0</b></td>
+				<td><b>${{planilla.insaforp}}0</b></td>
+				<td><b>${{planilla.vacacion_planilla}}0</b></td>
+				<td><b>${{planilla.aguinaldo_planilla}}0</b></td>
+				<td><b>${{planilla.salario_total}}0</b></td>
 				<td><b> <input type="checkbox" name="firma" ></b></td>
 			</tr>
 		{% endfor %}
