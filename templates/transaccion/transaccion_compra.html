@@ -216,7 +216,7 @@
                         if (precio == '' || cantidad == '') {
                             document.getElementById('tot').value = 0;
                         } else {
-                            document.getElementById('tot').value = parseFloat(precio) * parseFloat(cantidad);
+                            document.getElementById('tot').value = (parseFloat(precio) * parseFloat(cantidad)).toFixed(2);
                         }
                         if (document.getElementById('tot') != '0') {
                             var tot = document.getElementById('tot').value;
