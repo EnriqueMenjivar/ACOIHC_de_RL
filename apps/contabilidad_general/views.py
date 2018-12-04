@@ -162,6 +162,9 @@ def balance_comprobacion(request, periodo_id):
 	for balance in balances:
 		acreedor += balance.saldo_acreedor
 		deudor += balance.saldo_deudor
+
+	acreedor = round(acreedor, 2)
+	deudor = round(deudor, 2)
 	if acreedor==deudor:
 		mensaje='Se cumple partida doble'
 	else:
@@ -169,8 +172,8 @@ def balance_comprobacion(request, periodo_id):
 
 	context={
 		'balances':balances,
-		'acreedor': round(acreedor,2),
-		'deudor': round(deudor,2),
+		'acreedor': acreedor,
+		'deudor': deudor,
 		'mensaje': mensaje,
 		'fecha_inicio': fecha_0,
 		'fecha_final': fecha_1,
@@ -276,6 +279,8 @@ def balance_general(request, periodo_id):
 		haber += balance.saldo_acreedor
 		debe += balance.saldo_deudor
 
+	haber = round(haber, 2)
+	debe = round(debe, 2)
 	if debe==haber:
 		mensaje='Se cumple dualidad económica'
 	else:
@@ -283,8 +288,8 @@ def balance_general(request, periodo_id):
 
 	context={
 		'balances':balances,
-		'debe': round(debe,2),
-		'haber': round(haber,2),
+		'debe': debe,
+		'haber': haber,
 		'capital_social': capital_s,
 		'mensaje': mensaje,
 		'fecha_final': fecha_1,
