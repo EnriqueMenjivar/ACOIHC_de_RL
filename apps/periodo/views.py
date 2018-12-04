@@ -6,6 +6,56 @@ from apps.contabilidad_costos.peps import *
 from apps.contabilidad_general.models import * 
 
 # Create your views here.
+def sumar(request):
+	cuenta_h=CuentaHija.objects.all()
+	cuenta_p=Cuenta.objects.all()
+
+	for hija in cuenta_h:
+		saldo=hija.debe-hija.haber
+		if saldo>0:
+			hija.saldo_deudor_cuenta=saldo
+			hija.save()
+		else:
+			hija.saldo_acreedor_cuenta=abs(saldo)
+			hija.save()
+
+	for padre in cuenta_p:
+		for hija in cuenta_h:
+			if padre.codigo_cuenta==hija.codigo_padre:
+				padre.debe += hija.saldo_deudor_cuenta
+				padre.haber += hija.saldo_acreedor_cuenta
+				padre.save()
+
+	for padre in cuenta_p:
+		saldo=padre.debe-padre.haber
+		if saldo>0:
+			padre.saldo_deudor_cuenta=saldo
+			padre.save()
+		else:
+			padre.saldo_acreedor_cuenta=abs(saldo)
+			padre.save()
+
+def cerrar_periodo(request, periodo_id):
+	cuenta_p = Cuenta.objects.all()
+	cuenta_h = CuentaHija.objects.all()
+	periodo = Periodo.objects.get(id=periodo_id)
+	
+	sumar(request)
+
+	i=0
+	while i<len(cuenta_p):
+		bp=BalancePeriodo()
+		if i<len(cuenta_h):
+			bp.hija_balance=cuenta_h[i]
+			bp.saldo_deudor_h=cuenta_h[i].saldo_deudor_cuenta
+			bp.saldo_acreedor_h=cuenta_h[i].saldo_acreedor_cuenta
+		bp.periodo_balance=periodo
+		bp.cuenta_balance=cuenta_p[i]
+		bp.saldo_deudor=cuenta_p[i].saldo_deudor_cuenta
+		bp.saldo_acreedor=cuenta_p[i].saldo_acreedor_cuenta
+		bp.save()
+		i+=1
+
 def  periodo_contable ( request ):
 	cant = 0
 	periodos = Periodo.objects.all()
@@ -16,6 +66,7 @@ def  periodo_contable ( request ):
 	if request.method == 'POST':
 		if 'idPeriodo' in request.POST:
 			idP = request.POST.get('idPeriodo')
+			cerrar_periodo(request, idP)
 			periodoCerrado = Periodo.objects.get(id =idP)
 			periodoCerrado.estado_periodo = True # se indica que el periodo ha finalizado completamente
 			periodoCerrado.final_periodo = time.strftime("%Y-%m-%d")
