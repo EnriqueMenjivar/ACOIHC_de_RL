@@ -514,12 +514,12 @@ def venta_tangibles(request):
 
                 tran1 = Transaccion_Cuenta(
                     transaccion_tc=t,
-                    cuenta_tc=CuentaHija.objects.get(id=137),
+                    cuenta_tc=CuentaHija.objects.get(id=138),
                     haber_tc=Decimal("0.0"),
                     debe_tc=Decimal(cxp),
                 )
                 tran1.save()
-                aumentar_saldo(137, cxp, True)
+                aumentar_saldo(138, cxp, True)
         else:
             if 'efectivo0' in request.POST:
                 if request.POST['efectivo0'] == 'on':
@@ -537,12 +537,12 @@ def venta_tangibles(request):
                 cxp = request.POST['cxp']
                 tran1 = Transaccion_Cuenta(
                     transaccion_tc=t,
-                    cuenta_tc=CuentaHija.objects.get(id=137),
+                    cuenta_tc=CuentaHija.objects.get(id=138),
                     haber_tc=Decimal("0.0"),
                     debe_tc=Decimal(cxp),
                 )
                 tran1.save()
-                aumentar_saldo(137, cxp, True)
+                aumentar_saldo(138, cxp, True)
 
         return redirect('transaccion:transacciones')
 
