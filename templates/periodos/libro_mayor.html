@@ -35,10 +35,10 @@
                                     	{%for cuenta in cuentas%}
                                         <tr>
                                             <td>{{cuenta.nombre_cuenta}}</td>
-                                            <td>{{cuenta.debe}}</td>
-                                            <td>{{cuenta.haber}}</td>
-                                            <td>{{cuenta.saldo_deudor_cuenta}}</td>
-                                            <td>{{cuenta.saldo_acreedor_cuenta}}</td>
+                                            <td>${{cuenta.debe}}0</td>
+                                            <td>${{cuenta.haber}}0</td>
+                                            <td>${{cuenta.saldo_deudor_cuenta}}0</td>
+                                            <td>${{cuenta.saldo_acreedor_cuenta}}0</td>
                                         </tr>
                                         {%endfor%}
                                     </tbody>
@@ -54,8 +54,8 @@
                                     	{%for cuenta in cuentas%}
                                         <tr>
                                             <td>{{cuenta.cuenta_balance}}</td>
-                                            <td>{{cuenta.saldo_deudor}}</td>
-                                            <td>{{cuenta.saldo_acreedor}}</td>
+                                            <td>${{cuenta.saldo_deudor}}0</td>
+                                            <td>${{cuenta.saldo_acreedor}}0</td>
                                         </tr>
                                         {%endfor%}
                                     </tbody>
