@@ -73,6 +73,7 @@ def seguimiento(request, id_programacion):
 		prog_proc = request.POST['idProgramacionProcesofrm']
 		cuenta_proceso = Programacion_Proceso.objects.get(id = prog_proc).proceso.cuenta_proceso
 		total = cuenta_proceso.debe
+		total = round(total,2)
 
 		if Programacion_Proceso.objects.get(id = prog_proc).proceso.id < 7:
 			siguiente_proc_name = Programacion_Proceso.objects.get(id = prog_proc).proceso.proceso_siguiente
@@ -109,6 +110,7 @@ def seguimiento(request, id_programacion):
 				progra = Programacion_Proceso.objects.get(id = programacion_proceso).programacion
 				cantidad = float(Programacion_Proceso.objects.get(id = programacion_proceso).programacion.cantidad_programacion)
 				costo_unitario = float(total)/cantidad
+				costo_unitario = round(costo_unitario,2)
 				Programacion.objects.filter(id = progra.id).update(estado_programacion = True, costo_unitario = costo_unitario)
 				peps(progra.periodo_programacion.id, date.today(), cuenta_inventario_pt.id,cantidad,costo_unitario,False,[])
 				pass
@@ -149,7 +151,6 @@ class TransaccionesProgramacion(TemplateView):
 			costoMP = peps(periodo, fecha, producto,int(cantidad),0, True, cv)
 			monto = 0.00	
 			if costoMP == []:
-				print('No alcanza')
 				data = []
 				return HttpResponse(data)
 				pass
@@ -159,7 +160,7 @@ class TransaccionesProgramacion(TemplateView):
 				for x in costoMP:
 					monto = monto + x[2]
 					pass
-				print(monto)
+				monto = round(monto,2)
 				fecha = time.strftime("%Y-%m-%d")
 				transaccion = Transaccion(fecha_transaccion = fecha, descripcion_transaccion = "Cargando materia prima al proceso productivo", periodo_transaccion = periodo_obj)
 				transaccion.save()
@@ -193,9 +194,11 @@ class TransaccionesProgramacion(TemplateView):
 			cargoSueldo = request.GET['cargo']
 			cargo = cargoSueldo.split("/")[0]
 			sueldo = Decimal((cargoSueldo.split("/")[1]+"0").replace(",","."))/720
+			sueldo = round(sueldo,2)
 			cantidadEmpleados = int(request.GET['cantidadEmpleados'])
 			cantidadHRSempleado = int(request.GET['cantidadHRSempleado'])
 			monto = float(sueldo*cantidadEmpleados*cantidadHRSempleado)
+			monto = round(monto,2)
 			fecha = time.strftime("%Y-%m-%d")
 			transaccion = Transaccion(fecha_transaccion = fecha, descripcion_transaccion = "Cargando mano de obra a proceso", periodo_transaccion = periodo)
 			transaccion.save()
@@ -254,6 +257,7 @@ class TransaccionesProgramacion(TemplateView):
 				pass
 
 			#Se procedera a realizar las transacciones
+			total_cif = round(total_cif,2)
 			fecha = time.strftime("%Y-%m-%d")
 			periodo = Programacion_Proceso.objects.get(id = programacion_proceso).programacion.periodo_programacion
 			transaccion = Transaccion(fecha_transaccion = fecha, descripcion_transaccion = "Cargando CIF a proceso", periodo_transaccion = periodo)
