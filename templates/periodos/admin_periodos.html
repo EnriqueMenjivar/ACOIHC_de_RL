@@ -17,10 +17,12 @@
                             <p>Periodos Contables </p>
                             </div>
                             <div class="col-lg-2">
+                                {% if user.is_staff == True %}
                             {% if cant == 0 %}
                                 <a class="btn btn-success" data-toggle = "modal" href="#crear" >Nuevo Periodo</a>
                             {% else %}
                                 <a class="btn btn-default" data-toggle = "modal" href="#crearNo" >Nuevo Periodo</a>
+                            {%endif%}
                             {%endif%}
                             </div>
                             </div>
@@ -56,12 +58,14 @@
                   							{% endif %}
                                             <td>
                                                 <a href="{% url 'periodo_menu_vista' p.id %}">Ver</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                {% if user.is_staff == True %}
                                                 {%if p.estado_periodo == False and p.periodo_ajuste == False%}
                                                 <a href="#f{{p.id}}"  data-toggle = "modal">Cerrar periodo</a>
                                                 {% endif %}
                                                 {%if p.estado_periodo == False and p.periodo_ajuste == True%}
                                                 <a href="#{{p.id}}"  data-toggle = "modal">Finalizar Ajustes</a>
                                                 {% endif %}
+                                                {%endif%}
                                             </td>
                                         </tr>
                                         <!-- Ventana modal para cerrar periodo definitivamente--> 
