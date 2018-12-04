@@ -277,7 +277,7 @@ def balance_general(request, periodo_id):
 		debe += balance.saldo_deudor
 
 	if debe==haber:
-		mensaje='Se cumple dualidad ecoómica'
+		mensaje='Se cumple dualidad económica'
 	else:
 		mensaje='No se cumple dualidad económica'
 

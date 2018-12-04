@@ -8,8 +8,6 @@
     <tr>
       <th scope="col">Codigo de la cuenta</th>
       <th scope="col">Nombre de la cuenta</th>
-      <th scope="col">Saldo deudor</th>
-      <th scope="col">Saldo acreedor</th>
       {% if user.is_superuser == True %}
       <th scope="col">Acciones</th>
       {% endif %}
@@ -21,8 +19,6 @@
     <tr class="table-dark">
       <th scope="row">{{hija.codigo_cuenta}}</th>
       <td>{{hija.nombre_cuenta}}</td>
-      <td>{{hija.saldo_deudor_cuenta}}</td>
-      <td>{{hija.saldo_acreedor_cuenta}}</td>
       {% if user.is_staff == True %}
       <td>
         <div class="col-md-10">
