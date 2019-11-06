@@ -10,25 +10,25 @@ from django.db.models import Q
 # Create your views here.
 
 def cuenta_create(request):
-	form = CuentaForm()
 	grupos = Grupo.objects.all()
 
 	if request.method=='POST':
-		form = CuentaForm(request.POST)
-		if form.is_valid():
-			instance = form.save(commit=False)
-			instance.user = request.user
-			instance.save()
+		cuenta = Cuenta()
+		ultima_cuenta = Cuenta.objects.latest("id");
+		agrupaciones = Cuenta.objects.filter(agrupacion=request.POST['agrupacion']).order_by('codigo_cuenta')
+		codigo = agrupaciones[len(agrupaciones)-1].codigo_cuenta+1
 
-			cuenta = Cuenta.objects.latest('id')
-			agrupaciones = Cuenta.objects.filter(agrupacion=cuenta.agrupacion).order_by('codigo_cuenta')
-			codigo = agrupaciones[len(agrupaciones)-2].codigo_cuenta+1
+		if(ultima_cuenta):
+			cuenta.id = ultima_cuenta.id+1
 
-			cuenta.codigo_cuenta=codigo
-			cuenta.save()
+		cuenta.agrupacion = Agrupacion.objects.get(id=request.POST['agrupacion'])
+		cuenta.nombre_cuenta = request.POST['nombre_cuenta']
+		cuenta.descripcion_cuenta = request.POST['descripcion_cuenta']
+		cuenta.codigo_cuenta = codigo
+		cuenta.save()
 
-			return redirect('contabilidad_general:mostrar-cuentas')
-	return render(request, 'contabilidad_general/cuenta_create.html', {'form':form, 'grupos':grupos, })
+		return redirect('contabilidad_general:mostrar-cuentas')
+	return render(request, 'contabilidad_general/cuenta_create.html', {'grupos':grupos, })
 	
 def load_agrupaciones(request):
 	grupo_id = request.GET.get('grupo')
@@ -36,27 +36,32 @@ def load_agrupaciones(request):
 	return render(request, 'contabilidad_general/dropdown_opcions.html', {'agrupaciones':agrupaciones,})
 
 def cuenta_hija_create(request, cuenta_id):
-	cuenta_p = Cuenta.objects.get(id=cuenta_id)
-	cuenta_h = CuentaHija.objects.filter(padre=cuenta_id).order_by('codigo_cuenta')
-	if cuenta_h:
-		cod_cuenta_h=cuenta_h[len(cuenta_h)-1].codigo_cuenta+1
-	else:
-		cod_cuenta_h = str(cuenta_p.codigo_cuenta)+str(0)+str(1)
-	cuentaid=cuenta_id
 
 	if request.method=='POST':
-		CuentaHija.objects.create(
-			padre=cuenta_p,
-			codigo_padre=cuenta_p.codigo_cuenta,
-			nombre_cuenta=request.POST['nombre_cuenta'],
-			codigo_cuenta=cod_cuenta_h,
-			descripcion_cuenta=request.POST['descripcion_cuenta'],
-			saldo_deudor_cuenta=0.0,
-			saldo_acreedor_cuenta=0.0
-			)
+		cuenta_hija = CuentaHija()
+		ultima_cuenta_h = CuentaHija.objects.latest("id")
+		cuenta_p = Cuenta.objects.get(id=cuenta_id)
+		cuenta_h = CuentaHija.objects.filter(padre=cuenta_id).order_by('codigo_cuenta')
+		
+		if cuenta_h:
+			cod_cuenta_h=cuenta_h[len(cuenta_h)-1].codigo_cuenta+1
+		else:
+			cod_cuenta_h = str(cuenta_p.codigo_cuenta)+str(0)+str(1)
+		
+		if(ultima_cuenta_h):
+			cuenta_hija.id = ultima_cuenta_h.id + 1
+		cuenta_hija.padre = cuenta_p
+		cuenta_hija.codigo_padre = cuenta_p.codigo_cuenta
+		cuenta_hija.nombre_cuenta = request.POST['nombre_cuenta']
+		cuenta_hija.codigo_cuenta = cod_cuenta_h
+		cuenta_hija.descripcion_cuenta = request.POST['descripcion_cuenta']
+		cuenta_hija.saldo_deudor = 0.0
+		cuenta_hija.saldo_acreedor = 0.0
+
+		cuenta_hija.save()
 
 		return redirect('contabilidad_general:mostrar-cuentas')
-	return render(request, 'contabilidad_general/cuenta_hija_create.html', {'cuenta_p':cuenta_p, 'cuenta_id': cuentaid,})
+	return render(request, 'contabilidad_general/cuenta_hija_create.html')
 
 def catalogo_show(request):
 	cuentas = Cuenta.objects.all().order_by('codigo_cuenta')
