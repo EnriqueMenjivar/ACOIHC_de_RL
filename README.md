@@ -7,8 +7,6 @@ Tarea ex-aula 2018
 |--|--|
 | Alvarado Villalobos, Manuel Antonio | AV16002 |
 | Amaya Palacios, Edwin Joel | AP16014 |
-| Diaz Colato, Juan Pablo | DC16009 |
+| Díaz Colato, Juan Pablo | DC16009 |
 | Estupinián López, Ricardo Bladimir | EL16002 |
-| Menjivar Tejada , Oscar Enrique | MT16007 |
-
-
+| Menjívar Tejada , Oscar Enrique | MT16007 |
