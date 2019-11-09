@@ -6,6 +6,18 @@ from apps.contabilidad_costos.peps import *
 from apps.contabilidad_general.models import * 
 
 # Create your views here.
+def resetear_saldos():
+	cuenta_h=CuentaHija.objects.all()
+
+	for hija in cuenta_h:
+		hija.debe = hija.saldo_deudor_cuenta
+		hija.haber = hija.saldo_acreedor_cuenta
+
+		hija.saldo_acreedor_cuenta = 0.0
+		hija.saldo_deudor_cuenta = 0.0
+
+
+
 def sumar(request):
 	cuenta_h=CuentaHija.objects.all()
 	cuenta_p=Cuenta.objects.all()
