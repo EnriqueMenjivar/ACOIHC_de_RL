@@ -31,6 +31,11 @@
   <link rel="stylesheet" type="text/css" href="{% static 'css/estilos.css' %}">
   <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}">
   <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+
+  <!-- Datatable -->
+
+<link rel="stylesheet" type="text/css" href="{% static 'datatables/dataTables.bootstrap4.min.css' %}">
+
 {% block extracss %}
 {% endblock %}
   <!-- Nivo Slider Theme -->
@@ -166,6 +171,11 @@
   <!-- Contact Form JavaScript File -->
   <script type="text/javascript" src="{% static 'plantilla/contactform/contactform.js' %}"></script>
   <script type="text/javascript" src="{% static 'plantilla/js/main.js' %}"></script>
+
+  <script type="text/javascript" src="{% static 'datatables/jquery.dataTables.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'datatables/dataTables.bootstrap4.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/datatables-demo.js' %}"></script>
+
   {% block extrajs %}
   {% endblock %}
 </body>

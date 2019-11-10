@@ -15,7 +15,14 @@ from decimal import Decimal
 
 
 def programacion_list(request):
-	lista_programacion = Programacion.objects.all()
+	lista_programacion_tmp = Programacion.objects.all()
+	lista_programacion = []
+
+	for programacion in lista_programacion_tmp:
+		programacion.nombre_producto = CuentaHija.objects.get(codigo_cuenta=programacion.producto_programacion).nombre_cuenta
+		programacion.costo_unitario = "{:10.2f}".format(programacion.costo_unitario)
+		lista_programacion.append(programacion)
+
 	return render(request,'contabilidad_costos/programacion_list.html', {'programaciones':lista_programacion})
 
 def programacion_nueva(request):
@@ -123,16 +130,50 @@ def seguimiento(request, id_programacion):
 def ver_detalles(request, id_programacion):
 	#Se recibe el id_porgramacion para recoger todos los procesos asociados a la programacion y recorrerlos luego en el template
 	programacion = Programacion.objects.get(id = id_programacion)
+
+	proceso_en_marcha = 0
+	
+	if(Programacion_Proceso.objects.filter(programacion=programacion, terminado = False).exists()):
+		proceso_en_marcha = Programacion_Proceso.objects.filter(programacion=programacion, terminado = False).order_by('id')[:1][0].id
+	
 	producto = CuentaHija.objects.get(codigo_cuenta = programacion.producto_programacion)
-	programacion_procesos = Programacion_Proceso.objects.filter(programacion = programacion, terminado = True)
-	return render(request, 'contabilidad_costos/ver_detalles.html', {'programacion_procesos':programacion_procesos, 'producto':producto, 'programacion':programacion})
+	programacion_procesos = Programacion_Proceso.objects.filter(programacion = programacion)
+	return render(request, 'contabilidad_costos/ver_detalles.html', {'programacion_procesos':programacion_procesos, 'producto':producto, 'programacion':programacion, 'proceso_en_marcha':proceso_en_marcha})
 
 def ver_detalles_proceso(request, id_proceso):
 	programacion_proceso = Programacion_Proceso.objects.get(id = id_proceso)
 	programacion = programacion_proceso.programacion
-	asignaciones_mp = Asignar_Materia_Prima.objects.filter(proceso_prog_mp = programacion_proceso)
-	asignaciones_mo = Asignar_Mano_Obra.objects.filter(proceso_prog_mo = programacion_proceso)
-	asignaciones_cif = Asignar_Cif.objects.filter(proceso_prog_cif = programacion_proceso)
+
+	asignaciones_mp_init = Asignar_Materia_Prima.objects.filter(proceso_prog_mp = programacion_proceso)
+	asignaciones_mp = []
+
+	if asignaciones_mp_init != []:
+		for asignacion_mp in asignaciones_mp_init:
+			asignacion_mp.monto = "{:10.2f}".format(asignacion_mp.monto)
+			if(asignacion_mp.cantidad_mp):
+				asignacion_mp.costo_unit = "{:10.2f}".format(float(asignacion_mp.monto)/float(asignacion_mp.cantidad_mp))
+				asignacion_mp.cantidad_mp = "{:10.2f}".format(asignacion_mp.cantidad_mp)
+				asignaciones_mp.append(asignacion_mp)
+
+	asignaciones_mo_init = Asignar_Mano_Obra.objects.filter(proceso_prog_mo = programacion_proceso)
+	asignaciones_mo = []
+
+	if asignaciones_mo_init != []:
+		for asignacion_mo in asignaciones_mo_init:
+			asignacion_mo.monto = "{:10.2f}".format(asignacion_mo.monto)
+			asignacion_mo.cantidad_horas_empleado = "{:10.2f}".format(asignacion_mo.cantidad_horas_empleado)
+			asignacion_mo.cargo_mo.sueldo_base = "{:10.2f}".format(asignacion_mo.cargo_mo.sueldo_base)
+			asignaciones_mo.append(asignacion_mo)
+
+	asignaciones_cif_init = Asignar_Cif.objects.filter(proceso_prog_cif = programacion_proceso)
+	asignaciones_cif = []
+
+	if asignaciones_cif_init != []:
+		for asignacion_cif in asignaciones_cif_init:
+			asignacion_cif.monto = "{:10.2f}".format(asignacion_cif.monto)
+			asignacion_cif.porcentaje_cif = "{:10.0f}".format(asignacion_cif.porcentaje_cif)
+			asignaciones_cif.append(asignacion_cif)
+
 	contexto = {'programacion': programacion, 'programacion_proceso': programacion_proceso, 'asignaciones_mp':asignaciones_mp, 'asignaciones_mo':asignaciones_mo, 'asignaciones_cif':asignaciones_cif}
 	return render(request, 'contabilidad_costos/ver_detalles_proceso.html', contexto)
 
@@ -180,6 +221,7 @@ class TransaccionesProgramacion(TemplateView):
 					prog_proc_obj = Programacion_Proceso.objects.get(id = programacion_proceso) 
 					asignacion_mp = Asignar_Materia_Prima(cantidad_mp = float(cantidad), monto = monto, nombre_mp = cuenta_mp, proceso_prog_mp = prog_proc_obj)
 					asignacion_mp.save()
+					
 					#Se alistara JSON para reflejar datos en la tabla de mp
 					data = serializers.serialize('json',[asignacion_mp],fields = ('proceso_prog_mp','nombre_mp','cantidad_mp','monto'))
 					return HttpResponse(data, content_type = 'application/json')
