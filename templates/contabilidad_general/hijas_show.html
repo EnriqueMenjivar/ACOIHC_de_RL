@@ -1,43 +1,84 @@
 {% extends 'base/base.html' %}
-
+{%load staticfiles%}
+{% block extracss %}
+  <link href="{% static 'vendor/datatables/dataTables.bootstrap4.css' %}" type="text/css" rel="stylesheet"> 
+  <link rel="stylesheet" type="text/css" href="{% static 'css/sb-admin.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/sb-admin.min.css' %}">
+{% endblock %}
 
 {% block content %}
-<table class="table table-hover">
-  {% if hijas %}
-  <thead>
-    <tr>
-      <th scope="col">Codigo de la cuenta</th>
-      <th scope="col">Nombre de la cuenta</th>
-      {% if user.is_superuser == True %}
-      <th scope="col">Acciones</th>
-      {% endif %}
-    </tr>
-  </thead>
-  <tbody>
-    
-  	{% for hija in hijas %}
-    <tr class="table-dark">
-      <th scope="row">{{hija.codigo_cuenta}}</th>
-      <td>{{hija.nombre_cuenta}}</td>
-      {% if user.is_staff == True %}
-      <td>
-        <div class="col-md-10">
-              <div class="col-md-10">
-                  <a href="{% url 'contabilidad_general:hija-editar' hija.id %}" class="btn btn-block btn-success font-weight-bold">Editar</a>
+<div class="container">
+  <div class="row justify-content-md-center">
+    <div class="col-md-10 position-relative">
+      <!-- /#wrapper -->
+    <div id="wrapper">
+      <div id="content-wrapper">
+        <div class="container-fluid">
+          <!-- DataTables Example -->
+          <div class="card mb-3">
+            <div class="card-header">
+              <i class="fas fa-table"></i>
+                  Cuentas Hija
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                  <thead>
+                    <tr>
+                      <th>Codigo de la cuenta</th>
+                      <th>Nombre de la cuenta</th>
+                      {% if user.is_superuser == True %}
+                      <th>Acciones</th>
+                      {% endif %}
+                    </tr>
+                  </thead>
+                  <tfoot>
+                    <tr>
+                      <th>Codigo de la cuenta</th>
+                      <th>Nombre de la cuenta</th>
+                      {% if user.is_superuser == True %}
+                      <th>Acciones</th>
+                      {% endif %}
+                    </tr>
+                  </tfoot>
+                  <tbody>
+                    {% for hija in hijas %}
+                    <tr>
+                      <th scope="row">{{hija.codigo_cuenta}}</th>
+                      <td>{{hija.nombre_cuenta}}</td>
+                      {% if user.is_staff == True %}
+                      <td>
+                        <a href="{% url 'contabilidad_general:hija-editar' hija.id %}" class="btn btn-success" title="Editar"><i class="fas fa-pencil-alt"></i></a>
+                      </td>
+                      {% endif %}
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
               </div>
             </div>
+          </div>
         </div>
-      </td>
-      {% endif %}
-    </tr>
-    {% endfor %}
-    {% else %}
-    <h2 class="text-center">Esta cuenta aun no posee hijas </h2>
-    <div class="text-center">
-      <a href="{% url 'contabilidad_general:mostrar-cuentas' %}" class="text-center">Regresar</a>
+        <!-- /.container-fluid -->
+      </div>
+      <!-- /.content-wrapper -->
     </div>
-    {% endif%}
+    </div>
+  </div>
+</div>
 
-  </tbody>
-</table> 
+{% endblock %}
+
+{% block extrajs %}
+<script type="text/javascript" src="{% static 'js/sb-admin.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/sb-admin.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+<!-- Core plugin JavaScript-->
+<script type="text/javascript" src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+
+<!-- Page level plugin JavaScript-->
+<script type="text/javascript" src="{% static 'vendor/datatables/jquery.dataTables.js' %}"></script>
+<script type="text/javascript" src="{% static 'vendor/datatables/dataTables.bootstrap4.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/datatables-demo.js' %}"></script>
 {% endblock %}

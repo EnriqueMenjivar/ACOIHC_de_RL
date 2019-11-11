@@ -1,55 +1,93 @@
 {% extends 'base/base.html' %}
-
+{%load staticfiles%}
+{% block extracss %}
+  <link href="{% static 'vendor/datatables/dataTables.bootstrap4.css' %}" type="text/css" rel="stylesheet"> 
+  <link rel="stylesheet" type="text/css" href="{% static 'css/sb-admin.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/sb-admin.min.css' %}">
+{% endblock %}
 {% block content %}
-{% if cuentas %}
 
-{% if user.is_staff == True %}
-<div class="col-md-3 btnNueva">
-  <a href="{% url 'contabilidad_general:crear' %}" class="btn btn-secondary">+ Nueva</a>
-</div>
-{% endif %}
-
-<table class="table table-hover">
-  <thead>
-    <tr>
-      <th scope="col">Código de la cuenta</th>
-      <th scope="col">Nombre de la cuenta</th>
-      <th scope="col">Acciones</th>
-    </tr>
-  </thead>
-  <tbody>
-  	{% for cuenta in cuentas %}
-    <tr class="table-ligth">
-      <th scope="row">{{cuenta.codigo_cuenta}}</th>
-      <td>{{cuenta.nombre_cuenta}}</td>
-      <td>
-        
-      	<div class="col-md-11">
-            <div class="row">
-              {% if user.is_staff == True %}
-              <div class="col-md-4">
-                  <a href="{% url 'contabilidad_general:mostrar-hijas' cuenta.id %}" class="btn btn-block btn-info font-weight-bold">Cuentas hija</a>
-              </div>  
-              <div class="col-md-3">
-                  <a href="{% url 'contabilidad_general:cuenta-editar' cuenta.id %}" class="btn btn-block btn-success font-weight-bold">Editar</a>
-              </div>
-              <div class="col-md-5">
-                  <a href="{% url 'contabilidad_general:crear-hija' cuenta.id %}" class="btn btn-block btn-primary font-weight-bold">Agregar cuenta hija</a>
-              </div>
-              {% else %}
-              <div class="col-md-10">
-                  <a href="{% url 'contabilidad_general:mostrar-hijas' cuenta.id %}" class="btn btn-block btn-info font-weight-bold">Cuentas hija</a>
-              </div>  
-              {% endif %}
+<div class="container">
+  <div class="row justify-content-md-center">
+    <div class="col-md-10 position-relative">
+      <!-- /#wrapper -->
+    <div id="wrapper">
+      <div id="content-wrapper">
+        <div class="container-fluid">
+          <!-- DataTables Example -->
+          <div class="card mb-3">
+            <div class="card-header">
+                <div class="col-md-10">
+                  <i class="fas fa-table"></i>
+                  Catalogo De Cuentas
+                </div>
+                <div >
+                  {% if user.is_staff == True %}
+                  <a class="btn btn-sm mb-3" href="{% url 'contabilidad_general:crear' %}" title="Agregar">
+                  <i class="fas fa-plus-circle"></i>
+                  <b>Nueva Cuenta</b>
+                  </a>
+                  {% endif %}
+                </div>
             </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                  <thead>
+                    <tr>
+                      <th>Código de la cuenta</th>
+                      <th>Nombre de la cuenta</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tfoot>
+                    <tr>
+                      <th>Código de la cuenta</th>
+                      <th>Nombre de la cuenta</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </tfoot>
+                  <tbody>
+                    {% for cuenta in cuentas %}
+                    <tr>
+                      <th>{{cuenta.codigo_cuenta}}</th>
+                      <td>{{cuenta.nombre_cuenta}}</td>
+                      <td>
+                        {% if user.is_staff == True %}
+                          <a href="{% url 'contabilidad_general:mostrar-hijas' cuenta.id %}" class="btn btn-info" title="Ver cuentas hija"><i class="fas fa-list-ol"></i></a>
+                          <a href="{% url 'contabilidad_general:cuenta-editar' cuenta.id %}" class="btn btn-success" title="Editar"><i class="fas fa-pencil-alt"></i></a>
+                          <a href="{% url 'contabilidad_general:crear-hija' cuenta.id %}" class="btn btn-primary" title="Agregar cuenta hija"><i class="fas fa-plus-circle"></i></a>
+                        {% else %}
+                          <a href="{% url 'contabilidad_general:mostrar-hijas' cuenta.id %}" class="btn btn-info" title="Ver cuentas hijas"><i class="fas fa-list-ol"></i></a>
+                        {% endif %}
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
         </div>
-        
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-  {% else %}
-  <h2 class="text-center">No hay cuentas por mostrar</h2>
-  {% endif %}
-</table> 
+        <!-- /.container-fluid -->
+      </div>
+      <!-- /.content-wrapper -->
+    </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extrajs %}
+<script type="text/javascript" src="{% static 'js/sb-admin.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/sb-admin.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+<!-- Core plugin JavaScript-->
+<script type="text/javascript" src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+
+<!-- Page level plugin JavaScript-->
+<script type="text/javascript" src="{% static 'vendor/datatables/jquery.dataTables.js' %}"></script>
+<script type="text/javascript" src="{% static 'vendor/datatables/dataTables.bootstrap4.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/datatables-demo.js' %}"></script>
 {% endblock %}
