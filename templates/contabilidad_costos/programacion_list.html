@@ -5,17 +5,18 @@
 <br>
 <h3 style="text-align: center; color:  #54758e;">Lista de programaciones</h3><br>
 {% if user.is_staff == True or user.is_superuser == True %}
-&nbsp;&nbsp;<a href="{% url 'programaciones_nueva' %}"><i class="fas fa-plus-square fa-2x"> Agregar nueva programacion</i></a> 
-{% endif %}
-{% if programaciones %}	
-	<table id="tbProgramaciones" class="table">
+&nbsp;&nbsp;<a href="{% url 'programaciones_nueva' %}"><i class="fas fa-plus-square fa-2x"> Agregar nueva programación</i></a> 
+{% endif %}	
+<div class="card-body">
+<div class="table-responsive">
+	<table id="dataTable" class="table table-striped" width="100%" cellspacing="0">
 		<thead id="thead-dark" class="thead-dark">
 			<tr>
 				<th scope="col">Periodo</th>
-				<th scope="col">Fecha</th>
+				<th scope="col">Fecha de programación</th>
 				<th scope="col">Producto</th>
 				<th scope="col">Cantidad</th>
-				<th scope="col">Finalizado</th>
+				<th scope="col">Estado</th>
 				<th scope="col">Costo unitario</th>
 				<th scope="col">Acciones</th>
 			</tr>
@@ -25,17 +26,25 @@
 			<tr id="{{programacion.id}}">
 				<td><b>{{programacion.periodo_programacion.id}}</b></td>
 				<td>{{programacion.fecha_programacion}}</td>
-				<td>{{programacion.producto_programacion}}</td>
+				<td>{{programacion.nombre_producto}}</td>
 				<td>{{programacion.cantidad_programacion}}</td>
-				<td>{{programacion.estado_programacion}}</td>
-				<td>{{programacion.costo_unitario}}</td>
 				<td>
 					{% if programacion.estado_programacion %}
-						<input style="width: 107px;" class="btn btn-primary" type="button" name="btnDetalles" value="Ver detalles" onclick=" location.href='{% url 'detalles' programacion.id %}' ">
+						Finalizado
 					{% else %}
-						<input style="width: 107px;" class="btn btn-primary" type="button" name="btnDetalles" value="Ver detalles" onclick=" location.href='{% url 'detalles' programacion.id %}' ">
-						{% if user.is_staff == True or user.is_superuser == True %}
-							<input class="btn btn-success" type="button" name="btnSeguimiento" value="Seguimiento" onclick=" location.href='{% url 'seguimiento' programacion.id %}' ">
+						En proceso
+					{% endif %}
+				</td>
+				<td>${{programacion.costo_unitario}}</td>
+				<td>
+					<button class="btn-md btn-md-info">
+						<a href="{% url 'detalles' programacion.id %}"><span title="Detalles"><i class="fas fa-info-circle fa-2x"></i></span></a>
+					</button>
+					{% if user.is_staff or user.is_superuser %}
+						{% if not programacion.estado_programacion %}
+						<button class="btn-md btn-md-success">
+							<a href="{% url 'seguimiento' programacion.id %}"><span title="Seguimiento"><i style="color: green;" class="fas fa-play fa-2x"></i></span></a>
+						</button>
 						{% endif %}
 					{% endif %}
 				</td>
@@ -43,9 +52,7 @@
 		{% endfor %}
 		</tbody>
 	</table>
-{% else %}
-	<b>No hay ninguna programacion</b>
-{% endif %}
-
+</div>
+</div>
 
 {% endblock %}

@@ -18,7 +18,7 @@
 					<tr>
 						<th scope="col">ID</th>
 						<th scope="col">Nombre proceso</th>
-						<th scope="col">Finalizado</th>
+						<th scope="col">Estado</th>
 						<th scope="col">Acciones</th>
 					</tr>
 				</thead>
@@ -27,8 +27,30 @@
 						<tr>
 							<td>{{ programacion_proceso.id }}</td>
 							<td>{{ programacion_proceso.proceso.nombre_proceso }}</td>
-							<td>{{ programacion_proceso.terminado }}</td>
-							<td><input type="button" onclick="location.href = '{% url 'detalles_proceso' programacion_proceso.id  %}'" class="btn btn-primary" name="btnDetalles_proceso" value="Ver detalles"></td>
+							<td>
+								{% if programacion_proceso.terminado %}
+									Finalizado
+								{% elif programacion_proceso.id == proceso_en_marcha %}
+									En proceso
+								{% else %}
+									Pendiente
+								{% endif %}
+							</td>
+							<td>
+								{% if programacion_proceso.terminado %}
+									<button class="btn-md btn-md-info">
+										<a href="{% url 'detalles_proceso' programacion_proceso.id %}"><span title="Detalles"><i class="fas fa-info-circle fa-2x"></i></span></a>
+									</button>
+								{% else %}
+									{% if programacion_proceso.id == proceso_en_marcha %}
+										<button class="btn-md btn-md-info">
+											<a href="{% url 'detalles_proceso' programacion_proceso.id %}"><span title="Detalles"><i class="fas fa-info-circle fa-2x"></i></span></a>
+										</button>
+									{% else %}
+										No disponible
+									{% endif %}
+								{% endif %}
+							</td>
 						</tr>
 					{% endfor %}
 				</tbody>
