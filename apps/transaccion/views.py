@@ -85,13 +85,16 @@ def transaccion(request):
 def compra_inventario(request):
     cuentas = CuentaHija.objects.select_related().all()
     periodo = Periodo.objects.latest('id')
-    form1 = TransaccionForm()
-    if request.is_ajax():
-        iniciar_transaccion(request, form1)
 
     if 'guardar' in request.POST:
 
-        t = Transaccion.objects.latest('id')
+        t = Transaccion(
+            periodo_transaccion=periodo,
+            fecha_transaccion=request.POST["fecha_transaccion"],
+            descripcion_transaccion=request.POST["descripcion_transaccion"],
+        )
+        t.save()
+
         # Cargado
         c = CuentaHija.objects.get(nombre_cuenta=request.POST['cuenta'])
         totalCompra = request.POST['total']
@@ -168,8 +171,7 @@ def compra_inventario(request):
 
         return redirect('transaccion:transacciones')
 
-    contexto = {
-        'form': form1, 'periodo': periodo, 'cuentas': cuentas
+    contexto = {'periodo': periodo, 'cuentas': cuentas
     }
     return render(request, 'transaccion/transaccion_compra.html', contexto)
 
