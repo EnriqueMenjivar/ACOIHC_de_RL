@@ -9,7 +9,7 @@ from apps.contabilidad_costos.peps import *
 
 # Create your views here.
 
-
+#Decreapted
 def iniciar_transaccion(request, form1):
     form1 = TransaccionForm(request.POST)
     if form1.is_valid():
@@ -25,11 +25,7 @@ def transaccion(request):
     cuentas = CuentaHija.objects.select_related().all()
     periodo = Periodo.objects.latest('id')
     cuentasDebe = []
-    cuentasHaber = []
-
-    form1 = TransaccionForm()
-    if request.is_ajax():
-        iniciar_transaccion(request, form1)
+    cuentasHaber = []    
 
     if 'cargar' in request.GET:
         for c in cuentas:
@@ -47,14 +43,21 @@ def transaccion(request):
                 if request.GET[str(c.id)+"habers"] == 'on':
                     cuentasDebe.append(c)
 
-    if 'guardar' in request.POST:
+    #Mini reingenieria
+    if request.is_ajax():
+        t = Transaccion(
+            periodo_transaccion=periodo,
+            fecha_transaccion=request.POST["fecha_transaccion"],
+            descripcion_transaccion=request.POST["descripcion_transaccion"],
+        )
+        t.save()
         for c in cuentas:
             if str(c.id)+"deb" in request.POST:
                 valor = request.POST[str(c.id)+"deb"]
-                t = Transaccion.objects.latest('id')
+                
                 tran = Transaccion_Cuenta(
                     transaccion_tc=t, cuenta_tc=c,
-                    debe_tc=Decimal(valor),
+                    debe_tc=valor,
                     haber_tc=Decimal("0.0"),
                 )
                 tran.save()
@@ -62,19 +65,19 @@ def transaccion(request):
 
             if str(c.id)+"abon" in request.POST:
                 valor = request.POST[str(c.id)+"abon"]
-                t = Transaccion.objects.latest('id')
                 tran = Transaccion_Cuenta(
                     transaccion_tc=t, cuenta_tc=c,
                     debe_tc=Decimal("0.0"),
-                    haber_tc=Decimal(valor),
+                    haber_tc=valor,
                 )
                 tran.save()
                 aumentar_saldo(c.id, valor, False)
 
-        return redirect('transaccion:transacciones')
+        data = {'message': "La transaccion se registro exitosamente"}
+        return JsonResponse(data)
 
     # Contexto
-    contexto = {'cuentas': cuentas, 'form': form1, 'periodo': periodo,
+    contexto = {'cuentas': cuentas, 'periodo': periodo,
                 'cuentasdebe': cuentasDebe, 'cuentashaber': cuentasHaber}
     return render(request, 'transaccion/transaccion.html', contexto)
 
