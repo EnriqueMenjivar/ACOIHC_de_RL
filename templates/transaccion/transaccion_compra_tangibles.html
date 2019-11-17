@@ -22,7 +22,7 @@
         <label>Cantidad:</label>
     </div>
     <div class="col-lg-8 form-group">
-        <input type="number" class="form-control" name="cantidad" id="cant" onchange="operaciones()" required value="1">
+        <input type="number" class="form-control" name="cantidad" id="cant" onkeyup="operaciones()" required step="1">
     </div>
 </div>
 <div class="row container-fluid">
@@ -30,7 +30,7 @@
         <label>Precio Unitario:</label>
     </div>
     <div class="col-lg-8 form-group">
-        <input type="number" class="form-control" name="precio_unit" onchange="operaciones()" id="pu" required step=".01">
+        <input type="number" class="form-control" name="precio_unit" onkeyup="operaciones()" id="pu" required step=".01">
     </div>
 </div>
 <div class="row container-fluid">
@@ -38,7 +38,7 @@
         <label>Total Compra: </label>
     </div>
     <div class="col-lg-8 form-group">
-        <input type="text" class="debe form-control" name="total" id="tot">
+        <input type="text" class="debe form-control" name="total" id="tot" readonly>
     </div>
 </div>
 <div class="row container-fluid">
@@ -46,7 +46,7 @@
         <label>IVA Credito Fiscal: </label>
     </div>
     <div class="col-lg-8 form-group">
-        <input type="text" class="debe form-control" name="iva" id="iva">
+        <input type="text" class="debe form-control" name="iva" id="iva" readonly>
     </div>
 </div>
 

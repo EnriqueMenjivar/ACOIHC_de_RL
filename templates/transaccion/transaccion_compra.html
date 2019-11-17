@@ -5,7 +5,10 @@
 {% endblock %}
 
 {% block content%}
-{%block validacion%}
+<div class="col-lg-2">
+</div>
+<div class="col-lg-8">
+    {%block validacion%}
 {%endblock%}
 <!--Validacion partida doble-->
 <div class="hidden alert alert-danger alert-dismissible show text-center" role="alert" id="error">
@@ -15,9 +18,6 @@
     </button>
 </div>
 
-<div class="col-lg-2">
-</div>
-<div class="col-lg-8">
     <div class="row jumbotron container-fluid">
         <form method="POST" class="formulario" data-url="/transaccion/">
 
