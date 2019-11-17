@@ -76,7 +76,7 @@
                             <label>Cantidad:</label>
                         </div>
                         <div class="col-lg-8 form-group">
-                            <input type="number" class="form-control" name="cantidad" id="cant" onkeyup="operaciones();partidaDoble();" required step=".01">
+                            <input type="number" class="form-control" name="cantidad" id="cant" onkeyup="operaciones();partidaDoble();" required step="1">
                         </div>
                     </div>
                     <div class="row container-fluid">
@@ -143,14 +143,29 @@
         </div><br><br><br>
         {%block boton%}
         <div class="row">
-            <button type="button" class="btn btn-success" onclick="validar()">Registrar Transaccion</button>
+            <div class="col-lg-3"></div>
+            <div class="col-lg-3"><button type="button" class="btn btn-success" onclick="validar()">Registrar Transaccion</button></div>
+            <div class="col-lg-3"> 
+                {%block regresar%}
+                    <button type="button" class="btn btn-danger" onclick="location='{%url 'transaccion:transacciones'%}';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Regresar&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                {%endblock%}</div>
+            <div class="col-lg-3"></div>
         </div>
         {%endblock%}
         {%if request.path == '/transaccion/venta'%}
         <div class="row">
+            <div class="col-lg-3"></div>
+            <div class="col-lg-3">
             <button type="button" class="btn btn-success" onclick="document.getElementById('save').click();">Registrar
-                Transaccion</button>
-        </div>
+                Transaccion</button></div>
+            <div class="col-lg-3">
+                    <button type="button" class="btn btn-danger" onclick="location='{%url 'transaccion:transacciones'%}';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Regresar&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button></div>
+            <div class="col-lg-3"></div>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
         {%endif%}
 
     </div>
@@ -181,13 +196,6 @@
         </table>
 
         {%endblock%}
-        {%block regresar%}
-        <div class="row text-center">
-            <br><br>
-            <button type="button" class="btn btn-danger ml-2" onclick="location='{%url 'transaccion:transacciones'%}';">Regresar</button>
-        </div>
-        {%endblock%}
-
     </div>
 </div>
 

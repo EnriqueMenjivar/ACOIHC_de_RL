@@ -179,14 +179,18 @@ def compra_inventario(request):
 def devolucion_compra(request):
     cuentas = CuentaHija.objects.select_related().all()
     periodo = Periodo.objects.latest('id')
-    form1 = TransaccionForm()
     error=False
-    if request.is_ajax():
-        iniciar_transaccion(request, form1)
+
+
 
     if 'guardar' in request.POST:
 
-        t = Transaccion.objects.latest('id')
+        t = Transaccion(
+            periodo_transaccion=periodo,
+            fecha_transaccion=request.POST["fecha_transaccion"],
+            descripcion_transaccion=request.POST["descripcion_transaccion"],
+        )
+        t.save()
         # Cargado
         c = CuentaHija.objects.get(nombre_cuenta=request.POST['cuenta'])
         totalCompra = request.POST['total']
@@ -268,11 +272,11 @@ def devolucion_compra(request):
         else:
             error = True
             contexto = {
-                'form': form1, 'periodo': periodo, 'cuentas': cuentas, 'error': error
+                'periodo': periodo, 'cuentas': cuentas, 'error': error
             }
 
     contexto = {
-        'form': form1, 'periodo': periodo, 'cuentas': cuentas, 'error': error
+        'periodo': periodo, 'cuentas': cuentas, 'error': error
     }
     return render(request, 'transaccion/transaccion_devo_compra.html', contexto)
 
@@ -281,24 +285,23 @@ def venta(request):
     cuentas = CuentaHija.objects.select_related().all()
     periodo = Periodo.objects.latest('id')
     error = False
-    form1 = TransaccionForm()
-    if request.is_ajax():
-        iniciar_transaccion(request, form1)
 
     if 'guardar' in request.POST:
 
-        t = Transaccion.objects.latest('id')
+        t = Transaccion(
+            periodo_transaccion=periodo,
+            fecha_transaccion=request.POST["fecha_transaccion"],
+            descripcion_transaccion=request.POST["descripcion_transaccion"],
+        )
+        t.save()
+
         # Cargado
         c = CuentaHija.objects.get(nombre_cuenta=request.POST['cuenta'])
         cant = request.POST['cantidad']
         porcentaje = request.POST['porcentaje']
 
         cv = list()
-        cv = peps(periodo.id, t.fecha_transaccion,
-                  c.id, int(cant), 0, True, cv)
-
-        
-
+        cv = peps(periodo.id, t.fecha_transaccion,c.id, int(cant), 0, True, cv)
         costo = 0
 
         if cv:
@@ -371,11 +374,11 @@ def venta(request):
         else:
             error = True
             contexto = {
-                'form': form1, 'periodo': periodo, 'cuentas': cuentas, 'error': error
+                'periodo': periodo, 'cuentas': cuentas, 'error': error
             }
 
     contexto = {
-        'form': form1, 'periodo': periodo, 'cuentas': cuentas, 'error': error
+        'periodo': periodo, 'cuentas': cuentas, 'error': error
     }
     return render(request, 'transaccion/transaccion_venta.html', contexto)
 
