@@ -1,0 +1,328 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block title %} Ratios Financieros {% endblock %}
+{% block extracss %}
+    <link rel="stylesheet" href="{% static 'css/sb-admin-2.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sb-admin-2.min.css' %}">
+    <style>
+      .fraction {
+    display: inline-block;
+    vertical-align: middle; 
+    margin: 0 0.2em 0.4ex;
+    text-align: center;
+}
+.fraction > span {
+    display: block;
+    padding-top: 0.15em;
+}
+.fraction span.fdn {border-top: thin solid black;}
+.fraction span.bar {display: none;}
+    </style>
+
+
+{% endblock %}
+
+{% block content %}
+
+	{% if balances %}
+	<h4 class="text-center">Huelic Chocolatl</h4>
+	<h5 class="text-center">Ratios Financieros</h5>
+	<h5 class="text-center">Del {{fecha_inicio}}, al {{fecha_final}}</h5>
+
+	<br> 
+      
+
+
+      
+      <div class="row">
+        <div class="col-lg-6 col-md-6">
+          <div class="panel panel-default">
+            <a href="#">
+                  <div class="panel-footer" 
+                  data-toggle="tooltip" 
+                  data-placement="left" 
+                  title="Se usan para medir la capacidad de una empresa para cumplir sus obligaciones a corto plazo. ">
+                      <span class="pull-left">Razones de Liquidez</span>
+                      <span class="pull-right" ><i class="fa fa-search-dollar" ></i></span>
+                      <div class="clearfix"></div>
+                  </div>
+              </a>
+              <div class="panel-heading">
+                  <div class="row">
+                      <div class="col-xs-12 text-left">
+                          <div class="huge"></div>
+                          <div>Prueba de liquidez</div>
+                      </div>
+                  </div>
+                  <br>
+                  <div class="eq-c" align="justify">
+                    
+                    <div class="fraction">
+                    <span class="fup"><i>activo_corriente</i></span>
+                    <span class="bar">/</span>
+                    <span class="fdn"><i>pasivo_corriente</i></span>
+                    </div> =
+                    <div class="fraction">
+                    <span class="fup"><i>{{activo_corriente}}</i></span>
+                    <span class="bar">/</span>
+                    <span class="fdn"><i>{{pasivo_corriente}}</i></span>
+                    </div>
+                    <i>= {{prueba_de_liquidez}}</i> 
+                  </div>
+                  <br>
+                  <div class="row">
+                      <div class="col-xs-12 text-left">
+                          <div class="huge"></div>
+                          <div>Prueba ácida</div>
+                      </div>
+                  </div>
+                  <br>
+                  <div class="eq-c" align="justify">
+                    
+                    <div class="fraction">
+                    <span class="fup"><i>activo_corriente - inventarios</i></span>
+                    <span class="bar">/</span>
+                    <span class="fdn"><i>pasivo_corriente</i></span>
+                    </div> =
+                    <div class="fraction">
+                    <span class="fup"><i>{{activo_corriente}} - {{total_inventario}}</i></span>
+                    <span class="bar">/</span>
+                    <span class="fdn"><i>{{pasivo_corriente}}</i></span>
+                    </div>
+                    <i>= {{prueba_acida}}</i> 
+                  </div>
+                  <div id="columnchart_liquidez"></div>
+              </div>
+              
+          </div>
+      </div>
+
+
+      <div class="col-lg-6 col-md-6">
+          <div class="panel panel-default">
+            <a href="#">
+                  <div class="panel-footer"
+                  data-toggle="tooltip" 
+                  data-placement="left" 
+                  title="indican el grado en el que la empresa está financiada por deuda. Para evaluar el grado en el que la empresa está usando dinero prestado, podemos usar varias razones de endeudamiento.">
+                      <span class="pull-left">Razones de Endeudamiento</span>
+                      <span class="pull-right"><i class="fa fa-search-dollar"></i></span>
+                      <div class="clearfix"></div>
+                  </div>
+              </a>
+              <div class="panel-heading">
+                  <div class="row">
+                      <div class="col-xs-12 text-left">
+                          <div class="huge"></div>
+                          <div>Razón entre deuda y capital</div>
+                      </div>
+                  </div>
+                  <br>
+                  <div class="eq-c" align="justify">
+                    
+                    <div class="fraction">
+                    <span class="fup"><i>deuda total</i></span>
+                    <span class="bar">/</span>
+                    <span class="fdn"><i>capital</i></span>
+                    </div> =
+                    <div class="fraction">
+                    <span class="fup"><i>{{total_pasivo}}</i></span>
+                    <span class="bar">/</span>
+                    <span class="fdn"><i>{{capital}}</i></span>
+                    </div>
+                    <i>= {{deuda_capital}}</i> 
+                  </div>
+                  <br>
+                  <div class="row">
+                      <div class="col-xs-12 text-left">
+                          <div class="huge"></div>
+                          <div>Razón entre deuda y activos totales</div>
+                      </div>
+                  </div>
+                  <br>
+                  <div class="eq-c" align="justify">
+                    
+                    <div class="fraction">
+                    <span class="fup"><i>deudal total</i></span>
+                    <span class="bar">/</span>
+                    <span class="fdn"><i>total activo</i></span>
+                    </div> =
+                    <div class="fraction">
+                    <span class="fup"><i>{{total_pasivo}}</i></span>
+                    <span class="bar">/</span>
+                    <span class="fdn"><i>{{total_activo}}</i></span>
+                    </div>
+                    <i>= {{deuda_at}}</i> 
+                  </div>
+                  <div id="columnchart_endeudamiento"></div>
+                 
+                  
+              </div>
+              
+          </div>
+      </div>
+
+
+      <div class="col-lg-6 col-md-6">
+          <div class="panel panel-default">
+            <a href="#">
+                  <div class="panel-footer"
+                  data-toggle="tooltip" 
+                  data-placement="left" 
+                  title="indican la efectividad global de la operación de la empresa."
+                  >
+                      <span class="pull-left">Razones de Rendimiento</span>
+                      <span class="pull-right"><i class="fa fa-search-dollar"></i></span>
+                      <div class="clearfix"></div>
+                  </div>
+              </a>
+              <div class="panel-heading">
+                  <div class="row">
+                      <div class="col-xs-12 text-left">
+                          <div class="huge"></div>
+                          <div>Rentabilidad en relación con las ventas</div>
+                      </div>
+                  </div>
+                  <br>
+                  <div class="eq-c" align="justify">
+                    
+                    <div class="fraction">
+                    <span class="fup"><i>ventas - costo de venta</i></span>
+                    <span class="bar">/</span>
+                    <span class="fdn"><i>ventas</i></span>
+                    </div> =
+                    <div class="fraction">
+                    <span class="fup"><i>{{ventas}} - {{costo_de_venta}}</i></span>
+                    <span class="bar">/</span>
+                    <span class="fdn"><i>{{ventas}}</i></span>
+                    </div>
+                    <i>= {{rentabilidad_ventas}}</i> 
+                  </div>
+                  <br>
+                  <div class="row">
+                      <div class="col-xs-12 text-left">
+                          <div class="huge"></div>
+                          <div>Rentabilidad en relación con la inversión</div>
+                      </div>
+                  </div>
+                  <br>
+                  <div class="eq-c" align="justify">
+                    
+                    <div class="fraction">
+                    <span class="fup"><i>Utilidades</i></span>
+                    <span class="bar">/</span>
+                    <span class="fdn"><i>total activo</i></span>
+                    </div> =
+                    <div class="fraction">
+                    <span class="fup"><i>{{utilidad}}</i></span>
+                    <span class="bar">/</span>
+                    <span class="fdn"><i>{{total_activo}}</i></span>
+                    </div>
+                    <i>= {{rentabilidad_inversion}}</i> 
+                  </div>
+                  <div id="columnchart_rentabilidad"></div>
+                  
+                  
+              </div>
+              
+          </div>
+      </div>
+      </div>
+      
+          
+    	<hr>
+    {% else %}
+    <h2 class="text-center">El balance de comprobación no está disponible para este periodo</h2>
+    {% endif %}
+
+{% block extrajs %}
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  
+    <script type="text/javascript">
+      google.charts.load("current", {packages:['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ["Element", "Density", { role: "style" } ],
+          ["Prueba de liquidez", {{prueba_de_liquidez}}, "orange"],
+          ["Prueba acida", {{prueba_acida}}, "green"],
+        ]);
+
+        var view = new google.visualization.DataView(data);
+        view.setColumns([0, 1,
+                         { calc: "stringify",
+                           sourceColumn: 1,
+                           type: "string",
+                           role: "annotation" },
+                         2]);
+
+        var options = {
+          title: "Razón de liquidez",
+          width: 450,
+          
+          bar: {groupWidth: "95%"},
+          legend: { position: "none" },
+        };
+        //-------------------------------------------------------------------
+        var data1 = google.visualization.arrayToDataTable([
+          ["Element", "Density", { role: "style" } ],
+          ["Deuda - capital", {{deuda_capital}}, "orange"],
+          ["Deuda - activo total", {{deuda_at}}, "green"],
+        ]);
+
+        var view1 = new google.visualization.DataView(data1);
+        view1.setColumns([0, 1,
+                         { calc: "stringify",
+                           sourceColumn: 1,
+                           type: "string",
+                           role: "annotation" },
+                         2]);
+
+        var options1 = {
+          title: "Razón de Endeudamiento",
+          width: 450,
+          
+          bar: {groupWidth: "95%"},
+          legend: { position: "none" },
+        };
+
+        //-------------------------------------------------------------------
+        var data2 = google.visualization.arrayToDataTable([
+          ["Element", "Density", { role: "style" } ],
+          ["ventas", {{rentabilidad_ventas}}, "orange"],
+          ["inversion", {{rentabilidad_inversion}}, "green"],
+        ]);
+
+        var view2 = new google.visualization.DataView(data2);
+        view2.setColumns([0, 1,
+                         { calc: "stringify",
+                           sourceColumn: 1,
+                           type: "string",
+                           role: "annotation" },
+                         2]);
+
+        var options2 = {
+          title: "Razón de rentabilidad",
+          width: 450,
+          
+          bar: {groupWidth: "95%"},
+          legend: { position: "none" },
+        };
+
+        var chart = new google.visualization.ColumnChart(document.getElementById("columnchart_liquidez"));
+        chart.draw(view, options);
+        var chart1 = new google.visualization.ColumnChart(document.getElementById("columnchart_endeudamiento"));
+        chart1.draw(view1, options1);
+        var chart2 = new google.visualization.ColumnChart(document.getElementById("columnchart_rentabilidad"));
+        chart2.draw(view2, options2);
+    }
+    </script>
+    <script>
+      $(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+    </script>
+{% endblock %}
+    
+
+{% endblock %}
