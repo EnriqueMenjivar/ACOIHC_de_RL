@@ -2,8 +2,6 @@
 {%load staticfiles%}
 {% block extracss %}
 <link href="{%static '/plantilla/lib/bootstrap/css/bootstrap.css' %}" rel="stylesheet">
-
-
 {% endblock %}
 
 {%block content%}
@@ -252,171 +250,165 @@
     </div>
 </div>
 
-
-<div>
-    <!--Validacion partida doble-->
-    <div class="hidden alert alert-danger alert-dismissible show text-center" role="alert" id="error">
-        <strong>Advertencia!</strong> No se cumple partida doble. Revisar datos de transaccion.
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-   
+<div>  
     <div class="row">
-        
-        <div class="col-lg-3 btn-group-vertical text-center">
+        <!--Transacciones especiales-->
+        <div class="col-lg-3 ">
+            <div class="row btn-group-vertical text-center">
                 {%if not periodo.periodo_ajuste%}
-            <h3 class="h4">Transacciones Especiales</h3>
-            <div class="btn-group-vertical">
-                <button type="button" class="btn btn-primary" onclick="location='{%url 'transaccion:compra_inv'%}';">Compra
-                    de
-                    Inventario</button>
-                <button type="button" class="btn btn-info" onclick="location='{%url 'transaccion:venta'%}';">Venta de
-                    Productos Terminados</button>
-                <button type="button" class="btn btn-primary" onclick="location='{%url 'transaccion:dev_compra'%}';">Devolucion
-                    S/Compra de Inventario</button>
+                <h3 class="h4">Transacciones Especiales</h3>
+                <div class="btn-group-vertical">
+                    <button type="button" class="btn btn-primary" onclick="location='{%url 'transaccion:compra_inv'%}';">Compra
+                        de
+                        Inventario</button>
+                    <button type="button" class="btn btn-info" onclick="location='{%url 'transaccion:venta'%}';">Venta de
+                        Productos Terminados</button>
+                    <button type="button" class="btn btn-primary" onclick="location='{%url 'transaccion:dev_compra'%}';">Devolucion
+                        S/Compra de Inventario</button>
 
-                <button type="button" class="btn btn-info" onclick="location='{%url 'transaccion:compra_tangibles'%}';">Compra
-                    de Bienes Tangibles</button>
-                <button type="button" class="btn btn-primary" onclick="location='{%url 'transaccion:venta_tangibles'%}';">Venta
-                    de Bienes Tangibles</button>
+                    <button type="button" class="btn btn-info" onclick="location='{%url 'transaccion:compra_tangibles'%}';">Compra
+                        de Bienes Tangibles</button>
+                    <button type="button" class="btn btn-primary" onclick="location='{%url 'transaccion:venta_tangibles'%}';">Venta
+                        de Bienes Tangibles</button>
+                </div>
+                {%endif%}
             </div>
-            
-        {%endif%}
-
+            <br>
+            <br>
+            <br>
+            <div class="row">
+                <div class="col-12 btn-group-vertical">
+                    <button type="button" class="btn">
+                      DEBE &nbsp;&nbsp;<strong>$ </strong><span class="badge badge-light" id="resultadodeb"> 0.00</span>
+                    </button>
+                    <span class="badge" id="resultadodeb"></span>
+                </div>
+                <button type="button" class="btn">
+                      HABER <strong>$ </strong><span class="badge badge-light" id="resultadohab">0.00</span>
+                </button>
+            </div>
         </div>
 
         <div class="col-lg-9">
+             <!--Validacion partida doble-->
+            <div class="hidden alert alert-danger alert-dismissible show text-center" role="alert" id="error">
+                <strong>Advertencia!</strong> No se cumple partida doble, o hay valores a cero.
+            </div>
 
-            <div class="row jumbotron container-fluid">
-                <form method="POST" class="formulario" data-url="/transaccion/">
-                    <div class="col-lg-8">
+            <div class="row jumbotron container-fluid text-center">
+                <div class="row">
+                    <form method="POST" class="formulario" data-url="/transaccion/" id="transaccionPost">
                         {%csrf_token%}
+                        
+                        <div class="col-lg-6">
+                            <!-- Boton modal Debe -->
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#debe1" id="ad">
+                                Agregar Cuentas Debe
+                            </button>
+                            <br><br><br>
+                            <h3>Debe</h3>
+                            <div class="row container-fluid">
+                                <div class="col-lg-1"></div>
+                                <div class="col-lg-6 form-group">
+                                    {%for c in cuentasdebe%}
+                                    <div class="row form-group text-left">
+                                        <label>{{c.nombre_cuenta}}</label>
+                                    </div>
+                                    {%endfor%}
+                                </div>
+                                <div class="col-lg-4 form-group">
+                                    {%for c in cuentasdebe%}
+                                    <div class="row form-group">
+                                        <input type="number" class="valores debe form-control" name="{{c.id}}deb" placeholder="$" required step=".01">
+                                    </div>
+                                    {%endfor%}
+                                </div>
+                                <div class="col-lg-1"></div>
+
+                            </div>
+
+                        </div>
+                        <div class="col-lg-6">
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#haber1" id="ah">
+                                Agregar Cuentas Haber
+                            </button>
+                            <!-- Boton modal Haber -->
+                            <br><br><br>
+                            <h3>Haber</h3>
+                            <div class="row">
+                                <div class="col-lg-6 form-group">
+                                    {%for c in cuentashaber%}
+                                    <div class="row form-group text-left">
+                                        <label>{{c.nombre_cuenta}}</label>
+                                    </div>
+                                    {%endfor%}
+                                </div>
+                                <div class="col-lg-4 form-group">
+                                    {%for c in cuentashaber%}
+                                    <div class="row form-group">
+                                        <input type="text" class="valores haber form-control" name="{{c.id}}abon"  placeholder="$" required step=".01">
+                                    </div>
+                                    {%endfor%}
+                                </div>
+                                <div class="col-lg-2"></div>
+                            </div>
+
+                        </div>
+                </div>
+                <br>
+                <br>
+            <div class="row">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#transaccion" >Registrar Transaccion</button> &nbsp;&nbsp;
+&nbsp;                <a type="button" class="btn btn-info" href="/periodo_contable/transacciones/{{periodo.id}}/">Listado de Transaccion</a>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- Modal Iniciar Transaccion-->
+<div class="modal" id="transaccion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Ingrese los detalles de la transaccion</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            
+                <div class="modal-body">
                         <div class="form-group row mr-2 ml-2">
 
                             <div class="col-sm-10">
-                                <input type="text" name="periodo_transaccion" value="{{periodo.id}}" hidden>
+                                <input id="p"type="text" name="periodo_transaccion" value="{{periodo.id}}" hidden>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label">Fecha transaccion:</label>
                             <div class="col-sm-10">
-                                {{form.fecha_transaccion}}
+                                <input id="f"class="form-control" type="date" name="fecha_transaccion" required>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label"> Descripcion:</label>
 
                             <div class="col-sm-10">
-                                {{form.descripcion_transaccion}}
+                                <input id="d"class="form-control " type="text" name="descripcion_transaccion" required>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="col-lg-4 text-center">
-                        <br><br>
-                        <button type="submit" class="btn btn-success" name="inicio_transaccion" id="1">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" name="inicio_transaccion" id="inicio_transaccion">
                             Iniciar Transaccion
                         </button>
-                </form>
-
-            </div>
-        </div>
-
-        <div class="row jumbotron container-fluid text-center">
-            <div class="row">
-                <form action="" method="POST">
-                    {%csrf_token%}
-                    <div class="col-lg-6">
-                        <!-- Boton modal Debe -->
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#debe1" id="ad">
-                            Agregar Cuentas Debe
-                        </button>
-                        <br><br><br>
-                        <h3>Debe</h3>
-                        <div class="row container-fluid">
-                            <div class="col-lg-6 form-group">
-                                {%for c in cuentasdebe%}
-                                <div class="row form-group">
-                                    <input type="text" readonly value="{{c.nombre_cuenta}}" class="form-control">
-                                </div>
-                                {%endfor%}
-                            </div>
-                            <div class="col-lg-4 form-group">
-                                {%for c in cuentasdebe%}
-                                <div class="row form-group">
-                                    <input type="text" class="debe form-control" name="{{c.id}}deb" onchange="partidaDoble()">
-                                </div>
-                                {%endfor%}
-                            </div>
-                            <div class="col-lg-2"></div>
-
-                        </div>
-
-                    </div>
-
-                    <div class="col-lg-6">
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#haber1" id="ah">
-                            Agregar Cuentas Haber
-                        </button>
-                        <!-- Boton modal Haber -->
-                        <br><br><br>
-                        <h3>Haber</h3>
-                        <div class="row">
-                            <div class="col-lg-6 form-group">
-                                {%for c in cuentashaber%}
-                                <div class="row form-group">
-                                    <input type="text" readonly value="{{c.nombre_cuenta}}" class="form-control">
-                                </div>
-                                {%endfor%}
-                            </div>
-                            <div class="col-lg-4 form-group">
-                                {%for c in cuentashaber%}
-                                <div class="row form-group">
-                                    <input type="text" class="haber form-control" name="{{c.id}}abon" onchange="partidaDoble()">
-                                </div>
-                                {%endfor%}
-                            </div>
-                            <div class="col-lg-2"></div>
-                        </div>
-
-                    </div>
-                    <button type="submit" name="guardar" id="save" hidden> </button>
-                </form>
-            </div><br><br><br>
-            <div class="row">
-                <button type="button" class="btn btn-success" onclick="validar()">Registrar Transaccion</button>
-            </div>
-        </div>
-
-        <div class="row jumbotron container-fluid text-center">
-
-            <table class="table">
-                <h3>Total de la Transaccion</h3>
-                <thead class="thead-dark">
-                    <tr>
-
-                        <th scope="col">Saldo Debe</th>
-                        <th scope="col">Saldo Haber</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-
-                        <td id="resultadodeb">0.0</td>
-                        <td id="resultadohab">0.0</td>
-
-                    </tr>
-
-                </tbody>
-            </table>
-            <button type="button" class="btn btn-danger ml-2" onclick="location='{%url 'periodo_contable'%}';"">Regresar</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="regresar">Regresar</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
-</div>
-
-
 
 
 
@@ -425,98 +417,10 @@
 {%endblock%}
 
 {% block extrajs %}
-<script type="text/javascript" src="{% static 'js/partidaDoble.js' %}">
+
 </script>
 <script type="text/javascript">
-    function validar() {
-        acumdeb = parseFloat(document.getElementById("resultadodeb").innerHTML);
-        acumhab = parseFloat(document.getElementById("resultadohab").innerHTML);
-        if (acumdeb != acumhab) {
-            document.getElementById("error").classList.remove("hidden");
-            $('body, html').animate({
-                scrollTop: '0px'
-            }, 300);
-        } else {
-            document.getElementById('save').click();
-        }
-
-
-    }
-</script>
-
-<!--
-<script type="text/javascript">
-
-    document.getElementById("btndebe").addEventListener("click", function () {
-        var ndiv1, ndiv2, ndiv3;
-        ndiv1 = document.createElement("div");
-        ndiv2 = document.createElement("div");
-        ndiv3 = document.createElement("div");
-
-        ndiv1.setAttribute("class", "form-group row");
-        ndiv2.setAttribute("class", "col-lg-7");
-        ndiv3.setAttribute("class", "col-lg-5");
-
-        document.getElementById("debe").appendChild(ndiv1);
-        ndiv1.appendChild(ndiv2);
-        ndiv1.appendChild(ndiv3);
-
-        var nin1, nin2;
-        nin1 = document.createElement("select");
-        nin2 = document.createElement("input");
-        nin3 = document.createElement("input");
-
-        nin1.setAttribute("class", "form-control");
-        nin2.setAttribute("class", "form-control");
-        nin1.setAttribute("name", "cuenta_tc");
-        nin2.setAttribute("name", "debe_tc");
-        nin2.setAttribute("type", "number");
-
-        nin3.setAttribute("name", "haber_tc");
-        nin3.setAttribute("value", 0);
-        nin3.setAttribute("hidden", "hidden");
-
-        nin1.innerHTML = "{%for c in cuentas%} {%ifnotequal c.codigo_padre '12'%}<option>{{c.id}}</option> {%endifnotequal%} {%endfor%}";
-
-        ndiv2.appendChild(nin1);
-        ndiv3.appendChild(nin2);
-        ndiv3.appendChild(nin3);
-
-
-    })
-    document.getElementById("btnhaber").addEventListener("click", function () {
-        var ndiv1, ndiv2, ndiv3;
-        ndiv1 = document.createElement("div");
-        ndiv2 = document.createElement("div");
-        ndiv3 = document.createElement("div");
-
-        ndiv1.setAttribute("class", "form-group row");
-        ndiv2.setAttribute("class", "col-lg-7");
-        ndiv3.setAttribute("class", "col-lg-5");
-
-        document.getElementById("haber").appendChild(ndiv1);
-        ndiv1.appendChild(ndiv2);
-        ndiv1.appendChild(ndiv3);
-
-        var nin1, nin2;
-        nin1 = document.createElement("select");
-        nin2 = document.createElement("input");
-
-
-        nin1.setAttribute("class", "form-control");
-        nin2.setAttribute("class", "form-control");
-        nin1.setAttribute("name", "cuenta_tc");
-        nin2.setAttribute("name", "haber_tc");
-        nin2.setAttribute("type", "number");
-
-        nin1.innerHTML = "{%for c in cuentas%} {%ifnotequal c.codigo_padre '12'%}<option>{{c.nombre_cuenta}}</option> {%endifnotequal%} {%endfor%}";
-        ndiv2.appendChild(nin1);
-        ndiv3.appendChild(nin2);
-
-    })-->
-
 </script>
 <script type="text/javascript" src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
-
-<script src="{% static 'js/prueba.js'%}"></script>
+<script src="{% static 'js/transacciones.js'%}"></script>
 {% endblock %}
