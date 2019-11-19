@@ -89,4 +89,8 @@ input[type="checkbox"] {
   line-height: normal;
 }
 
+.divBorder .form-group .input {
+	color: blue;
+	text-align: center;
+}
 
