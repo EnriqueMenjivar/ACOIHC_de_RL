@@ -16,22 +16,22 @@
 <br>
 <div class="row">
     <div class="col-lg-5 form-group">
-        <label><input type="checkbox" aria-label="Checkbox for following text input" name="efectivo0">Caja
+        <label><input type="checkbox" aria-label="Checkbox for following text input" name="efectivo0" id="cj">Caja
             General:
         </label>
     </div>
     <div class="col-lg-7 form-group">
-        <input type="text" class="debe form-control" name="efectivo" onchange="partidaDoble()" value="0" required>
+        <input type="text" class="debe form-control" name="efectivo" onkeyup="partidaDoble()" value="0" required>
     </div>
 </div>
 <div class="row">
     <div class="col-lg-5 form-group">
-        <label><input type="checkbox" aria-label="Checkbox for following text input" name="cxp0">Cuentas
+        <label><input type="checkbox" aria-label="Checkbox for following text input" name="cxp0" id="cp">Cuentas
             por Pagar:
         </label>
     </div>
     <div class="col-lg-7 form-group">
-        <input type="text" class="debe form-control" name="cxp" onchange="partidaDoble()" value="0" required>
+        <input type="text" class="debe form-control" name="cxp" onkeyup="partidaDoble()" value="0" required>
     </div>
 
 </div>
@@ -57,7 +57,7 @@
         <label>Cantidad:</label>
     </div>
     <div class="col-lg-8 form-group">
-        <input type="number" class="form-control" name="cantidad" id="cant" onchange="operaciones()" required>
+        <input type="number" class="form-control" name="cantidad" id="cant" onkeyup="operaciones()" required step="1">
     </div>
 </div>
 <div class="row container-fluid">
@@ -65,7 +65,7 @@
         <label>Precio Unitario:</label>
     </div>
     <div class="col-lg-8 form-group">
-        <input type="text" class="form-control" name="precio_unit" onchange="operaciones()" id="pu" required>
+        <input type="number" class="form-control" name="precio_unit" onkeyup="operaciones()" id="pu" required step=".01">
     </div>
 </div>
 <div class="row container-fluid">
@@ -73,7 +73,7 @@
         <label>Total Compra: </label>
     </div>
     <div class="col-lg-8 form-group">
-        <input type="text" class="haber form-control" name="total" id="tot">
+        <input type="text" class="haber form-control" name="total" id="tot" readonly>
     </div>
 </div>
 <div class="row container-fluid">
@@ -81,7 +81,7 @@
         <label>IVA Credito Fiscal: </label>
     </div>
     <div class="col-lg-8 form-group">
-        <input type="text" class="haber form-control" name="iva" id="iva">
+        <input type="text" class="haber form-control" name="iva" id="iva" readonly>
     </div>
 </div>
 {%endblock%}
