@@ -116,22 +116,22 @@
                     <br>
                     <div class="row">
                         <div class="col-lg-5 form-group">
-                            <label><input type="checkbox" aria-label="Checkbox for following text input" name="efectivo0">Caja
+                            <label><input type="checkbox" aria-label="Checkbox for following text input" name="efectivo0" id="cj">Caja
                                 General:
                             </label>
                         </div>
                         <div class="col-lg-7 form-group">
-                            <input type="number" class="haber form-control" name="efectivo" onkeyup="partidaDoble();" required step=".01" placeholder="$" value="0">
+                            <input type="number" class="haber form-control" name="efectivo" onkeyup="partidaDoble();" required step=".01" placeholder="$" value="0" id="cjin">
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-lg-5 form-group">
-                            <label><input type="checkbox" aria-label="Checkbox for following text input" name="cxp0">Cuentas
+                            <label><input type="checkbox" aria-label="Checkbox for following text input" name="cxp0" id="cp">Cuentas
                                 por Pagar:
                             </label>
                         </div>
                         <div class="col-lg-7 form-group">
-                            <input type="number" class="haber form-control" name="cxp" onkeyup="partidaDoble()" required step=".01" placeholder="$" value="0">
+                            <input type="number" class="haber form-control" name="cxp" onkeyup="partidaDoble()" required step=".01" placeholder="$" value="0" id="cpin">
                         </div>
 
                     </div>
@@ -219,6 +219,6 @@
     }
 </script>
 <script type="text/javascript" src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
-<script src="{% static 'js/prueba.js'%}"></script>
+<script src="{% static 'js/prueba1.js'%}"></script>
 <script src="{% static 'js/partidaDoble.js'%}"></script>
 {%endblock%}
