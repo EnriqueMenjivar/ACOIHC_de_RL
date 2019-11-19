@@ -1,0 +1,59 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+
+	{% if transacciones %}
+  
+<div class="container">
+  <div class="row">
+    <div class="col-md-10 col-md-offset-1">
+       <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="text-center">Huelic Chocolatl</h4>
+          <h5 class="text-center">Flujo de efectivo</h5>
+          <h5 class="text-center">Del {{fecha_inicio}}, al {{fecha_final}}</h5>
+          <hr>
+        </div>
+        <div class="panel-body">
+            <table class="table table-hover" id="estados_financieros">
+            <thead>
+              <tr>
+                  <th scope="col">Transacción</th>
+                  <th scope="col">Entradas</th>
+                  <th scope="col">Salidas</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for transaccion in transacciones %}
+            <tr class="table-dark">
+                <td>{{ transaccion.transaccion_tc.descripcion_transaccion }}</td>
+                <td>{{ transaccion.debe_tc }}</td>
+                <td>{{ transaccion.haber_tc }}</td>
+            </tr>
+            {% endfor %}
+
+            <tr>
+              <th>Total</th>
+              <th>{{ total_entradas }}</th>
+              <th>{{ total_salidas }}</th>
+            </tr>
+
+            <tr class="table-dark">
+              <td></td><td></td><td></td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+         <div class="panel-footer text-center">
+            <h4>Saldo final de efectivo: {{ saldo_final }}</h4>
+         </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+{% else %}
+<h2 class="text-center">El flujo de efectivo no está disponible para este periodo</h2>
+{% endif %}
+
+{% endblock %}

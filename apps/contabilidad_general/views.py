@@ -3,6 +3,7 @@ from django.urls import reverse_lazy
 from apps.catalogo.forms import CuentaForm, AgrupacionForm, HijaForm
 from apps.catalogo.models import Grupo, Agrupacion, Cuenta, CuentaHija
 from apps.periodo.models import BalancePeriodo, Periodo
+from apps.contabilidad_general.models import *
 from django.views.generic import ListView, CreateView, UpdateView
 from django.http import HttpResponse 
 from django.db.models import Q
@@ -301,3 +302,28 @@ def balance_general(request, periodo_id):
 	}
 
 	return render(request, 'contabilidad_general/balance_general.html', context)
+
+def flujo_de_efectivo(request, periodo_id):
+	total_entradas = 0.0
+	total_salidas = 0.0
+	transacciones = Transaccion_Cuenta.objects.filter(transaccion_tc__periodo_transaccion__id = periodo_id).\
+											   filter(cuenta_tc__codigo_cuenta__startswith = 1101)
+
+	fecha_inicio = transacciones[0].transaccion_tc.periodo_transaccion.inicio_periodo
+	fecha_final = transacciones[0].transaccion_tc.periodo_transaccion.final_periodo
+
+	for transaccion in transacciones:
+		total_entradas += transaccion.debe_tc
+		total_salidas += transaccion.haber_tc
+
+	total_salidas = round(total_salidas, 2)
+	total_entradas = round(total_entradas, 2)
+	context = {
+		'fecha_inicio' : fecha_inicio,
+		'fecha_final' : fecha_final,
+		'total_entradas' : total_entradas,
+		'total_salidas' : total_salidas,
+		'saldo_final' : (total_entradas - total_salidas),
+		'transacciones' : transacciones
+	}
+	return render (request, 'contabilidad_general/flujo_de_efectivo.html', context)

@@ -3,46 +3,58 @@
 {% block content %}
 
 	{% if balances %}
-	<h4 class="text-center">Huelic Chocolatl</h4>
-	<h5 class="text-center">Balance General</h5>
-	<h5 class="text-center">Al {{fecha_final}}</h5>
 
-	<br>
-	<table class="table table-hover" id="estados_financieros">
-  		<thead>
-    		<tr>
-      			<th scope="col">Cuenta</th>
-      			<th scope="col">Activos</th>
-      			<th scope="col">Participaciones</th>
-    		</tr>
-  		</thead>
-  		<tbody>
-  		{% for balance in balances %}
-    	<tr class="table-dark">
-      		<td>{{balance.cuenta_balance.nombre_cuenta}}</td>
-      		<td>{{balance.saldo_deudor}}</td>
-      		<td>{{balance.saldo_acreedor}}</td>
-    	</tr>
-    	{% endfor %}
-      <tr>
-          <th>Capital social</th>
-          <th></th>
-          <th>{{capital_social}}</th>
-      </tr>
-    	<tr>
-      		<th>Total</th>
-      		<th>{{debe}}</th>
-      		<th>{{haber}}</th>
-    	</tr>
-    	<tr class="table-dark">
-    		<td></td><td></td><td></td>
-    	</tr>
-    	</tbody>
-    </table>
-    	
-    	<br><br>
-    	<h3 class="text-center">{{mensaje}}</h3>
-      <hr>
+<div class="container">
+  <div class="row">
+    <div class="col-md-10 col-md-offset-1">
+       <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="text-center">Huelic Chocolatl</h4>
+          <h5 class="text-center">Balance General</h5>
+          <h5 class="text-center">Al {{fecha_final}}</h5>
+          <hr>
+        </div>
+        <div class="panel-body">
+          <table class="table table-hover" id="estados_financieros">
+          <thead>
+            <tr>
+                <th scope="col">Cuenta</th>
+                <th scope="col">Activos</th>
+                <th scope="col">Participaciones</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for balance in balances %}
+          <tr class="table-dark">
+              <td>{{balance.cuenta_balance.nombre_cuenta}}</td>
+              <td>{{balance.saldo_deudor}}</td>
+              <td>{{balance.saldo_acreedor}}</td>
+          </tr>
+          {% endfor %}
+          <tr>
+              <th>Capital social</th>
+              <th></th>
+              <th>{{capital_social}}</th>
+          </tr>
+          <tr>
+              <th>Total</th>
+              <th>{{debe}}</th>
+              <th>{{haber}}</th>
+          </tr>
+          <tr class="table-dark">
+            <td></td><td></td><td></td>
+          </tr>
+          </tbody>
+        </table>
+        </div>
+       <div class="panel-footer text-center">
+        <h3 class="text-center">{{mensaje}}</h3>  
+       </div>
+      </div>
+    </div>
+  </div>
+</div>
+<br>
     {% else %}
     <h2 class="text-center">El balance de comprobación no está disponible para este periodo</h2>
     {% endif %}
