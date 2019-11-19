@@ -289,8 +289,7 @@ def venta(request):
             fecha_transaccion=request.POST["fecha_transaccion"],
             descripcion_transaccion=request.POST["descripcion_transaccion"],
         )
-        t.save()
-
+        
         # Cargado
         c = CuentaHija.objects.get(nombre_cuenta=request.POST['cuenta'])
         cant = request.POST['cantidad']
@@ -301,6 +300,7 @@ def venta(request):
         costo = 0
 
         if cv:
+            t.save()
             for v in cv:
                 costo = costo+v[2]
 
