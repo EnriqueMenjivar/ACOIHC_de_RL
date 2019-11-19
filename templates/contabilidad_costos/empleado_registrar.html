@@ -1,8 +1,11 @@
 {% extends 'base/base.html'%}
+{%load staticfiles%}
 {% block title %} Empleados {% endblock %}
+{% block extracss %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/estilo2.css' %}">
+{% endblock %}
 {% block portada %}<br><br><br>{% endblock %}
 {% block content %}
-
 
 <div class="divBorder">
 	<br>
@@ -10,10 +13,17 @@
    	<form method="post">
    		<div class="form-group">
 			{% csrf_token %}
-			{{form1.as_p}}
-			<button type="submit" class="btn btn-primary" align="center"/>Registrar</button>
+			
+			{% for field in form1 %}
+				<div class="input">
+					{{ field.errors }}
+					{{ field.label_tag }}
+					{{ field }}
+				</div>
+			{% endfor %}
+			<br>
+			<button type="submit" class="btn-primary" align="center">Registrar</button>
 		</div>
 	</form>
 </div>
-
 {% endblock %}

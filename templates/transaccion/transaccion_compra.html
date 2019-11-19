@@ -5,7 +5,10 @@
 {% endblock %}
 
 {% block content%}
-{%block validacion%}
+<div class="col-lg-2">
+</div>
+<div class="col-lg-8">
+    {%block validacion%}
 {%endblock%}
 <!--Validacion partida doble-->
 <div class="hidden alert alert-danger alert-dismissible show text-center" role="alert" id="error">
@@ -15,14 +18,10 @@
     </button>
 </div>
 
-<div class="col-lg-2">
-
-</div>
-<div class="col-lg-8">
     <div class="row jumbotron container-fluid">
         <form method="POST" class="formulario" data-url="/transaccion/">
 
-            <div class="col-lg-8">
+            <div class="col-lg-10">
                 {% csrf_token%}
                 <div class="form-group row">
                     <div>
@@ -32,34 +31,23 @@
                 <div class="form-group row">
                     <label class="col-lg-5 col-form-label">Fecha transaccion:</label>
                     <div class="col-lg-7">
-                        {{form.fecha_transaccion}}
+                         <input id="f"class="form-control" type="date" name="fecha_transaccion" required>
                     </div>
                 </div>
                 <div class="form-group row">
                     <label class="col-lg-5 col-form-label"> Descripcion:</label>
 
                     <div class="col-lg-7">
-                        {{form.descripcion_transaccion}}
+                         <input id="d"class="form-control " type="text" name="descripcion_transaccion" required>
                     </div>
                 </div>
             </div>
-
-            <div class="col-lg-4">
-                <br><br>
-                <button type="submit" class="btn btn-success" name="inicio_transaccion" id="1">
-                    Iniciar Transaccion
-                </button>
-        </form>
-
     </div>
-    <br><br><br><br><br><br>
-    <hr />
     <!--Transacciones-->
     <!--Compras de Inventarios-->
 
     <div class="row jumbotron container-fluid text-center">
         <div class="row">
-            <form action="" method="POST">
                 {%csrf_token%}
                 <div class="col-lg-6">
 
@@ -88,8 +76,7 @@
                             <label>Cantidad:</label>
                         </div>
                         <div class="col-lg-8 form-group">
-                            <input type="number" class="form-control" name="cantidad" id="cant" onchange="operaciones()"
-                                required>
+                            <input type="number" class="form-control" name="cantidad" id="cant" onkeyup="operaciones();partidaDoble();" required step="1">
                         </div>
                     </div>
                     <div class="row container-fluid">
@@ -97,8 +84,7 @@
                             <label>Precio Unitario:</label>
                         </div>
                         <div class="col-lg-8 form-group">
-                            <input type="text" class="form-control" name="precio_unit" onchange="operaciones()" id="pu"
-                                required>
+                            <input type="number" class="form-control" name="precio_unit" onkeyup="operaciones()" id="pu" required step=".01" placeholder="$">
                         </div>
                     </div>
                     <div class="row container-fluid">
@@ -106,7 +92,7 @@
                             <label>Total Compra: </label>
                         </div>
                         <div class="col-lg-8 form-group">
-                            <input type="text" class="debe form-control" name="total" id="tot">
+                            <input type="text" class="debe form-control" name="total" id="tot" readonly>
                         </div>
                     </div>
                     <div class="row container-fluid">
@@ -114,7 +100,7 @@
                             <label>IVA Credito Fiscal: </label>
                         </div>
                         <div class="col-lg-8 form-group">
-                            <input type="text" class="debe form-control" name="iva" id="iva">
+                            <input type="text" class="debe form-control" name="iva" id="iva" readonly>
                         </div>
                     </div>
 
@@ -130,24 +116,22 @@
                     <br>
                     <div class="row">
                         <div class="col-lg-5 form-group">
-                            <label><input type="checkbox" aria-label="Checkbox for following text input" name="efectivo0">Caja
+                            <label><input type="checkbox" aria-label="Checkbox for following text input" name="efectivo0" id="cj">Caja
                                 General:
                             </label>
                         </div>
                         <div class="col-lg-7 form-group">
-                            <input type="text" class="haber form-control" name="efectivo" onchange="partidaDoble()"
-                                value="0" required>
+                            <input type="number" class="haber form-control" name="efectivo" onkeyup="partidaDoble();" required step=".01" placeholder="$" value="0" id="cjin">
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-lg-5 form-group">
-                            <label><input type="checkbox" aria-label="Checkbox for following text input" name="cxp0">Cuentas
+                            <label><input type="checkbox" aria-label="Checkbox for following text input" name="cxp0" id="cp">Cuentas
                                 por Pagar:
                             </label>
                         </div>
                         <div class="col-lg-7 form-group">
-                            <input type="text" class="haber form-control" name="cxp" onchange="partidaDoble()" value="0"
-                                required>
+                            <input type="number" class="haber form-control" name="cxp" onkeyup="partidaDoble()" required step=".01" placeholder="$" value="0" id="cpin">
                         </div>
 
                     </div>
@@ -159,14 +143,29 @@
         </div><br><br><br>
         {%block boton%}
         <div class="row">
-            <button type="button" class="btn btn-success" onclick="validar()">Registrar Transaccion</button>
+            <div class="col-lg-3"></div>
+            <div class="col-lg-3"><button type="button" class="btn btn-success" onclick="validar()">Registrar Transaccion</button></div>
+            <div class="col-lg-3"> 
+                {%block regresar%}
+                    <button type="button" class="btn btn-danger" onclick="location='{%url 'transaccion:transacciones'%}';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Regresar&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                {%endblock%}</div>
+            <div class="col-lg-3"></div>
         </div>
         {%endblock%}
         {%if request.path == '/transaccion/venta'%}
         <div class="row">
+            <div class="col-lg-3"></div>
+            <div class="col-lg-3">
             <button type="button" class="btn btn-success" onclick="document.getElementById('save').click();">Registrar
-                Transaccion</button>
-        </div>
+                Transaccion</button></div>
+            <div class="col-lg-3">
+                    <button type="button" class="btn btn-danger" onclick="location='{%url 'transaccion:transacciones'%}';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Regresar&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button></div>
+            <div class="col-lg-3"></div>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
         {%endif%}
 
     </div>
@@ -197,54 +196,29 @@
         </table>
 
         {%endblock%}
-        {%block regresar%}
-        <div class="row text-center">
-            <br><br>
-            <button type="button" class="btn btn-danger ml-2" onclick="location='{%url 'transaccion:transacciones'%}';"">Regresar</button>
-        </div>
-        {%endblock%}
-
     </div>
 </div>
 
-<script type="
-                text/javascript" src="{% static 'js/partidaDoble.js' %}"></script>
-                <script type="text/javascript">
-                    function operaciones() {
-                        var precio = document.getElementById('pu').value;
-                        var cantidad = document.getElementById('cant').value;
-                        if (precio == '' || cantidad == '') {
-                            document.getElementById('tot').value = 0;
-                        } else {
-                            document.getElementById('tot').value = (parseFloat(precio) * parseFloat(cantidad)).toFixed(2);
-                        }
-                        if (document.getElementById('tot') != '0') {
-                            var tot = document.getElementById('tot').value;
-                            document.getElementById('iva').value = (parseFloat(tot) * 0.13).toFixed(2);
-                        } else {
-                            document.getElementById('iva').value = 0;
-                        }
 
-                    }
-                </script>
-                <script type="text/javascript">
-                    function validar() {
-                        acumdeb = parseFloat(document.getElementById("resultadodeb").innerHTML);
-                        acumhab = parseFloat(document.getElementById("resultadohab").innerHTML);
-                        if (acumdeb != acumhab) {
-                            document.getElementById("error").classList.remove("hidden");
-                            $('body, html').animate({
-                                scrollTop: '0px'
-                            }, 300);
-                        } else {
-                            document.getElementById('save').click();
-                        }
-                    }
-                </script>
-
-
-
-                <script type="text/javascript" src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
-
-                <script src="{% static 'js/prueba.js'%}"></script>
-                {%endblock%}
+<script type="text/javascript">
+    function operaciones() {
+        var precio = document.getElementById('pu').value;
+        var cantidad = document.getElementById('cant').value;
+        if (precio == '' || cantidad == '') {
+            document.getElementById('tot').value = 0;
+        } else {
+            document.getElementById('tot').value = (parseFloat(precio) * parseFloat(cantidad)).toFixed(2);
+        }
+        if (document.getElementById('tot') != '0') {
+            var tot = document.getElementById('tot').value;
+            document.getElementById('iva').value = (parseFloat(tot) * 0.13).toFixed(2);
+        } else {
+            document.getElementById('iva').value = 0;
+        }
+        partidaDoble();
+    }
+</script>
+<script type="text/javascript" src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+<script src="{% static 'js/prueba1.js'%}"></script>
+<script src="{% static 'js/partidaDoble.js'%}"></script>
+{%endblock%}

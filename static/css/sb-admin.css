@@ -130,6 +130,11 @@ body.fixed-nav.sidebar-toggled #content-wrapper {
   }
 }
 
+.divBorder .form-group .input {
+  color: blue;
+}
+
+
 .sidebar {
   width: 90px !important;
   background-color: #212529;

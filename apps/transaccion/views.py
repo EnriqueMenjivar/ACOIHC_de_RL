@@ -9,7 +9,7 @@ from apps.contabilidad_costos.peps import *
 
 # Create your views here.
 
-
+#Decreapted
 def iniciar_transaccion(request, form1):
     form1 = TransaccionForm(request.POST)
     if form1.is_valid():
@@ -20,16 +20,11 @@ def iniciar_transaccion(request, form1):
     else:
         form1 = TransaccionForm()
 
-
 def transaccion(request):
     cuentas = CuentaHija.objects.select_related().all()
     periodo = Periodo.objects.latest('id')
     cuentasDebe = []
-    cuentasHaber = []
-
-    form1 = TransaccionForm()
-    if request.is_ajax():
-        iniciar_transaccion(request, form1)
+    cuentasHaber = []    
 
     if 'cargar' in request.GET:
         for c in cuentas:
@@ -47,14 +42,21 @@ def transaccion(request):
                 if request.GET[str(c.id)+"habers"] == 'on':
                     cuentasDebe.append(c)
 
-    if 'guardar' in request.POST:
+    #Mini reingenieria
+    if request.is_ajax():
+        t = Transaccion(
+            periodo_transaccion=periodo,
+            fecha_transaccion=request.POST["fecha_transaccion"],
+            descripcion_transaccion=request.POST["descripcion_transaccion"],
+        )
+        t.save()
         for c in cuentas:
             if str(c.id)+"deb" in request.POST:
                 valor = request.POST[str(c.id)+"deb"]
-                t = Transaccion.objects.latest('id')
+                
                 tran = Transaccion_Cuenta(
                     transaccion_tc=t, cuenta_tc=c,
-                    debe_tc=Decimal(valor),
+                    debe_tc=valor,
                     haber_tc=Decimal("0.0"),
                 )
                 tran.save()
@@ -62,33 +64,35 @@ def transaccion(request):
 
             if str(c.id)+"abon" in request.POST:
                 valor = request.POST[str(c.id)+"abon"]
-                t = Transaccion.objects.latest('id')
                 tran = Transaccion_Cuenta(
                     transaccion_tc=t, cuenta_tc=c,
                     debe_tc=Decimal("0.0"),
-                    haber_tc=Decimal(valor),
+                    haber_tc=valor,
                 )
                 tran.save()
                 aumentar_saldo(c.id, valor, False)
 
-        return redirect('transaccion:transacciones')
+        data = {'message': "La transaccion se registro exitosamente"}
+        return JsonResponse(data)
 
     # Contexto
-    contexto = {'cuentas': cuentas, 'form': form1, 'periodo': periodo,
+    contexto = {'cuentas': cuentas, 'periodo': periodo,
                 'cuentasdebe': cuentasDebe, 'cuentashaber': cuentasHaber}
     return render(request, 'transaccion/transaccion.html', contexto)
-
 
 def compra_inventario(request):
     cuentas = CuentaHija.objects.select_related().all()
     periodo = Periodo.objects.latest('id')
-    form1 = TransaccionForm()
-    if request.is_ajax():
-        iniciar_transaccion(request, form1)
 
     if 'guardar' in request.POST:
 
-        t = Transaccion.objects.latest('id')
+        t = Transaccion(
+            periodo_transaccion=periodo,
+            fecha_transaccion=request.POST["fecha_transaccion"],
+            descripcion_transaccion=request.POST["descripcion_transaccion"],
+        )
+        t.save()
+
         # Cargado
         c = CuentaHija.objects.get(nombre_cuenta=request.POST['cuenta'])
         totalCompra = request.POST['total']
@@ -165,23 +169,25 @@ def compra_inventario(request):
 
         return redirect('transaccion:transacciones')
 
-    contexto = {
-        'form': form1, 'periodo': periodo, 'cuentas': cuentas
+    contexto = {'periodo': periodo, 'cuentas': cuentas
     }
     return render(request, 'transaccion/transaccion_compra.html', contexto)
-
 
 def devolucion_compra(request):
     cuentas = CuentaHija.objects.select_related().all()
     periodo = Periodo.objects.latest('id')
-    form1 = TransaccionForm()
     error=False
-    if request.is_ajax():
-        iniciar_transaccion(request, form1)
+
+
 
     if 'guardar' in request.POST:
 
-        t = Transaccion.objects.latest('id')
+        t = Transaccion(
+            periodo_transaccion=periodo,
+            fecha_transaccion=request.POST["fecha_transaccion"],
+            descripcion_transaccion=request.POST["descripcion_transaccion"],
+        )
+        t.save()
         # Cargado
         c = CuentaHija.objects.get(nombre_cuenta=request.POST['cuenta'])
         totalCompra = request.POST['total']
@@ -263,40 +269,38 @@ def devolucion_compra(request):
         else:
             error = True
             contexto = {
-                'form': form1, 'periodo': periodo, 'cuentas': cuentas, 'error': error
+                'periodo': periodo, 'cuentas': cuentas, 'error': error
             }
 
     contexto = {
-        'form': form1, 'periodo': periodo, 'cuentas': cuentas, 'error': error
+        'periodo': periodo, 'cuentas': cuentas, 'error': error
     }
     return render(request, 'transaccion/transaccion_devo_compra.html', contexto)
-
 
 def venta(request):
     cuentas = CuentaHija.objects.select_related().all()
     periodo = Periodo.objects.latest('id')
     error = False
-    form1 = TransaccionForm()
-    if request.is_ajax():
-        iniciar_transaccion(request, form1)
 
     if 'guardar' in request.POST:
 
-        t = Transaccion.objects.latest('id')
+        t = Transaccion(
+            periodo_transaccion=periodo,
+            fecha_transaccion=request.POST["fecha_transaccion"],
+            descripcion_transaccion=request.POST["descripcion_transaccion"],
+        )
+        
         # Cargado
         c = CuentaHija.objects.get(nombre_cuenta=request.POST['cuenta'])
         cant = request.POST['cantidad']
         porcentaje = request.POST['porcentaje']
 
         cv = list()
-        cv = peps(periodo.id, t.fecha_transaccion,
-                  c.id, int(cant), 0, True, cv)
-
-        
-
+        cv = peps(periodo.id, t.fecha_transaccion,c.id, int(cant), 0, True, cv)
         costo = 0
 
         if cv:
+            t.save()
             for v in cv:
                 costo = costo+v[2]
 
@@ -366,25 +370,24 @@ def venta(request):
         else:
             error = True
             contexto = {
-                'form': form1, 'periodo': periodo, 'cuentas': cuentas, 'error': error
+                'periodo': periodo, 'cuentas': cuentas, 'error': error
             }
 
     contexto = {
-        'form': form1, 'periodo': periodo, 'cuentas': cuentas, 'error': error
+        'periodo': periodo, 'cuentas': cuentas, 'error': error
     }
     return render(request, 'transaccion/transaccion_venta.html', contexto)
-
 
 def compra_tangibles(request):
     cuentas = CuentaHija.objects.select_related().all()
     periodo = Periodo.objects.latest('id')
-    form1 = TransaccionForm()
-    if request.is_ajax():
-        iniciar_transaccion(request, form1)
-
     if 'guardar' in request.POST:
-
-        t = Transaccion.objects.latest('id')
+        t = Transaccion(
+            periodo_transaccion=periodo,
+            fecha_transaccion=request.POST["fecha_transaccion"],
+            descripcion_transaccion=request.POST["descripcion_transaccion"],
+        )
+        t.save()
         # Cargado
         c = CuentaHija.objects.get(nombre_cuenta=request.POST['cuenta'])
         totalCompra = request.POST['total']
@@ -458,21 +461,21 @@ def compra_tangibles(request):
         return redirect('transaccion:transacciones')
 
     contexto = {
-        'form': form1, 'periodo': periodo, 'cuentas': cuentas
+        'periodo': periodo, 'cuentas': cuentas
     }
     return render(request, 'transaccion/transaccion_compra_tangibles.html', contexto)
-
 
 def venta_tangibles(request):
     cuentas = CuentaHija.objects.select_related().all()
     periodo = Periodo.objects.latest('id')
-    form1 = TransaccionForm()
-    if request.is_ajax():
-        iniciar_transaccion(request, form1)
 
     if 'guardar' in request.POST:
-
-        t = Transaccion.objects.latest('id')
+        t = Transaccion(
+            periodo_transaccion=periodo,
+            fecha_transaccion=request.POST["fecha_transaccion"],
+            descripcion_transaccion=request.POST["descripcion_transaccion"],
+        )
+        t.save()
         # Cargado
         c = CuentaHija.objects.get(nombre_cuenta=request.POST['cuenta'])
         totalCompra = request.POST['total']
@@ -547,10 +550,9 @@ def venta_tangibles(request):
         return redirect('transaccion:transacciones')
 
     contexto = {
-        'form': form1, 'periodo': periodo, 'cuentas': cuentas
+        'periodo': periodo, 'cuentas': cuentas
     }
     return render(request, 'transaccion/transaccion_venta_tangibles.html', contexto)
-
 
 def aumentar_saldo(id_cuenta, monto, opcion):
     cuenta = CuentaHija.objects.get(id=id_cuenta)

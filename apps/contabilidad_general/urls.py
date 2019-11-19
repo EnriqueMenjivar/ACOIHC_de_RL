@@ -11,6 +11,7 @@ urlpatterns = [
 	path('cuenta-editar/<cuenta_id>/', views.cuenta_update, name="cuenta-editar"),
 	path('hija-editar/<hija_id>/', views.hija_update, name="hija-editar"),
 	path('balance-comprobacion/<periodo_id>/', views.balance_comprobacion, name="balance-comprobacion"),
+	path('ratios-financieros/<periodo_id>/', views.ratios_financieros, name="ratios-financieros"),
 	path('estado-resultado/<periodo_id>/', views.estado_resultado, name="estado-resultado"),
 	path('estado-capital/<periodo_id>/', views.estado_capital, name="estado-capital"),
 	path('balance-general/<periodo_id>/', views.balance_general, name="balance-general"),

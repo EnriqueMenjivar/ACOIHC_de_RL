@@ -1,6 +1,11 @@
 {% extends 'base/base.html'%}
 {% load staticfiles %}
 {% block title %} Empleados {% endblock %}
+
+{% block extracss %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/estilo2.css' %}">
+{% endblock %}
+
 {% block portada %}<br><br><br>{% endblock %} 
 
 {% block content %}
@@ -14,35 +19,35 @@
 		{% csrf_token %}
 
 		<div class="form-group">
-			<label for="nombres" class="control-label col-md-2">Nombres :</label>
+			<label for="nombres" class="control-label col-md-2">Nombres </label>
 			<div class="col-md-7">
 				<input id="nombres" type="text" class="form-control" name="nombres" min="1" readonly="readonly" value = "{{empleado.nombre_empleado}}">
 			</div>
 		</div>
 
 		<div class="form-group">
-			<label for="apellidos" class="control-label col-md-2">Apellidos :</label>
+			<label for="apellidos" class="control-label col-md-2">Apellidos </label>
 			<div class="col-md-7">
 				<input id="apellidos" type="text" class="form-control" name="apellidos" min="1" readonly="readonly" value = "{{empleado.apellido_empleado}}">
 			</div>
 		</div>
 
 		<div class="form-group">
-			<label for="dui" class="control-label col-md-2">DUI :</label>
+			<label for="dui" class="control-label col-md-2">DUI </label>
 			<div class="col-md-7">
 				<input id="dui" type="text" class="form-control" name="dui" min="1" readonly="readonly" value = "{{empleado.dui_empleado}}">
 			</div>
 		</div>
 
 		<div class="form-group">
-			<label for="isss" class="control-label col-md-2">N° ISSS :</label>
+			<label for="isss" class="control-label col-md-2">N° ISSS </label>
 			<div class="col-md-7">
 				<input id="isss" type="text" class="form-control" name="isss" min="1" readonly="readonly" value = "{{empleado.Nisss_empleado}}">
 			</div>
 		</div>
 
 		<div class="form-group">
-			<label for="afp" class="control-label col-md-2">N° AFP :</label>
+			<label for="afp" class="control-label col-md-2">N° AFP </label>
 			<div class="col-md-7">
 				<input id="afp" type="text" class="form-control" name="afp" min="1" readonly="readonly" value = "{{empleado.Nafp_empleado}}">
 			</div>
@@ -50,14 +55,14 @@
 
 		
 		<div class="form-group">
-			<label for="cargo" class="control-label col-md-2">CARGO :</label>
+			<label for="cargo" class="control-label col-md-2">CARGO </label>
 			<div class="col-md-7">
 				<input id="cargo" type="text" class="form-control" name="cargo" min="1" readonly="readonly" value = "{{empleado.cargo_empleado}}">
 			</div>
 		</div>
 
 		<div class="form-group">
-			<label for="salario" class="control-label col-md-2"> SALARIO BASE :</label>
+			<label for="salario" class="control-label col-md-2"> SALARIO BASE </label>
 			<div class="col-md-7">
 				<input id="salario" type="text" class="form-control" name="salario" min="1" readonly="readonly" value = "{{empleado.cargo_empleado.sueldo_base}}">
 			</div>
@@ -77,35 +82,35 @@
 		{% csrf_token %}
 	
 		<div class="form-group">
-			<label for="Nisss" class="control-label col-md-2"> ISSS :</label>
+			<label for="Nisss" class="control-label col-md-2"> ISSS </label>
 			<div class="col-md-7">
 				<input id="afp" type="text" class="form-control" name="Nisss" readonly="readonly" value = "{{planilla.isss_planilla}}">
 			</div>
 		</div>
 
 		<div class="form-group">
-			<label for="Nafp" class="control-label col-md-2"> AFP :</label>
+			<label for="Nafp" class="control-label col-md-2"> AFP </label>
 			<div class="col-md-7">
 				<input id="Nafp" type="text" class="form-control" name="Nafp"  readonly="readonly" value = "{{planilla.afp_planilla}}">
 			</div>
 		</div>
 
 		<div class="form-group">
-			<label for="aguinaldo" class="control-label col-md-2"> AGUINALDO:</label>
+			<label for="aguinaldo" class="control-label col-md-2"> AGUINALDO</label>
 			<div class="col-md-7">
 				<input id="aguinaldo" type="text" class="form-control" name="aguinaldo" readonly="readonly" value = "{{planilla.aguinaldo_planilla}}">
 			</div>
 		</div>
 
 		<div class="form-group">
-			<label for="vacaciones" class="control-label col-md-2">VACACIONES :</label>
+			<label for="vacaciones" class="control-label col-md-2">VACACIONES </label>
 			<div class="col-md-7">
 				<input id="vacaciones" type="text" class="form-control" name="vacaciones" readonly="readonly" value = "{{planilla.vacacion_planilla}}">
 			</div>
 		</div>
 
 		<div class="form-group">
-			<label for="insaforp" class="control-label col-md-2">INSAFORP :</label>
+			<label for="insaforp" class="control-label col-md-2">INSAFORP </label>
 			<div class="col-md-7">
 				<input id="insaforp" type="text" class="form-control" name="insaforp" readonly="readonly" value = "{{planilla.insaforp}}">
 			</div>
@@ -113,7 +118,7 @@
 
 			
 		<div class="form-group">
-			<label for="sueldo_base" class="control-label col-md-2"> SUELDO TOTAL :</label>
+			<label for="sueldo_base" class="control-label col-md-2"> SUELDO TOTAL </label>
 			<div class="col-md-7">
 				<input id="sueldo_base" type="text" class="form-control" name="sueldo_base" readonly="readonly" value = "{{planilla.salario_total}}">
 			</div>

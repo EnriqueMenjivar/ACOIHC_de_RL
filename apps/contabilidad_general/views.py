@@ -327,3 +327,128 @@ def flujo_de_efectivo(request, periodo_id):
 		'transacciones' : transacciones
 	}
 	return render (request, 'contabilidad_general/flujo_de_efectivo.html', context)
+
+def ratios_financieros(request, periodo_id):
+	balances = BalancePeriodo.objects.filter(periodo_balance=periodo_id)
+	fecha_0=balances[0].periodo_balance.inicio_periodo
+	fecha_1=balances[0].periodo_balance.final_periodo
+	activo_corriente=0
+	pasivo_corriente=0
+	pasivo_no_corriente=0
+	total_activo=0
+	total_pasivo=0
+	total_inventario=0
+	capital=0
+	ventas = 0
+	utilidad= 0
+	costo_de_venta = 0
+
+	"""
+	RAZONES DE LIQUIDEZ
+
+	razón de liquidez corriente = activo corriente/pasivo corriente
+	prueba acida = (activo corriente - inventario)/pasivo corriente
+
+	RAZONES DE ENDEUDAMEINTO
+
+	Razón entre deuda y capital = total pasivo/capital
+	Razón entre deuda y activos totales = total pasivo/ total activo
+
+	RAZON DE RENTABILIDAD
+
+	Rentabilidad en relación con las ventas = (Ventas - Costo de venta)/Ventas
+	Rentabilidad en relación con la inversión = (Utilidades)/ total activo
+	"""
+
+	#INICIANDO RESULTADOS
+	prueba_de_liquidez = 0
+	prueba_acida = 0
+	deuda_capital = 0
+	deuda_at = 0
+	rentabilidad_ventas = 0
+	rentabilidad_inversion = 0
+
+
+	for balance in balances:
+		#las cuentas que son activos
+		if(balance.cuenta_balance.agrupacion.codigo_grup.codigo_grupo == '1'):
+			total_activo += balance.saldo_deudor
+			total_activo -= balance.saldo_acreedor
+			#las cuentas que son de activo corriente
+			if(balance.cuenta_balance.agrupacion.codigo_agrupacion == '11'):
+				activo_corriente += balance.saldo_deudor
+				activo_corriente -= balance.saldo_acreedor
+
+				if(balance.cuenta_balance.codigo_cuenta == 1103  or
+					balance.cuenta_balance.codigo_cuenta == 1104 or
+					balance.cuenta_balance.codigo_cuenta == 1105 or
+					balance.cuenta_balance.codigo_cuenta == 1106 ):
+					total_inventario += balance.saldo_deudor
+					total_inventario -= balance.saldo_acreedor
+		#las cuentas que son pasivos
+		if(balance.cuenta_balance.agrupacion.codigo_grup.codigo_grupo == '2'):
+			total_pasivo -= balance.saldo_deudor
+			total_pasivo += balance.saldo_acreedor
+			#las cuentas que son de pasivo corriente
+			if(balance.cuenta_balance.agrupacion.codigo_agrupacion == '21'):
+				pasivo_corriente -= balance.saldo_deudor
+				pasivo_corriente += balance.saldo_acreedor
+			#las cuentas que son de pasivo no corriente
+			if(balance.cuenta_balance.agrupacion.codigo_agrupacion == '22'):
+				pasivo_no_corriente -= balance.saldo_deudor
+				pasivo_no_corriente += balance.saldo_acreedor
+		#Si la cuenta es de capital
+		if(balance.cuenta_balance.agrupacion.codigo_grup.codigo_grupo == '3'):
+			capital -= balance.saldo_deudor
+			capital += balance.saldo_acreedor
+			#Si la cuenta es de utilidades
+			if(balance.cuenta_balance.codigo_cuenta == 3301):
+				utilidad -= balance.saldo_deudor
+				utilidad += balance.saldo_acreedor
+		#Si la cuenta es la cuenta ventas
+		if(balance.cuenta_balance.codigo_cuenta == 5101):
+			ventas -= balance.saldo_deudor
+			ventas += balance.saldo_acreedor
+		#Si la cuenta es la cuenta costo de ventas
+		if(balance.cuenta_balance.codigo_cuenta == 4104):
+			costo_de_venta += balance.saldo_deudor
+			costo_de_venta -= balance.saldo_acreedor
+		
+		#calculo
+		if(pasivo_corriente != 0):
+			prueba_de_liquidez = (activo_corriente)/(pasivo_corriente)
+			prueba_acida = (activo_corriente - total_inventario)/(pasivo_corriente)
+		if(capital != 0):
+			deuda_capital = (total_pasivo)/capital
+		if(total_activo !=0):
+			deuda_at = (total_pasivo)/total_activo
+			rentabilidad_inversion = (utilidad)/total_activo
+		if(ventas !=0):
+			rentabilidad_ventas = (ventas- costo_de_venta)/(ventas)
+
+
+
+
+	context={
+		'rentabilidad_ventas': "{0:.4f}".format(rentabilidad_ventas),
+		'rentabilidad_inversion':"{0:.4f}".format(rentabilidad_inversion),
+		'deuda_at':"{0:.4f}".format(deuda_at),
+		'deuda_capital': "{0:.4f}".format(deuda_capital),
+		'prueba_de_liquidez': "{0:.4f}".format(prueba_de_liquidez),
+		'prueba_acida': "{0:.4f}".format(prueba_acida),
+		'total_inventario':"{0:.2f}".format(total_inventario),
+		'activo_corriente':"{0:.2f}".format(activo_corriente),
+		'pasivo_corriente':"{0:.2f}".format(pasivo_corriente),
+		'pasivo_no_corriente':"{0:.2f}".format(pasivo_no_corriente),
+		'total_activo':"{0:.2f}".format(total_activo),
+		'total_pasivo':"{0:.2f}".format(total_pasivo),
+		'ventas':"{0:.2f}".format(ventas),
+		'costo_de_venta':"{0:.2f}".format(costo_de_venta),
+		'capital':"{0:.2f}".format(capital),
+		'utilidad':"{0:.2f}".format(utilidad),
+		'balances':balances,
+		'fecha_inicio': fecha_0,
+		'fecha_final': fecha_1,
+	}
+
+	return render(request, 'contabilidad_general/ratios_financieros.html', context)
