@@ -1,5 +1,6 @@
 from django.urls import path, re_path
 from apps.contabilidad_general import views
+from apps.periodo.urls import *
 
 app_name = "contabilidad_general"
 

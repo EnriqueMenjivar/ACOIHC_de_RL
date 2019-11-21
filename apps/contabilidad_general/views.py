@@ -2,12 +2,9 @@ from django.shortcuts import render, redirect, render_to_response
 from django.urls import reverse_lazy
 from apps.catalogo.forms import CuentaForm, AgrupacionForm, HijaForm
 from apps.catalogo.models import Grupo, Agrupacion, Cuenta, CuentaHija
-<<<<<<< HEAD
 from apps.periodo.models import BalancePeriodo, Periodo, NotaPeriodo
-=======
 from apps.periodo.models import BalancePeriodo, Periodo
 from apps.contabilidad_general.models import *
->>>>>>> 9aab9b22aa2bbda9dce0c33e308129c5c0812231
 from django.views.generic import ListView, CreateView, UpdateView
 from django.http import HttpResponse 
 from django.db.models import Q
@@ -170,6 +167,7 @@ def balance_comprobacion(request, periodo_id):
 	acreedor=0
 	deudor=0
 	mensaje=''
+	context = {''}
 	
 
 	for balance in balances:
@@ -195,19 +193,31 @@ def balance_comprobacion(request, periodo_id):
 		nota.save()
 		estado = True
 
-	context={
-		'balances':balances,
-		'acreedor': acreedor,
-		'deudor': deudor,
-		'mensaje': mensaje,
-		'fecha_inicio': fecha_0,
-		'fecha_final': fecha_1,
-		'periodo':Periodo,
-		'estado': estado,
-	}
+		notas = NotaPeriodo.objects.all()
+		context = {
+			'notas' : notas,
+		}
 
-	return render(request, 'contabilidad_general/balance_comprobacion.html', context)
+		return render(request, 'contabilidad_general/notas_list.html', context)
+	else:
+		context={
+			'balances':balances,
+			'acreedor': acreedor,
+			'deudor': deudor,
+			'mensaje': mensaje,
+			'fecha_inicio': fecha_0,
+			'fecha_final': fecha_1,
+			'periodo':Periodo,
+			'estado': estado,
+		}
 
+		return render(request, 'contabilidad_general/balance_comprobacion.html', context)
+
+def notas_list(request):
+	notas = NotaPeriodo.objects.all()
+	contexto1 = {'notas' : notas}
+
+	return render(request, 'contabilidad_general/notas_list.html', context)
 
 
 def estado_resultado(request, periodo_id):
@@ -220,6 +230,7 @@ def estado_resultado(request, periodo_id):
 	fecha_1=balances[0].periodo_balance.final_periodo
 	ingresos=0
 	gastos=0
+	context = {''}
 
 	for balance in balances:
 		gastos += balance.saldo_deudor
@@ -238,16 +249,24 @@ def estado_resultado(request, periodo_id):
 		nota.save()
 		estado = True
 
-	context = {
-		'balances': balances,
-		'ingresos': round(ingresos,2),
-		'gastos': round(gastos,2),
-		'utilidad_periodo':round(utilidad_periodo,2),
-		'fecha_inicio': fecha_0,
-		'fecha_final': fecha_1,
-		'estado': estado,
-	}
-	return render(request, 'contabilidad_general/estado_resultado.html', context)
+		notas = NotaPeriodo.objects.all()
+		context = {
+			'notas' : notas,
+		}
+
+		return render(request, 'contabilidad_general/notas_list.html', context)
+	else:
+
+		context = {
+			'balances': balances,
+			'ingresos': round(ingresos,2),
+			'gastos': round(gastos,2),
+			'utilidad_periodo':round(utilidad_periodo,2),
+			'fecha_inicio': fecha_0,
+			'fecha_final': fecha_1,
+			'estado': estado,
+		}
+		return render(request, 'contabilidad_general/estado_resultado.html', context)
 
 def utilidad_periodo(request, periodo_id):
 	balances = BalancePeriodo.objects.filter(Q(periodo_balance=periodo_id), 
@@ -272,6 +291,7 @@ def estado_capital(request, periodo_id):
 	inversiones=utilidad_periodo(request, periodo_id)
 	desinversiones=0
 	utilidad_p=inversiones
+	context = {''}
 
 	for balance in balances:
 		inversiones += balance.saldo_acreedor
@@ -290,18 +310,26 @@ def estado_capital(request, periodo_id):
 		nota.save()
 		estado = True
 
-	context = {
-		'balances':balances,
-		'inversiones': round(inversiones,2),
-		'desinversiones': round(desinversiones,2),
-		'capital_social': round(capital_social,2),
-		'utilidad_periodo':utilidad_p,
-		'fecha_inicio': fecha_0,
-		'fecha_final': fecha_1,
-		'estado' : estado,
-	}
+		notas = NotaPeriodo.objects.all()
+		context = {
+			'notas' : notas,
+		}
 
-	return render(request, 'contabilidad_general/estado_capital.html', context)
+		return render(request, 'contabilidad_general/notas_list.html', context)
+	else:
+
+		context = {
+			'balances':balances,
+			'inversiones': round(inversiones,2),
+			'desinversiones': round(desinversiones,2),
+			'capital_social': round(capital_social,2),
+			'utilidad_periodo':utilidad_p,
+			'fecha_inicio': fecha_0,
+			'fecha_final': fecha_1,
+			'estado' : estado,
+		}
+
+		return render(request, 'contabilidad_general/estado_capital.html', context)
 
 def capital_social(request, periodo_id):
 	balances = BalancePeriodo.objects.filter(Q(periodo_balance=periodo_id), 
@@ -327,6 +355,7 @@ def balance_general(request, periodo_id):
 	haber=capital_social(request, periodo_id)
 	capital_s=haber
 	mensaje=''
+	context = {''}
 
 	for balance in balances:
 		haber += balance.saldo_acreedor
@@ -351,17 +380,25 @@ def balance_general(request, periodo_id):
 		nota.save()
 		estado = True
 
-	context={
-		'balances':balances,
-		'debe': debe,
-		'haber': haber,
-		'capital_social': capital_s,
-		'mensaje': mensaje,
-		'fecha_final': fecha_1,
-		'estado' : estado,
-	}
+		notas = NotaPeriodo.objects.all()
+		context = {
+			'notas' : notas,
+		}
 
-	return render(request, 'contabilidad_general/balance_general.html', context)
+		return render(request, 'contabilidad_general/notas_list.html', context)
+	else:
+
+		context={
+			'balances':balances,
+			'debe': debe,
+			'haber': haber,
+			'capital_social': capital_s,
+			'mensaje': mensaje,
+			'fecha_final': fecha_1,
+			'estado' : estado,
+		}
+
+		return render(request, 'contabilidad_general/balance_general.html', context)
 
 def flujo_de_efectivo(request, periodo_id):
 	total_entradas = 0.0
@@ -371,6 +408,7 @@ def flujo_de_efectivo(request, periodo_id):
 
 	fecha_inicio = transacciones[0].transaccion_tc.periodo_transaccion.inicio_periodo
 	fecha_final = transacciones[0].transaccion_tc.periodo_transaccion.final_periodo
+	context = {''}
 
 	for transaccion in transacciones:
 		total_entradas += transaccion.debe_tc
@@ -378,15 +416,34 @@ def flujo_de_efectivo(request, periodo_id):
 
 	total_salidas = round(total_salidas, 2)
 	total_entradas = round(total_entradas, 2)
-	context = {
-		'fecha_inicio' : fecha_inicio,
-		'fecha_final' : fecha_final,
-		'total_entradas' : total_entradas,
-		'total_salidas' : total_salidas,
-		'saldo_final' : (total_entradas - total_salidas),
-		'transacciones' : transacciones
-	}
-	return render (request, 'contabilidad_general/flujo_de_efectivo.html', context)
+
+	estado=False
+	p = Periodo.objects.get(id=1)
+	
+	if request.method=='POST':
+		nota = NotaPeriodo()
+		nota.titulo_nota=request.POST['titulo']
+		nota.descripcion_nota=request.POST['descripcion']
+		nota.periodo_nota= p
+		nota.save()
+		estado = True
+
+		notas = NotaPeriodo.objects.all()
+		context = {
+			'notas' : notas,
+		}
+
+		return render(request, 'contabilidad_general/notas_list.html', context)
+	else:
+		context = {
+			'fecha_inicio' : fecha_inicio,
+			'fecha_final' : fecha_final,
+			'total_entradas' : total_entradas,
+			'total_salidas' : total_salidas,
+			'saldo_final' : (total_entradas - total_salidas),
+			'transacciones' : transacciones
+		}
+		return render (request, 'contabilidad_general/flujo_de_efectivo.html', context)
 
 def ratios_financieros(request, periodo_id):
 	balances = BalancePeriodo.objects.filter(periodo_balance=periodo_id)
