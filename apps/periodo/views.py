@@ -4,6 +4,7 @@ from django.shortcuts import redirect
 import datetime, time 
 from apps.contabilidad_costos.peps import * 
 from apps.contabilidad_general.models import * 
+from apps.periodo.forms import NotaForms
 
 # Create your views here.
 def resetear_saldos():
@@ -196,3 +197,6 @@ def sumarMayor():
 		else:
 			padre.saldo_acreedor_cuenta=round(abs(saldo),2)
 	return cuenta_p
+
+
+	

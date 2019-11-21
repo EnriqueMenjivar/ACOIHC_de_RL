@@ -1,11 +1,13 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, render_to_response
 from django.urls import reverse_lazy
 from apps.catalogo.forms import CuentaForm, AgrupacionForm, HijaForm
 from apps.catalogo.models import Grupo, Agrupacion, Cuenta, CuentaHija
-from apps.periodo.models import BalancePeriodo, Periodo
+from apps.periodo.models import BalancePeriodo, Periodo, NotaPeriodo
 from django.views.generic import ListView, CreateView, UpdateView
 from django.http import HttpResponse 
 from django.db.models import Q
+from django.template import RequestContext
+from apps.periodo.models import NotaPeriodo, Periodo
 
 # Create your views here.
 
@@ -163,6 +165,7 @@ def balance_comprobacion(request, periodo_id):
 	acreedor=0
 	deudor=0
 	mensaje=''
+	
 
 	for balance in balances:
 		acreedor += balance.saldo_acreedor
@@ -175,6 +178,18 @@ def balance_comprobacion(request, periodo_id):
 	else:
 		mensaje='No se cumple partida doble'
 
+
+	estado=False
+	p = Periodo.objects.get(id=1)
+
+	if request.method=='POST':
+		nota = NotaPeriodo()
+		nota.titulo_nota=request.POST['titulo']
+		nota.descripcion_nota=request.POST['descripcion']
+		nota.periodo_nota= p
+		nota.save()
+		estado = True
+
 	context={
 		'balances':balances,
 		'acreedor': acreedor,
@@ -182,9 +197,13 @@ def balance_comprobacion(request, periodo_id):
 		'mensaje': mensaje,
 		'fecha_inicio': fecha_0,
 		'fecha_final': fecha_1,
+		'periodo':Periodo,
+		'estado': estado,
 	}
 
 	return render(request, 'contabilidad_general/balance_comprobacion.html', context)
+
+
 
 def estado_resultado(request, periodo_id):
 	balances = BalancePeriodo.objects.filter(Q(periodo_balance=periodo_id), 
@@ -203,6 +222,17 @@ def estado_resultado(request, periodo_id):
 
 	utilidad_periodo = ingresos-gastos
 
+	estado=False
+	p = Periodo.objects.get(id=periodo_id)
+	
+	if request.method=='POST':
+		nota = NotaPeriodo()
+		nota.titulo_nota=request.POST['titulo']
+		nota.descripcion_nota=request.POST['descripcion']
+		nota.periodo_nota= p
+		nota.save()
+		estado = True
+
 	context = {
 		'balances': balances,
 		'ingresos': round(ingresos,2),
@@ -210,6 +240,7 @@ def estado_resultado(request, periodo_id):
 		'utilidad_periodo':round(utilidad_periodo,2),
 		'fecha_inicio': fecha_0,
 		'fecha_final': fecha_1,
+		'estado': estado,
 	}
 	return render(request, 'contabilidad_general/estado_resultado.html', context)
 
@@ -243,6 +274,17 @@ def estado_capital(request, periodo_id):
 
 	capital_social = inversiones-desinversiones
 
+	estado=False
+	p = Periodo.objects.get(id=1)
+	
+	if request.method=='POST':
+		nota = NotaPeriodo()
+		nota.titulo_nota=request.POST['titulo']
+		nota.descripcion_nota=request.POST['descripcion']
+		nota.periodo_nota= p
+		nota.save()
+		estado = True
+
 	context = {
 		'balances':balances,
 		'inversiones': round(inversiones,2),
@@ -251,6 +293,7 @@ def estado_capital(request, periodo_id):
 		'utilidad_periodo':utilidad_p,
 		'fecha_inicio': fecha_0,
 		'fecha_final': fecha_1,
+		'estado' : estado,
 	}
 
 	return render(request, 'contabilidad_general/estado_capital.html', context)
@@ -291,6 +334,18 @@ def balance_general(request, periodo_id):
 	else:
 		mensaje='No se cumple dualidad económica'
 
+
+	estado=False
+	p = Periodo.objects.get(id=1)
+	
+	if request.method=='POST':
+		nota = NotaPeriodo()
+		nota.titulo_nota=request.POST['titulo']
+		nota.descripcion_nota=request.POST['descripcion']
+		nota.periodo_nota= p
+		nota.save()
+		estado = True
+
 	context={
 		'balances':balances,
 		'debe': debe,
@@ -298,6 +353,7 @@ def balance_general(request, periodo_id):
 		'capital_social': capital_s,
 		'mensaje': mensaje,
 		'fecha_final': fecha_1,
+		'estado' : estado,
 	}
 
 	return render(request, 'contabilidad_general/balance_general.html', context)
@@ -426,3 +482,21 @@ def ratios_financieros(request, periodo_id):
 	}
 
 	return render(request, 'contabilidad_general/ratios_financieros.html', context)
+
+
+def registra_nota(request):
+	if request.method == 'POST':
+
+		titulo = request.GET['titulo']
+		descripcion = request.GET['descripcion']
+		periodo =  Periodo.objects.last()
+		id_periodo= periodo.id
+		
+		nota = NotaPeriodo(titulo_nota=titulo,descripcion_nota=descripcion, periodo_nota= id_periodo)
+		nota.save()
+
+		return redirect('nota_lista')
+	else:
+		form1 = EmpleadoForms()
+
+	return render(request, 'contabilidad_general/.....')
