@@ -183,9 +183,10 @@ def sumarMayor():
 		else:
 			hija.saldo_acreedor_cuenta=abs(saldo)
 
-	padre.debe = 0
-	padre.haber = 0
+	
 	for padre in cuenta_p:
+		padre.debe = 0
+		padre.haber = 0
 		for hija in cuenta_h:
 			if padre.codigo_cuenta==hija.codigo_padre:
 				padre.debe += hija.saldo_deudor_cuenta
