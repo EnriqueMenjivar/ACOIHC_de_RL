@@ -64,13 +64,6 @@
 	text-align: center;
 }
 
-#estados_financieros{
-  width: 70%;
-  overflow: auto;
-  margin: auto;
-
-}
-
 .btnNueva{
 	margin-left: 80%;
 	margin-top: 1%;
@@ -89,8 +82,4 @@ input[type="checkbox"] {
   line-height: normal;
 }
 
-.divBorder .form-group .input {
-	color: blue;
-	text-align: center;
-}
 

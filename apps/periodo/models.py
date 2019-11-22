@@ -16,3 +16,10 @@ class BalancePeriodo(models.Model):
 	saldo_acreedor = models.FloatField(default=0.0)
 	saldo_deudor_h = models.FloatField(default=0.0)
 	saldo_acreedor_h = models.FloatField(default=0.0)
+
+
+class NotaPeriodo(models.Model):
+	periodo_nota = models.ForeignKey(Periodo, null=True, on_delete=models.CASCADE)
+	titulo_nota =  models.CharField(max_length=50)
+	descripcion_nota = models.CharField(max_length=300)
+	

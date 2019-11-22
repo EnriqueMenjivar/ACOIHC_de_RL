@@ -3,7 +3,7 @@
 {% block portada %}<br><br><br>{% endblock %}
 {% block content %}
 <br>
-<a href="{% url 'empleado_general' %}" ><b>PLANILLA GENERAL</b></a><br><br><br><br>
+<button><a href="{% url 'empleado_general' %}" ><b>PLANILLA GENERAL</b></a></button><br><br><br><br>
 {% if object_list %}	
 	<table id="tbEmpleados" class="table">
 		<thead id="thead-dark" class="thead-dark">

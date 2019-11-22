@@ -1,50 +1,96 @@
 {% extends 'base/base.html' %}
 
+{% load staticfiles%}
+{% block extracss %}
+<link href="{%static '/plantilla/lib/bootstrap/css/bootstrap.css' %}" rel="stylesheet">
+{% endblock %}
+
 {% block content %}
 
 	{% if balances %}
-	<h4 class="text-center">Huelic Chocolatl</h4>
-	<h5 class="text-center">Estado de Capital</h5>
-	<h5 class="text-center">Del {{fecha_inicio}}, al {{fecha_final}}</h5>
 
-	<br>
-	<table class="table table-hover" id="estados_financieros">
-  		<thead>
-    		<tr>
-      			<th scope="col">Cuenta</th>
-      			<th scope="col">Inversiones</th>
-      			<th scope="col">Desinversiones</th>
-    		</tr>
-  		</thead>
-  		<tbody>
-  		{% for balance in balances %}
-    	<tr class="table-dark">
-      		<td>{{balance.cuenta_balance.nombre_cuenta}}</td>
-          <td>{{balance.saldo_acreedor}}</td>
-      		<td>{{balance.saldo_deudor}}</td>
-    	</tr>
-    	{% endfor %}
-      <tr>
-          <th>Utilidades del periodo</th>
-          <th>{{utilidad_periodo}}</th>
-          <th></th>
-      </tr>
-    	<tr>
-      		<th>Total</th>
-          <th>{{inversiones}}</th>
-      		<th>{{desinversiones}}</th>
-    	</tr>
-    	<tr class="table-dark">
-    		<td></td><td></td><td></td>
-    	</tr>
-    	</tbody>
-    </table>
-    	
-    	<br>
-      <h4>Capital Social: {{capital_social}}</h4>
-      <hr>
+<div class="container">
+  <div class="row">
+    <div class="col-md-10 col-md-offset-1">
+       <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="text-center">Huelic Chocolatl</h4>
+          <h5 class="text-center">Estado de Capital</h5>
+          <h5 class="text-center">Del {{fecha_inicio}}, al {{fecha_final}}</h5>
+          <hr>
+        </div>
+        <div class="panel-body">
+          <table class="table table-hover" id="estados_financieros">
+          <thead>
+            <tr>
+                <th scope="col">Cuenta</th>
+                <th scope="col">Inversiones</th>
+                <th scope="col">Desinversiones</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for balance in balances %}
+          <tr class="table-dark">
+              <td>{{balance.cuenta_balance.nombre_cuenta}}</td>
+              <td>{{balance.saldo_acreedor}}</td>
+              <td>{{balance.saldo_deudor}}</td>
+          </tr>
+          {% endfor %}
+          <tr>
+              <th>Utilidades del periodo</th>
+              <th>{{utilidad_periodo}}</th>
+              <th></th>
+          </tr>
+          <tr>
+              <th>Total</th>
+              <th>{{inversiones}}</th>
+              <th>{{desinversiones}}</th>
+          </tr>
+          <tr class="table-dark">
+            <td></td><td></td><td></td>
+          </tr>
+          </tbody>
+        </table>
+          
+        </div>
+       <div class="panel-footer text-center">
+        <h4>Capital Social: {{capital_social}}</h4>  
+       </div>
+      </div>
+    </div>
+  </div>
+</div>
+<br>
     {% else %}
     <h2 class="text-center">El estado de capital no está disponible para este periodo</h2>
     {% endif %}
+
+   <br><br>
+  <div id="container2" >
+     <h4>Agregar Notas De Periodo</h4>
+     <form method="post" id="notas" class="notas">
+      <div id="form1">
+        {% csrf_token %}
+        
+        <div id="input1">
+          <p><label for="titulo" class="control-label">Titulo</label></p>
+          <div id="input2">
+            <input id="titulo" type="text" class="form-control" name="titulo" >
+          </div>
+        </div>
+
+        <div id="input1">
+          <p><label for="descripcion" class="control-label">Descripcion </label></p>
+          <div id="input2">
+            <textarea id="descripcion" type="text" class="form-control" name="descripcion" form="notas"></textarea>
+          </div>
+        </div>
+        <br>
+        <div id="input1">
+           <button type="submit" class="btn-primary" align="center">Agregar</button>
+        </div>
+      </div>
+    </form>
+  </div>
 
 {% endblock %}

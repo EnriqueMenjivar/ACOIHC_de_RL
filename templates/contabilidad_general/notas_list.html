@@ -1,0 +1,38 @@
+{% extends 'base/base.html'%}
+{% load staticfiles%}
+{% block title %} Notas del periodo {% endblock %}
+{% block portada %}<br><br><br>{% endblock %}
+
+{% block extracss %}
+<link href="{%static '/plantilla/lib/bootstrap/css/bootstrap.css' %}" rel="stylesheet">
+{% endblock %}
+{% block content %}
+<br>
+<div id="boton"><button><a href="/periodo_contable/estados/1/" ><b>Estados Financieros</b></a></button></div><br><br>
+
+<h3>Notas del Periodo</h3>
+{% if notas %}	
+	<table id="tbEmpleados" class="table">
+		<thead id="thead-dark" class="thead-dark">
+			<tr>
+				<th scope="col">ID</th>
+				<th scope="col">Titulo</th>
+				<th scope="col">Descripcion</th>
+			</tr>
+		</thead>
+		<tbody>
+		{% for nota in notas  %}	
+			<tr>
+				<td>{{nota.id}}</td>
+				<td><b>{{nota.titulo_nota}}</b></td>
+				<td>{{nota.descripcion_nota}}</td>
+			</tr>
+		{% endfor %}
+		</tbody>
+	</table>
+{% else %}
+	<b>No se encuentra registrado ningún empleado</b>
+{% endif %}
+
+
+{% endblock %}
