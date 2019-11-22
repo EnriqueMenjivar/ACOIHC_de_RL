@@ -1,0 +1,85 @@
+#log3{
+	display: none;
+}
+.prueba{
+	margin-top: 5.2%;
+	/*background: #eaeded;*/
+	height: 50%;
+	width: 100%;
+	padding-top: 3%;
+	padding-right: 5%;
+	padding-left: 5%;
+	padding-bottom: 5%;
+}
+
+#footer {
+   position:fixed;
+   left:0px;
+   bottom:0px;
+   height:80px;
+   width:100%;
+   background:#999;
+}
+
+#tbProgramaciones{
+	height: auto;
+	margin: 8px;
+	align-content: center;
+}
+#tbDiv,#tbDiv2{
+	margin: auto;
+	width: 800px;
+}
+ #tbMP1{
+ 	margin: auto;
+ }
+
+#thead-dark{
+	background-color: black;
+	color: #fff;
+}
+
+.contador{
+	margin-left: 120px; 
+}
+
+
+#fmProgramacionNueva, #fmProceso1,#fmProceso1MO{
+	align-items: center;
+	margin: 50px;
+	margin-right: 200px;
+	margin-left: 200px;
+
+}
+
+.divBorder{
+	margin-left: 100px;
+	margin-right: 100px; 
+	margin-bottom: 50px;
+	border-style: solid;
+	border-color: #54acac;
+}
+
+#b_comprobacion{
+	text-align: center;
+}
+
+.btnNueva{
+	margin-left: 80%;
+	margin-top: 1%;
+}
+
+
+h5 {
+	text-align: center;
+	color: red;
+}
+
+
+input[type="checkbox"] {
+  margin: 4px 0 0;
+  margin-top: 1px \9;
+  line-height: normal;
+}
+
+

@@ -1,0 +1,14 @@
+.nav > li{
+	float: left;
+}
+
+.nav li ul{
+	display: none;
+	position: absolute;
+	min-width: 140px;
+	background-color: #000;
+}
+
+.nav li:hover > ul{
+	display: block;
+}

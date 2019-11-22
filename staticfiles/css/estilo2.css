@@ -1,0 +1,12 @@
+h4 {
+	color: red;
+}
+
+#divBorder1 {
+	width: 15px;
+}
+
+#divBorder1 #form #input {
+	width: 10px;
+}
+
