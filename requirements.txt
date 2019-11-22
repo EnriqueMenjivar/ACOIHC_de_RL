@@ -1,4 +1,4 @@
-Django==2.1.5
+Django==2.0.5
 gunicorn
 pytz
 whitenoise
