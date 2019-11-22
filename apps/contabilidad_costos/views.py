@@ -334,7 +334,7 @@ class TransaccionesProgramacion(TemplateView):
 
 class Lista_Empleados(ListView):
 	model = Empleado
-	template_name = 'contabilidad_costos/empleado_list'
+	template_name = 'contabilidad_costos/empleado_list.html'
 
 
 class planilla_general(ListView):

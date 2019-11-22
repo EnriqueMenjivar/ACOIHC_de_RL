@@ -12,7 +12,3 @@
 .nav li:hover > ul{
 	display: block;
 }
-
-.divBorder .form-group .input{
-	color: blue;
-}

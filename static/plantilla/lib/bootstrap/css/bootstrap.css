@@ -7011,3 +7011,63 @@ button.close {
 }
 
 /*# sourceMappingURL=bootstrap.css.map */
+
+
+/*MANUEL*/
+
+#divBorder1 {
+  border-color: blue;
+  margin-bottom: 10px;
+  padding-bottom: 40px;
+}
+
+#divBorder1 h4 {
+  color: red;
+  text-align: center;
+}
+
+#divBorder1 #form1 #input1 {
+  color: blue;
+  width: 50%;
+  align-content:center;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+
+#divBorder1 #form1 .btn-primary {
+  margin-right: auto;
+  margin-left: auto;
+  width: 110px; /* Para que no se rompa en dos líneas, y lo translade tal cual. */
+  margin-left: 50%;
+    transform: translateX(-50%);
+}
+
+#container1 #fmEmpleado {
+  color: blue;
+  width: 50%;
+  align-content:center;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+#container2 {
+  padding-bottom: 50px;
+}
+
+#container2 h4 {
+  color: red;
+
+}
+
+#container2 #form1 #input1 {
+  width: 60%;
+}
+
+#container2 #form1 #input1 p{
+  color: blue;s
+}
+
+#boton{
+  float: right;
+}

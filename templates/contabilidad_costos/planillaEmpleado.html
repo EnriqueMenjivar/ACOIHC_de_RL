@@ -1,18 +1,19 @@
 {% extends 'base/base.html'%}
 {% load staticfiles %}
 {% block title %} Empleados {% endblock %}
-
 {% block extracss %}
-<link rel="stylesheet" type="text/css" href="{% static 'css/estilo2.css' %}">
+<link href="{%static '/plantilla/lib/bootstrap/css/bootstrap.css' %}" rel="stylesheet">
 {% endblock %}
 
 {% block portada %}<br><br><br>{% endblock %} 
 
 {% block content %}
 
+<button><a href="{% url 'empleado_lista' %}" ><b>Lista de Empleados</b></a></button><br><br>
+
 <h3>Planilla De Empleado {{empleado.nombre_empleado}} </h3>
 <br><br>
-<div class="container">
+<div id="container1">
 	<div class="divBorder"> <h5> DATOS EMPLEADO </h5></div>
 	<br>
 	<form action="/" id="fmEmpleado" class="form-horizontal" name="datosEmpleado" method="POST">
@@ -75,7 +76,7 @@
 
 
 
-<div class="container">
+<div id="container1">
 	<div class="divBorder"> <h5> COTIZACIONES </h5></div>
 	<br>
 	<form action="/" id="fmEmpleado" class="form-horizontal" name="datosEmpleado" method="POST">

@@ -1,4 +1,8 @@
 {% extends 'base/base.html' %}
+{% load staticfiles%}
+{% block extracss %}
+<link href="{%static '/plantilla/lib/bootstrap/css/bootstrap.css' %}" rel="stylesheet">
+{% endblock %}
 
 {% block content %}
 
@@ -53,5 +57,34 @@
     {% else %}
     <h2 class="text-center">El balance de comprobación no está disponible para este periodo</h2>
     {% endif %}
+  
+  <br><br>
+  <div id="container2" >
+     <h4>Agregar Notas De Periodo</h4>
+     <form method="post" id="notas" class="notas">
+      <div id="form1">
+        {% csrf_token %}
+        
+        <div id="input1">
+          <p><label for="titulo" class="control-label">Titulo</label></p>
+          <div id="input2">
+            <input id="titulo" type="text" class="form-control" name="titulo" >
+          </div>
+        </div>
+
+        <div id="input1">
+          <p><label for="descripcion" class="control-label">Descripcion </label></p>
+          <div id="input2">
+            <textarea id="descripcion" type="text" class="form-control" name="descripcion" form="notas"></textarea>
+          </div>
+        </div>
+        <br>
+        <div id="input1">
+           <button type="submit" class="btn-primary" align="center">Agregar</button>
+        </div>
+      </div>
+    </form>
+
+  </div>
 
 {% endblock %}

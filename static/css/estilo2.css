@@ -1,29 +1,12 @@
 h4 {
-	text-align: center;
+	color: red;
 }
 
-.diBorder .form-group {
+#divBorder1 {
+	width: 15px;
 }
 
-.divBorder .form-group .input {
-	color: blue;
-	width: 50%;
-	align-content:center;
-	margin-right: auto;
-	margin-left: auto;
+#divBorder1 #form #input {
+	width: 10px;
 }
 
-.divBorder .form-group .btn-primary {
-	margin-right: auto;
-	margin-left: auto;
-	width: 110px; /* Para que no se rompa en dos líneas, y lo translade tal cual. */
- 	margin-left: 50%;
-  	transform: translateX(-50%);
-}
-
-.container .form-group {
-	color: blue;
-	width: 50%;
-	margin-right: auto;
-	margin-left: auto;
-}

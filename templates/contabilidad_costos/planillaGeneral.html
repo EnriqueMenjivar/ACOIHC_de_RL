@@ -4,7 +4,7 @@
 {% block content %}
 
 <br>
-<a href="{% url 'empleado_general' %}" ><b>PLANILLA GENERAL</b></a><br><br><br><br>
+<button><a href="{% url 'empleado_lista' %}" ><b>Lista de Empleados</b></a></button><br><br>
 {% if object_list %}	
 	<table id="tbPlanillas" class="table">
 		<thead id="thead-dark" class="thead-dark">
