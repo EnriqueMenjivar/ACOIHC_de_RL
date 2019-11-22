@@ -84,6 +84,7 @@ def  periodo_contable ( request ):
 			periodoCerrado.final_periodo = time.strftime("%Y-%m-%d")
 			periodoCerrado.periodo_ajuste=False # se indica que el proceso de ajuste a finalizado
 			periodoCerrado.save()
+			resetear_saldos()
 			return redirect('periodo_contable')
 		if 'idPe' in request.POST:
 			idP = request.POST.get('idPe')
@@ -181,6 +182,8 @@ def sumarMayor():
 		else:
 			hija.saldo_acreedor_cuenta=abs(saldo)
 
+	padre.debe = 0
+	padre.haber = 0
 	for padre in cuenta_p:
 		for hija in cuenta_h:
 			if padre.codigo_cuenta==hija.codigo_padre:
