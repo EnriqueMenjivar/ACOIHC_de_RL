@@ -1,0 +1,1 @@
+web: gunicorn huelic_chocolatl.wsgi --log-file -
