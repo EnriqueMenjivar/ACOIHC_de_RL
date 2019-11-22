@@ -2,7 +2,7 @@
 
 {% block content %}
 
-	{% if transacciones %}
+  {% if balances %}
   
 <div class="container">
   <div class="row">
@@ -18,17 +18,17 @@
             <table class="table table-hover" id="estados_financieros">
             <thead>
               <tr>
-                  <th scope="col">Transacción</th>
+                  <th scope="col">Cuenta</th>
                   <th scope="col">Entradas</th>
                   <th scope="col">Salidas</th>
               </tr>
             </thead>
             <tbody>
-            {% for transaccion in transacciones %}
+            {% for balance in balances %}
             <tr class="table-dark">
-                <td>{{ transaccion.transaccion_tc.descripcion_transaccion }}</td>
-                <td>{{ transaccion.debe_tc }}</td>
-                <td>{{ transaccion.haber_tc }}</td>
+                <td>{{balance.cuenta_balance.nombre_cuenta}}</td>
+                <td>{{ balance.saldo_deudor }}</td>
+                <td>{{ balance.saldo_acreedor }}</td>
             </tr>
             {% endfor %}
 

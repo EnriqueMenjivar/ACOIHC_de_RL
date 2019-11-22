@@ -306,15 +306,32 @@ def balance_general(request, periodo_id):
 def flujo_de_efectivo(request, periodo_id):
 	total_entradas = 0.0
 	total_salidas = 0.0
-	transacciones = Transaccion_Cuenta.objects.filter(transaccion_tc__periodo_transaccion__id = periodo_id).\
-											   filter(cuenta_tc__codigo_cuenta__startswith = 1101)
+	
+	balances = BalancePeriodo.objects.filter(periodo_balance=periodo_id).\
+									  filter( 
+											Q(cuenta_balance__codigo_cuenta=5101)|
+											Q(cuenta_balance__codigo_cuenta=5102)|
+											Q(cuenta_balance__codigo_cuenta=1109)|
+											Q(cuenta_balance__codigo_cuenta=1104)|
+											Q(cuenta_balance__codigo_cuenta=1105)|
+											Q(cuenta_balance__codigo_cuenta=1106)|
+											Q(cuenta_balance__codigo_cuenta=4102)|
+											Q(cuenta_balance__codigo_cuenta=2105)|
+											Q(cuenta_balance__codigo_cuenta=2107)|
+											Q(cuenta_balance__codigo_cuenta=2108)|
+											Q(cuenta_balance__codigo_cuenta=1201)|
+											Q(cuenta_balance__codigo_cuenta=1202)|
+											Q(cuenta_balance__codigo_cuenta=1204)|
+											Q(cuenta_balance__codigo_cuenta=2101)|
+											Q(cuenta_balance__codigo_cuenta=2201)).\
+											order_by('cuenta_balance__agrupacion__codigo_agrupacion')
 
-	fecha_inicio = transacciones[0].transaccion_tc.periodo_transaccion.inicio_periodo
-	fecha_final = transacciones[0].transaccion_tc.periodo_transaccion.final_periodo
+	fecha_inicio = balances[0].periodo_balance.inicio_periodo
+	fecha_final = balances[0].periodo_balance.final_periodo
 
-	for transaccion in transacciones:
-		total_entradas += transaccion.debe_tc
-		total_salidas += transaccion.haber_tc
+	for balance in balances:
+		total_entradas += balance.saldo_deudor
+		total_salidas += balance.saldo_acreedor
 
 	total_salidas = round(total_salidas, 2)
 	total_entradas = round(total_entradas, 2)
@@ -324,7 +341,7 @@ def flujo_de_efectivo(request, periodo_id):
 		'total_entradas' : total_entradas,
 		'total_salidas' : total_salidas,
 		'saldo_final' : (total_entradas - total_salidas),
-		'transacciones' : transacciones
+		'balances' : balances
 	}
 	return render (request, 'contabilidad_general/flujo_de_efectivo.html', context)
 
