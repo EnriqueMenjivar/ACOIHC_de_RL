@@ -1,5 +1,5 @@
 {% extends 'base/base.html' %}
-{% load staticfiles %}
+{% load static from staticfiles %}
 
 {% block content %}
 	<form method="post" id="cuentaForm" data-agrupacion-url="{% url 'contabilidad_general:ajax' %}" novalidate>
