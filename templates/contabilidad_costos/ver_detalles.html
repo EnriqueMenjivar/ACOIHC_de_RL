@@ -29,11 +29,11 @@
 							<td>{{ programacion_proceso.proceso.nombre_proceso }}</td>
 							<td>
 								{% if programacion_proceso.terminado %}
-									Finalizado
+									<span class="label label-success col-sm-4">Finalizado</span>
 								{% elif programacion_proceso.id == proceso_en_marcha %}
-									En proceso
+									<span class="label label-warning col-sm-4">En proceso</span>
 								{% else %}
-									Pendiente
+									<span class="label label-default col-sm-4">Pendiente</span>
 								{% endif %}
 							</td>
 							<td>
